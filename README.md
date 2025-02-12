@@ -1,3 +1,3 @@
-- 51820 Luka Roca 
-- 50484 Afonso Santos
-- 51690 Bernardo Jaco 
+# 2425-2-common
+Software Laboratory, 2024/2025, Spring semester
+git agit a
