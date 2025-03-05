@@ -1,2 +1,1 @@
-# 2425-2-common
-Software Laboratory, 2024/2025, Spring semester
+# 2425-2-LEIC43D-G01
