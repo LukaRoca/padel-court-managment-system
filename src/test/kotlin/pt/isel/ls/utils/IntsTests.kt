@@ -50,10 +50,10 @@ class IntsTests {
     @Test
     fun indexOfBinary_big_numbers_test() {
         // Arrange
-        val v = intArrayOf(1,24, 34, 72, 90, 102)
+        val v = IntArray(40000000){102}
 
         // Act
-        val ix: Int = indexOfBinary(v, 0, 6,102)
+        val ix: Int = indexOfBinary(v, 20000000, 30000000,102)
 
         // Assert
         assertTrue(ix > 0)

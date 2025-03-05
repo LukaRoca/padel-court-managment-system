@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="pt.isel.ls.utils.IntsTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-03-05T15:28:34" hostname="PCDOJACO" time="0.034">
+<testsuite name="pt.isel.ls.utils.IntsTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-03-05T15:51:41" hostname="PCDOJACO" time="0.1">
   <properties/>
-  <testcase name="indexOfBinary_returns_negative_if_not_foundd" classname="pt.isel.ls.utils.IntsTests" time="0.034"/>
+  <testcase name="indexOfBinary_big_numbers_test" classname="pt.isel.ls.utils.IntsTests" time="0.1"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
