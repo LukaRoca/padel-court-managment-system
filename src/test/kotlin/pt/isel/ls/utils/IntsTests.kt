@@ -40,11 +40,25 @@ class IntsTests {
         }
     }
 
-
     @Test
     fun indexOfBinary_right_bound_parameter_is_exclusive() {
         val v = intArrayOf(2, 2, 2)
         val ix: Int = indexOfBinary(v, 1, 1, 2)
         assertTrue(ix < 0)
     }
+
+    @Test
+    fun indexOfBinary_big_numbers_test() {
+        // Arrange
+        val v = intArrayOf(1,24, 34, 72, 90, 102)
+
+        // Act
+        val ix: Int = indexOfBinary(v, 0, 6,102)
+
+        // Assert
+        assertTrue(ix > 0)
+    }
 }
+
+
+
