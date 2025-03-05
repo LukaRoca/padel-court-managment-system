@@ -1,1 +1,3 @@
-# 2425-2-LEIC43D-G01
+- 51820 Luka Roca 
+- 50484 Afonso Santos
+- 51690 Bernardo Jaco 
