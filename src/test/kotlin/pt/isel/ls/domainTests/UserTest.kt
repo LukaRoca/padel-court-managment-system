@@ -7,20 +7,20 @@ class UserTest {
     @Test
     fun `User with valid parameters`() {
         val user = User(
-            id = Uid(1),
+            id = Id(1),
             user = UserName("tubarao"),
             email = Email("luka.roca@gmail.com")
         )
         assertEquals(1, user.id.id)
         assertEquals("tubarao", user.user.name)
-        assertEquals("luka.roca@gmail.com", user.email.name)
+        assertEquals("luka.roca@gmail.com", user.email.value)
     }
 
     @Test
     fun `Throw exception if user name is blank`() {
         val exception = assertFailsWith<IllegalArgumentException> {
             User(
-                id = Uid(1),
+                id = Id(1),
                 user = UserName(""),
                 email = Email("luka@gmail.com")
             )

@@ -1,8 +1,6 @@
 package pt.isel.ls.domain
 
-data class Id (val id : Int)
-data class Name (val name : String)
-data class Owner (val name : Name)
+
 
 data class Court(
     val id : Id,
