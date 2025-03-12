@@ -10,9 +10,7 @@ data class Court(
     val owner : Owner,
 ) {
     init {
-        require(name.name.isNotBlank()) { "Name must not be empty" }
-        require(owner.name.name.isNotBlank()) { "Owner must not be empty" }
+        require(name.name.isNotBlank()) { "pt.isel.ls.domain.Name must not be empty" }
+        require(owner.name.name.isNotBlank()) { "pt.isel.ls.domain.Owner must not be empty" }
     }
 }
-
-
