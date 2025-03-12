@@ -24,7 +24,7 @@ class CourtTest {
                 owner = Owner(Name("Luka Roca"))
             )
         }
-        assertEquals("Name must not be empty", exception.message)
+        assertEquals("pt.isel.ls.domain.Name must not be empty", exception.message)
     }
     @Test
     fun `Throw exception if owner name is empty`() {
@@ -35,7 +35,7 @@ class CourtTest {
                 owner = Owner(Name(""))
             )
         }
-        assertEquals("Owner must not be empty", exception.message)
+        assertEquals("pt.isel.ls.domain.Owner must not be empty", exception.message)
     }
 }
 
