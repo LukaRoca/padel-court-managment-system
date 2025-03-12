@@ -11,3 +11,4 @@ insert into students(course, number, name) select cid as course, 12346 as number
 insert into students(course, number, name) select cid as course, 50484 as number, 'Afonso' as name from courses where name = 'LEIC'
 
  */
+  insert into "user"(name, email) values ('Alice', 'alice@gmail.com');
