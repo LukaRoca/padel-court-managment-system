@@ -9,12 +9,12 @@ data class Name (val name : String)
 data class Owner (val name : Name)
 
 @Serializable
-data class Email( val value : String){
+data class Email(val value: String) {
     init {
-        if(!value.contains("@"))
-            throw IllegalArgumentException("Invalid email")
+        require(value.contains("@")) { "Email must have @ in it" }
     }
 }
+
 
 @Serializable
 data class Id (val id : Int){

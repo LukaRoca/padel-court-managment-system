@@ -8,7 +8,7 @@ class UserTest {
     fun `User with valid parameters`() {
         val user = User(
             id = Id(1),
-            user = UserName("tubarao"),
+            user = Name("tubarao"),
             email = Email("luka.roca@gmail.com")
         )
         assertEquals(1, user.id.id)
@@ -21,7 +21,7 @@ class UserTest {
         val exception = assertFailsWith<IllegalArgumentException> {
             User(
                 id = Id(1),
-                user = UserName(""),
+                user = Name(""),
                 email = Email("luka@gmail.com")
             )
         }
