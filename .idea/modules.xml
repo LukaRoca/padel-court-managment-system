@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2425-2-LEIC43D-G01.iml" filepath="$PROJECT_DIR$/.idea/modules/2425-2-LEIC43D-G01.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2425-2-LEIC43D-G01.main.iml" filepath="$PROJECT_DIR$/.idea/modules/2425-2-LEIC43D-G01.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2425-2-LEIC43D-G01.test.iml" filepath="$PROJECT_DIR$/.idea/modules/2425-2-LEIC43D-G01.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ls.iml" filepath="$PROJECT_DIR$/.idea/modules/ls.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ls.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ls.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ls.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ls.test.iml" />
     </modules>
   </component>
 </project>
