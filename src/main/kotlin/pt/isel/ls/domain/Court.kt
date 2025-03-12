@@ -1,7 +1,5 @@
 package pt.isel.ls.domain
 
-
-
 data class Court(
     val id : Id,
     val name : Name,
