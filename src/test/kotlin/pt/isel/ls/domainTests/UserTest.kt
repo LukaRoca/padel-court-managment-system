@@ -1,7 +1,7 @@
 package pt.isel.ls.domainTests
 
 import pt.isel.ls.domain.*
-import kotlin.test.*
+import kotlin.test*
 
 class UserTest {
     @Test
