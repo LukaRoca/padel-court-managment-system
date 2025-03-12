@@ -12,12 +12,12 @@ class RentalTest {
         val rental = Rental(Number(2),
             Date(2004, 4, 5),
             Duration(2),
-            User(10),
+            User(Uid(10), UserName("Jaco"), Email("bjaco@gmail.com")),
             Court(Id(1), Name("Luz"), Owner(Name("Luis")) ))
         assertEquals(2, rental.rid.rid)
         assertEquals(2004, rental.date.year)
         assertEquals(2, rental.duration.hours)
-        assertEquals(10, rental.user.id)
+        assertEquals(10, rental.user.id.id)
         assertEquals("Luz", rental.court.name.name)
     }
 
@@ -27,7 +27,7 @@ class RentalTest {
             Rental(Number(2),
                 Date(2004, 4, 5),
                 Duration(-4),
-                User(10),
+                User(Uid(10), UserName("Jaco"), Email("bjaco@gmail.com")),
                 Court(Id(1), Name("Luz"), Owner(Name("Luis")) ))
         }
     }
@@ -38,7 +38,7 @@ class RentalTest {
             Rental(Number(2),
                 Date(0, 0, 0),
                 Duration(4),
-                User(10),
+                User(Uid(10), UserName("Jaco"), Email("bjaco@gmail.com")),
                 Court(Id(1), Name("Luz"), Owner(Name("Luis")) ))
         }
     }
@@ -49,7 +49,7 @@ class RentalTest {
             Rental(Number(2),
                 Date(0, 0, 0),
                 Duration(4),
-                User(10),
+                User(Uid(10), UserName("Jaco"), Email("bjaco@gmail.com")),
                 Court(Id(1), Name(""), Owner(Name("Luis")) ))
         }
     }

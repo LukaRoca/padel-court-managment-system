@@ -6,7 +6,6 @@ data class Date (val year : Int, val month : Int, val day : Int)
 
 data class Duration (val hours : Int)
 
-data class User (val id : Int)
 
 data class Rental (val rid : Number, val date : Date, val duration : Duration, val user : User, val court : Court) {
     init {
