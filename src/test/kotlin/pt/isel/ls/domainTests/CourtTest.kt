@@ -4,38 +4,54 @@ import pt.isel.ls.domain.*
 import kotlin.test.*
 
 class CourtTest {
+
     @Test
     fun `Court with valid parameters`() {
         val court = Court(
             id = Id(1),
-            name = Name("tubarao"),
-            owner = Owner(Name("Luka Roca"))
+            name = Name("Tubarao"),
+            club = Club(
+                name = Name("PadelClub"),
+                id = 1,
+                owner = Owner(Name("Luka Roca"))
+            )
         )
+
         assertEquals(1, court.id.id)
-        assertEquals("tubarao", court.name.name)
-        assertEquals("Luka Roca", court.owner.name.name)
+        assertEquals("Tubarao", court.name.name)
+        assertEquals("PadelClub", court.club.name.name)
+        assertEquals("Luka Roca", court.club.owner.name.name)
     }
+
     @Test
     fun `Throw exception if name is empty`() {
         val exception = assertFailsWith<IllegalArgumentException> {
             Court(
                 id = Id(1),
                 name = Name(""),
-                owner = Owner(Name("Luka Roca"))
+                club = Club(
+                    name = Name("PadelClub"),
+                    id = 1,
+                    owner = Owner(Name("Luka Roca"))
+                )
             )
         }
-        assertEquals("pt.isel.ls.domain.Name must not be empty", exception.message)
+        assertEquals("Name must not be empty", exception.message)
     }
+
     @Test
-    fun `Throw exception if owner name is empty`() {
+    fun `Throw exception if club name is empty`() {
         val exception = assertFailsWith<IllegalArgumentException> {
             Court(
                 id = Id(1),
                 name = Name("Luka Roca"),
-                owner = Owner(Name(""))
+                club = Club(
+                    name = Name(""),
+                    id = 1,
+                    owner = Owner(Name("Luka Roca"))
+                )
             )
         }
-        assertEquals("pt.isel.ls.domain.Owner must not be empty", exception.message)
+        assertEquals("Club name must not be empty", exception.message)
     }
 }
-
