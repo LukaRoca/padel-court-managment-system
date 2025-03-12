@@ -40,9 +40,26 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: org.http4k:http4k-server-jetty:6.1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.http4k:http4k-core:6.1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:2.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-simple:2.0.9" level="project" />
     <orderEntry type="library" name="Gradle: org.postgresql:postgresql:42.7.5" level="project" />
+    <orderEntry type="library" name="Gradle: org.http4k:http4k-realtime-core:6.1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:jetty-websocket-jetty-server:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-server:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.6.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.8.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:2.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:jetty-websocket-core-server:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:jetty-websocket-jetty-common:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-http:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-io:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:jetty-websocket-core-common:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:jetty-websocket-jetty-api:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-util:12.0.16" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.8.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.checkerframework:checker-qual:3.48.3" level="project" />
   </component>
 </module>
