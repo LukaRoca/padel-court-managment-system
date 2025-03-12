@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: org.http4k:http4k-core:6.1.0.1" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.http4k" artifactId="http4k-core" version="6.1.0.1" baseVersion="6.1.0.1" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.http4k/http4k-core/6.1.0.1/704fb1456f59af822d90290c0d35ca62f5fc4ce9/http4k-core-6.1.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
