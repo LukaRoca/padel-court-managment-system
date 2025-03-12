@@ -8,4 +8,8 @@ class userService(private val storage : DataMem) {
         return storage.getUsers()
     }
 
+    fun getUserById(userId: Int): User? {
+        return storage.getUsers().find { it.id.id == userId }
+    }
+
 }

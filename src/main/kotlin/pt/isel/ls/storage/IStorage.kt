@@ -5,4 +5,5 @@ import pt.isel.ls.domain.User
 interface IStorage{
 
     fun getUsers(): List<User>
+    fun getUserById(userId: Int): User?
 }
