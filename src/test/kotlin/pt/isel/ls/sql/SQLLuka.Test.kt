@@ -1,10 +1,12 @@
+package pt.isel.ls.sql
+
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class DataBaseTestsBernardo {
+class DataBaseTestsLuka {
     private val url = "jdbc:postgresql://localhost:5432/ls"
     private val user = "postgres"
     private val password = "tubarao"

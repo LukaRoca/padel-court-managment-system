@@ -1,11 +1,13 @@
+package pt.isel.ls.sql
+
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.ResultSet
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class DataBaseTestsLuka {
-    private val url = "jdbc:postgresql://localhost:5432/ls"
+class DataBaseTestsBernardo {
+    private val url = "jdbc:postgresql://localhost:5432/postgres"
     private val user = "postgres"
     private val password = "tubarao"
 
@@ -18,8 +20,8 @@ class DataBaseTestsLuka {
         val connection = connect()
         val sql = "INSERT INTO students (number, name, course) VALUES (?, ?, ?)"
         connection.prepareStatement(sql).use { stmt ->
-            stmt.setInt(1, 51820)
-            stmt.setString(2, "Luka")
+            stmt.setInt(1, 51690)
+            stmt.setString(2, "Bernardo")
             stmt.setInt(3, getCourseId("LEIC", connection))
             val rowsInserted = stmt.executeUpdate()
             assertTrue(rowsInserted > 0, "Falha ao inserir o aluno")
@@ -34,7 +36,7 @@ class DataBaseTestsLuka {
             val rs: ResultSet = stmt.executeQuery()
             var found = false
             while (rs.next()) {
-                if (rs.getInt("number") == 51820) {
+                if (rs.getInt("number") == 51690) {
                     found = true
                     break
                 }
@@ -48,8 +50,8 @@ class DataBaseTestsLuka {
         val connection = connect()
         val sql = "UPDATE students SET name = ? WHERE number = ?"
         connection.prepareStatement(sql).use { stmt ->
-            stmt.setString(1, "Lukao")
-            stmt.setInt(2, 51820)
+            stmt.setString(1, "Jacao")
+            stmt.setInt(2, 51690)
             val rowsUpdated = stmt.executeUpdate()
             assertTrue(rowsUpdated > 0, "Falha ao atualizar o aluno")
         }
@@ -60,7 +62,7 @@ class DataBaseTestsLuka {
         val connection = connect()
         val sql = "DELETE FROM students WHERE number = ?"
         connection.prepareStatement(sql).use { stmt ->
-            stmt.setInt(1, 51820)
+            stmt.setInt(1, 51690)
             val rowsDeleted = stmt.executeUpdate()
             assertTrue(rowsDeleted > 0, "Falha ao deletar o aluno")
         }
