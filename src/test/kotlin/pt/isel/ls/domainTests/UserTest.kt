@@ -13,7 +13,7 @@ class UserTest {
         )
         assertEquals(1, user.id.id)
         assertEquals("tubarao", user.user.name)
-        assertEquals("luka.roca@gmail.com", user.email.email)
+        assertEquals("luka.roca@gmail.com", user.email.name)
     }
 
     @Test
@@ -31,7 +31,7 @@ class UserTest {
     @Test
     fun `Email should contain @`() {
         val exception = assertFailsWith<IllegalArgumentException> {
-            Email("lukaerrado.com")
+            Email("invalid.com")
         }
         assertEquals("Email must have @ in it", exception.message)
     }
