@@ -1,2 +1,2 @@
-package pt.isel.ls.webApi.routes.courts
+package pt.isel.ls.webApi.courts
 

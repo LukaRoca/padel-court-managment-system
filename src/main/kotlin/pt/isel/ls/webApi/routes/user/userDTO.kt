@@ -1,4 +1,4 @@
-package pt.isel.ls.webApi.routes.user
+package pt.isel.ls.webApi.user
 
 import kotlinx.serialization.Serializable
 import pt.isel.ls.domain.Email
