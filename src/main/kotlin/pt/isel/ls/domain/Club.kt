@@ -1,8 +1,7 @@
-/*package pt.isel.ls.domain
-
+package pt.isel.ls.domain
+/*
 data class Club(
 
 )
-
 
 */

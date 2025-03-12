@@ -1,7 +1,9 @@
 package pt.isel.ls.domain
 
+data class UserName (val name : String)
+
 data class User(
-    val id : Uid,
+    val id : Id,
     val user : UserName,
     val email : Email,
 ){
