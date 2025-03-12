@@ -1,7 +1,3 @@
-
-/*
-Apagar depois visto que ja n vai ser necessario
-
 drop table if exists students;
 drop table if exists courses;
 
@@ -16,7 +12,7 @@ create table students (
   course int references courses(cid)
 );
 
- */
+
 
 
 create table "user" (
