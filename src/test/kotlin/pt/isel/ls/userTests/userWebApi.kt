@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 class userWebApi {
 
     val storage: IStorage = DataMem
-    //val client = okHttp()
+    val client = okHttp()
 
     @Test
     fun `get users`() {
@@ -30,17 +30,15 @@ class userWebApi {
         val req = client(Request(GET, "users"))
         assertEquals(Status.OK, req.status)
         assertEquals(req.header("content-type"), "application/json")
-        assertEquals(storage.getUsers(), Json.decodeFromString<User>(req.bodyString()))
+        assertEquals(storage.getUsers(), Json.decodeFromString<List<User>>(req.bodyString()))
     }
 
     @Test
     fun `get user by valid id`() {
         val userId = 1
         val req = client(Request(GET, "/users/$userId"))
-
         assertEquals(Status.OK, req.status)
         assertEquals("application/json", req.header("content-type"))
-
         val user = Json.decodeFromString<User>(req.bodyString())
         val expectedUser = storage.getUserById(userId)
         assertEquals(expectedUser, user)
@@ -48,12 +46,9 @@ class userWebApi {
 
     @Test
     fun `get user by invalid id`() {
-        // Tentar obter um usuário com ID inválido
         val invalidUserId = 10
         val req = client(Request(GET, "/users/$invalidUserId"))
-
-        assertEquals(Status.NOT_FOUND, response.status)
-
+        assertEquals(Status.NOT_FOUND, req.status)
         val expectedError = """{"error":"User not found"}"""
         assertEquals(expectedError, response.bodyString())
     }
