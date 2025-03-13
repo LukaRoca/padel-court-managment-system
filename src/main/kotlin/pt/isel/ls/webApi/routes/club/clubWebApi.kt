@@ -1,5 +1,5 @@
 package pt.isel.ls.webApi.routes.club
-/*
+
 import kotlinx.serialization.json.Json
 import org.http4k.core.Request
 import org.http4k.core.Response
@@ -21,6 +21,7 @@ class ClubWebApi(private val clubService: clubService) {
             request.header("accept"),
         )
     }
+    /*
     fun getClubs(request: Request): Response {
         logRequest(request)
         val clubs = clubService.getClubs()
@@ -28,6 +29,9 @@ class ClubWebApi(private val clubService: clubService) {
             .header("content-type", "application/json")
             .body(Json.encodeToString(clubs))
     }
+
+     */
+    /*
     fun getClubById(request: Request): Response {
         logRequest(request)
 
@@ -39,7 +43,9 @@ class ClubWebApi(private val clubService: clubService) {
         }
 
         val club = clubService.getClubById(clubId)
-        return if (club != null) {
+
+
+        return if (user != null) {
             Response(OK)
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(club))
@@ -49,4 +55,6 @@ class ClubWebApi(private val clubService: clubService) {
                 .body(Json.encodeToString(mapOf("error" to "User not found")))
         }
     }
-}*/
+
+     */
+}
