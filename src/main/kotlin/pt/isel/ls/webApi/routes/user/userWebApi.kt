@@ -1,6 +1,5 @@
 package pt.isel.ls.webApi.routes.user
 
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -12,37 +11,21 @@ import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
-import pt.isel.ls.domain.User
-import pt.isel.ls.storage.DataMem
-import pt.isel.ls.storage.DataMem.users
 import pt.isel.ls.webApi.user.UserDTO
-import pt.isel.ls.webServices.userService
-
 
 class UserWebApi(private val userService: UserServices) {
 
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
-
     fun logRequest(request: Request) {
         logger.info(
-                "incoming request: method={}, uri={}, content-type={} accept={}",
-                request.method,
-                request.uri,
-                request.header("content-type"),
-                request.header("accept"),
+            "incoming request: method={}, uri={}, content-type={} accept={}",
+            request.method,
+            request.uri,
+            request.header("content-type"),
+            request.header("accept"),
         )
     }
-
-    /*
-    fun getUsers(request: Request): Response {
-        logRequest(request)
-        val users = userService.getUsers()
-        return Response(OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(users))
-    }
-
     fun getUserById(request: Request): Response {
         logRequest(request)
 
@@ -64,9 +47,15 @@ class UserWebApi(private val userService: UserServices) {
                 .body(Json.encodeToString(mapOf("error" to "User not found")))
         }
     }
-
-     */
-
+    /*
+    fun getUsers(request: Request): Response {
+        logRequest(request)
+        val users = userService.getUsers()
+        return Response(OK)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(users))
+    }}
+    */
     fun createUser(request: Request): Response {
         logRequest(request)
         val user = Json.decodeFromString<UserDTO>(request.bodyString())
@@ -75,9 +64,7 @@ class UserWebApi(private val userService: UserServices) {
             .header("content-type", "application/json")
             .body(Json.encodeToString(createduser))
     }
-
     val app = routes(
         "users" bind Method.POST to ::createUser
     )
 }
-

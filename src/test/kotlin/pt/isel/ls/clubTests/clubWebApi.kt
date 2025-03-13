@@ -1,5 +1,5 @@
 package pt.isel.ls.clubTests
-
+/*
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
@@ -22,4 +22,4 @@ class clubWebApi {
         assertEquals(req.header("content-type"), "application/json")
         assertEquals(storage.getClubs(), Json.decodeFromString<List<Club>>(req.bodyString()))
     }
-}
+}*/

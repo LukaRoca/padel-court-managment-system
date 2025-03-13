@@ -3,29 +3,31 @@ import pt.isel.ls.domain.*
 import java.util.UUID
 
 object DataMem : IStorage {
-    val users = mutableListOf(
-        User(Id(1), Name("Michael Jackson"), Email("michael@gmail.com"))
+    // Usar mutableListOf() para permitir modificações na lista
+    private val users = mutableListOf(
+        User(Id(1), Name("Michael Jackson"), Email("michael@gmail.com")),
+        User(Id(2), Name("Luka Roca"), Email("luka@gmail.com"))
     )
 
-    private var uid = 1
+    private var uid = 2
 
-    fun createUser(name: String, email: String) : User {
+    // Função que cria um novo usuário
+    fun createUser(name: String, email: String): User {
         val token = UUID.randomUUID().toString()
-        ++uid
-        val newUser = User(Id(uid), Name(name), Email(email) )
-        users.add(newUser)
-        println("Usuário adicionado: $newUser") // DEBUG: Verificar se está a ser adicionado
-        println("Lista atual de usuários: $users") // DEBUG: Verificar o estado da lista
+        val newUser = User(Id(uid++), Name(name), Email(email))
+        users.add(newUser) // Adicionando o novo usuário à lista
+        println("Usuário adicionado: $newUser")
+        println("Lista atual de usuários: $users")
         return newUser
     }
-    /*
-    override fun getUsers(): List<User> = emptyList()
-    override fun getUserById(userId: Int): User? {
-        TODO("Not yet implemented")
 
+    // Função que encontra um usuário pelo ID
+    fun getUserById(userId: Int): User? {
+        return users.find { it.uid.id == userId }
     }
 
-     */
-
-
+    // Função para retornar a lista de usuários (mutável)
+    fun getUsers(): MutableList<User> {
+        return users
+    }
 }
