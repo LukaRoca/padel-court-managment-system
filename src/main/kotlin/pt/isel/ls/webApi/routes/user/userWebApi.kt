@@ -1,16 +1,25 @@
 package pt.isel.ls.webApi.routes.user
 
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
+import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
+import org.http4k.routing.bind
 import org.http4k.routing.path
+import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
+import pt.isel.ls.domain.User
+import pt.isel.ls.storage.DataMem
+import pt.isel.ls.storage.DataMem.users
+import pt.isel.ls.webApi.user.UserDTO
 import pt.isel.ls.webServices.userService
 
 
-class userWebApi(private val userService: userService) {
+class UserWebApi(private val userService: UserServices) {
 
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
@@ -25,6 +34,7 @@ class userWebApi(private val userService: userService) {
         )
     }
 
+    /*
     fun getUsers(request: Request): Response {
         logRequest(request)
         val users = userService.getUsers()
@@ -54,4 +64,20 @@ class userWebApi(private val userService: userService) {
                 .body(Json.encodeToString(mapOf("error" to "User not found")))
         }
     }
+
+     */
+
+    fun createUser(request: Request): Response {
+        logRequest(request)
+        val user = Json.decodeFromString<UserDTO>(request.bodyString())
+        val createduser = userService.createUser(user.name, user.email)
+        return Response(CREATED)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(createduser))
+    }
+
+    val app = routes(
+        "users" bind Method.POST to ::createUser
+    )
 }
+

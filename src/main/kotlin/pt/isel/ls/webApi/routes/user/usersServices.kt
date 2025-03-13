@@ -1,5 +1,0 @@
-package pt.isel.ls.webApi.routes.user
-
-object UserServices {
-
-}

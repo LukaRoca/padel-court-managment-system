@@ -7,7 +7,6 @@ import pt.isel.ls.domain.Name
 
 @Serializable
 data class UserDTO(
-    val id : Id,
-    val name : Name,
-    val email : Email,
+    val name : String,
+    val email : String,
 )
