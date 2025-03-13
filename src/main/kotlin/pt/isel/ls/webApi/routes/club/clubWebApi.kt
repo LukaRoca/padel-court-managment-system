@@ -21,6 +21,7 @@ class ClubWebApi(private val clubService: clubService) {
             request.header("accept"),
         )
     }
+    /*
     fun getClubs(request: Request): Response {
         logRequest(request)
         val clubs = clubService.getClubs()
@@ -28,6 +29,9 @@ class ClubWebApi(private val clubService: clubService) {
             .header("content-type", "application/json")
             .body(Json.encodeToString(clubs))
     }
+
+     */
+    /*
     fun getClubById(request: Request): Response {
         logRequest(request)
 
@@ -39,6 +43,8 @@ class ClubWebApi(private val clubService: clubService) {
         }
 
         val club = clubService.getClubById(clubId)
+
+
         return if (user != null) {
             Response(OK)
                 .header("content-type", "application/json")
@@ -49,4 +55,6 @@ class ClubWebApi(private val clubService: clubService) {
                 .body(Json.encodeToString(mapOf("error" to "User not found")))
         }
     }
+
+     */
 }

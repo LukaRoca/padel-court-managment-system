@@ -9,7 +9,7 @@ object DataMem : IStorage {
 
     private var uid = 1
 
-    fun createUser(name: String, email: String) : User {
+    override fun createUser(name: String, email: String) : User {
         val token = UUID.randomUUID().toString()
         ++uid
         val newUser = User(Id(uid), Name(name), Email(email) )
