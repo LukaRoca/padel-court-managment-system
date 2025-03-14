@@ -1,7 +1,7 @@
 package pt.isel.ls.domain
 
 data class Club(
-    val id : Int,
+    val id : Id,
     val name : Name,
     val owner : Owner,
 ) {

@@ -26,6 +26,24 @@ class UserWebApi(private val userService: UserServices) {
             request.header("accept"),
         )
     }
+    /*
+    fun getUsers(request: Request): Response {
+        logRequest(request)
+        val users = userService.getUsers()
+        return Response(OK)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(users))
+    }}
+    */
+    fun createUser(request: Request): Response {
+        logRequest(request)
+        val user = Json.decodeFromString<UserDTO>(request.bodyString())
+        val createduser = userService.createUser(user.name, user.email)
+        return Response(CREATED)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(createduser))
+    }
+
     fun getUserById(request: Request): Response {
         logRequest(request)
 
@@ -47,24 +65,11 @@ class UserWebApi(private val userService: UserServices) {
                 .body(Json.encodeToString(mapOf("error" to "User not found")))
         }
     }
-    /*
-    fun getUsers(request: Request): Response {
-        logRequest(request)
-        val users = userService.getUsers()
-        return Response(OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(users))
-    }}
-    */
-    fun createUser(request: Request): Response {
-        logRequest(request)
-        val user = Json.decodeFromString<UserDTO>(request.bodyString())
-        val createduser = userService.createUser(user.name, user.email)
-        return Response(CREATED)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(createduser))
-    }
+
+    //Rotas
     val app = routes(
-        "users" bind Method.POST to ::createUser
+        "users" bind Method.POST to ::createUser,
+        "users/{id}" bind Method.GET to ::getUserById
     )
+
 }

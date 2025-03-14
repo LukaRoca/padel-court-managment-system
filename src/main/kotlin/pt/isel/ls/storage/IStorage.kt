@@ -13,4 +13,5 @@ interface IStorage{
      */
 
     fun createUser(name: String, email: String) : User
+    fun getUserById(userId: Int): User?
 }

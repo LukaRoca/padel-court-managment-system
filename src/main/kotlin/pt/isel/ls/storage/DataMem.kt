@@ -12,7 +12,7 @@ object DataMem : IStorage {
     private var uid = 2
 
     // Função que cria um novo usuário
-    fun createUser(name: String, email: String): User {
+    override fun createUser(name: String, email: String): User {
         val token = UUID.randomUUID().toString()
         val newUser = User(Id(uid++), Name(name), Email(email))
         users.add(newUser) // Adicionando o novo usuário à lista
@@ -22,7 +22,7 @@ object DataMem : IStorage {
     }
 
     // Função que encontra um usuário pelo ID
-    fun getUserById(userId: Int): User? {
+    override fun getUserById(userId: Int): User? {
         return users.find { it.uid.id == userId }
     }
 
@@ -30,4 +30,6 @@ object DataMem : IStorage {
     fun getUsers(): MutableList<User> {
         return users
     }
+
+
 }
