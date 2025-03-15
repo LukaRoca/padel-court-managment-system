@@ -5,7 +5,7 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import pt.isel.ls.webApi.UserWebApi
-import pt.isel.ls.webApi.clubWebApi
+import pt.isel.ls.webApi.ClubWebApi
 import pt.isel.ls.webServices.ClubServices
 import pt.isel.ls.webServices.UserServices
 
@@ -18,7 +18,7 @@ fun main(){
     val clubService = ClubServices
 
     val userWebApi = UserWebApi(userService)
-    val clubWebApi = clubWebApi(clubService)
+    val clubWebApi = ClubWebApi(clubService)
 
     val appRoutes = routes(
         userWebApi.app,
