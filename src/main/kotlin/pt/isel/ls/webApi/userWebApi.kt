@@ -15,11 +15,11 @@ import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.dto.ResponseUserDto
 import pt.isel.ls.dto.UserDTO
 
-class UserWebApi(private val userService: UserServices) {
+class UserWebApi {
 
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
-    fun logRequest(request: Request) {
+    private fun logRequest(request: Request) {
         logger.info(
             "incoming request: method={}, uri={}, content-type={} accept={}",
             request.method,
@@ -29,7 +29,7 @@ class UserWebApi(private val userService: UserServices) {
         )
     }
 
-    fun getUserById(request: Request): Response {
+    private fun getUserById(request: Request): Response {
         logRequest(request)
 
         val userId = request.path("id")?.toIntOrNull()
@@ -51,7 +51,7 @@ class UserWebApi(private val userService: UserServices) {
         }
     }
 
-    fun createUser(request: Request): Response {
+    private fun createUser(request: Request): Response {
         logRequest(request)
         val user = Json.decodeFromString<UserDTO>(request.bodyString())
         val (userId, token) = UserServices.createUser(user.name, user.email)

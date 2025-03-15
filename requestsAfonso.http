@@ -1,0 +1,22 @@
+GET http://localhost:8081/users/1
+
+###
+GET http://localhost:8081/students
+Accept: application/json
+
+###
+GET http://localhost:8081/students/20
+Accept: application/json
+
+###
+POST http://localhost:8081/users
+Content-Type: application/json
+
+{
+  "name": "Pedro Pereira",
+  "email": "pp@gmail.com"
+}
+
+###
+GET http://localhost:8081/users/4
+Accept: application/json
