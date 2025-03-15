@@ -9,5 +9,5 @@ data class ClubDTO(
 
 @Serializable
 data class ResponseClubDto(
-    val cid : Int
+    val cid : Int,
 )

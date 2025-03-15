@@ -1,5 +1,8 @@
 package pt.isel.ls.domain
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Court(
     val id : Id,
     val name : Name,

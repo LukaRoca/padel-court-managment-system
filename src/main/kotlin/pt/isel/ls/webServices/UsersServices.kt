@@ -13,5 +13,9 @@ object UserServices {
         return DataMem.createUser(name,email)
     }
 
+    fun getUserByToken(token: String): User? {
+        return DataMem.getUserByToken(token)
+    }
+
 
 }

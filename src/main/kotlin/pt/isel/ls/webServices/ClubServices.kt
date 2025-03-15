@@ -9,5 +9,10 @@ object ClubServices {
         val user = DataMem.getUserByToken(token) ?: return null
         return DataMem.createClub(name, user)
     }
+    fun getClubById(id: Int): Club? {
+        TODO()
+    }
+
+
 
 }
