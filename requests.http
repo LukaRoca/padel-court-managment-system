@@ -16,3 +16,12 @@ Content-Type: application/json
     "name": "Pedro Pereira",
     "email": "pp@gmail.com"
 }
+
+###
+POST http://localhost:8080/clubs
+Authorization: Bearer 676e53c1-5558-402d-8da6-7a2e469e5a07
+Content-Type: application/json
+
+{
+    "name": "Padel Club Lisboa"
+}
