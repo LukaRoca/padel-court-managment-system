@@ -18,9 +18,11 @@ object DataMem : IStorage {
 
     override fun createUser(name: String, email: String): Pair<Int, String> {
         val token = UUID.randomUUID().toString()
-        val newUser = User(Id(uid++), Name(name), Email(email))
+        val newUser = User(Id(uid), Name(name), Email(email))
+        uid++
         users.put(newUser,token)
-        return Pair(uid,token)
+        println(users)
+        return Pair(newUser.uid.id,token)
     }
 
     // Função que encontra um usuário pelo ID
