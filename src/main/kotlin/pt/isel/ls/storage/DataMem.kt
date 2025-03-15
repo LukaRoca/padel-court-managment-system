@@ -11,21 +11,32 @@ object DataMem : IStorage {
     private var uid = 2
     private var cid = 2
     private var rid = 2
+    private var crid = 2
 
     private val clubs = mutableListOf(
         Club(Id(1), Name("Padel N"), Owner(User(Id(1), Name("Michael Jackson"), Email("michael@gmail.com"))))
     )
 
     private val rentals = mutableListOf<Rental>()
-    private val courts = mutableListOf<Court>()
+    private val courts = mutableListOf(
+        Court(Id(1), Name("Padel Court 1"), Club(Id(1), Name("Padel N"), Owner(User(Id(1), Name("Michael Jackson"), Email("michael@gmail.com"))))))
 
 
     override fun getClubById(cid: Int): Club? {
         return clubs.find { it.id.id == cid }
     }
 
-    override fun getCourtById(crid: Int): Court? {
+    override fun createCourt(name: String, cid: Int): Court {
+        val club = clubs.find { it.id.id == cid } ?: throw IllegalArgumentException("Club not found")
+        val newCourt = Court(Id(crid++), Name(name), club)
+        courts.add(newCourt)
+        return newCourt
+    }
+    override fun getCourt(crid: Int): Court? {
         return courts.find { it.id.id == crid }
+    }
+    override fun getCourtByClub(club: Club): List<Court> {
+        return courts.filter { it.club.id.id == club.id.id }
     }
 
     // Função que encontra um usuário pelo ID
@@ -57,13 +68,16 @@ object DataMem : IStorage {
     }
 
     override fun createRental(cid: Int, crid: Int, date: String, duration: Int): Rental? {
-        val club = getClubById(cid) ?: return null
+        /*val club = getClubById(cid) ?: return null
         val court = getCourtById(crid) ?: return null
-        //val newRental = Rental(rid++, Date(date), Duration(duration), User(), court)
+        val newRental = Rental(rid++, Date(date), Duration(duration), User(), court)
         rentals.add(newRental)
         return newRental
-
+*/
+        TODO()
     }
+
+
 
 
 }

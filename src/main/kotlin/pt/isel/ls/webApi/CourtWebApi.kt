@@ -18,7 +18,7 @@ import pt.isel.ls.webServices.ClubServices
 import pt.isel.ls.webServices.CourtServices
 import pt.isel.ls.webServices.UserServices
 
-class CourtWebApi {
+class CourtWebApi( private val courtServices: CourtServices){
 
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
@@ -42,7 +42,7 @@ class CourtWebApi {
         }
         val courtDto = Json.decodeFromString<CourtDTO>(request.bodyString())
         return try {
-            val court = CourtServices.createCourt(courtDto.name, Id(courtDto.id)) // Apenas chamamos o Service
+            val court = courtServices.createCourt(courtDto.name, Id(courtDto.id)) // Apenas chamamos o Service
             Response(CREATED)
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(ResponseCourtDto(court.id.id)))
@@ -59,7 +59,7 @@ class CourtWebApi {
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
 
-        val court = CourtServices.getCourt(crid)
+        val court = courtServices.getCourt(crid)
         return if (court != null) {
             Response(OK)
                 .header("content-type", "application/json")

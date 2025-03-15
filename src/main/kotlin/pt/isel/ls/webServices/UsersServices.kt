@@ -11,4 +11,10 @@ object UserServices {
     fun createUser(name: String, email: String): Pair<Int, String> {
         return DataMem.createUser(name,email)
     }
+
+    fun getUserByToken(token: String): User? {
+        return DataMem.getUserByToken(token)
+    }
+
+
 }

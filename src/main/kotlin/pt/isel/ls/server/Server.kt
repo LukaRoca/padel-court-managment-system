@@ -6,8 +6,10 @@ import org.http4k.server.asServer
 import org.slf4j.LoggerFactory
 import pt.isel.ls.webApi.UserWebApi
 import pt.isel.ls.webApi.ClubWebApi
+import pt.isel.ls.webApi.CourtWebApi
 import pt.isel.ls.webApi.RentalWebApi
 import pt.isel.ls.webServices.ClubServices
+import pt.isel.ls.webServices.CourtServices
 import pt.isel.ls.webServices.RentalServices
 import pt.isel.ls.webServices.UserServices
 
@@ -19,22 +21,27 @@ fun main(){
     val userService = UserServices
     val clubService = ClubServices
     val rentalService = RentalServices
+    val courtService = CourtServices
 
     val userWebApi = UserWebApi(userService)
     val clubWebApi = ClubWebApi(clubService)
     val rentalWebApi = RentalWebApi(rentalService)
+    val courtWebApi = CourtWebApi(courtService)
 
     val appRoutes = routes(
         userWebApi.app,
         clubWebApi.appClubs,
-        rentalWebApi.appRental
+        rentalWebApi.appRental,
+        courtWebApi.appCourts
     )
 
-    val jettyServer = appRoutes.asServer(Jetty(8080)).start()
+    val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()
+    //val jettyServer = appRoutes.asServer(Jetty(8080)).start()
     logger.info("server started")
 
     readln()
-    jettyServer.stop()
+    //jettyServer.stop()
+    jettyServerLuka.stop()
     logger.info("server stopped")
 
 }

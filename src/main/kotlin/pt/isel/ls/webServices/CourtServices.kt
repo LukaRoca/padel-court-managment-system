@@ -6,13 +6,13 @@ import pt.isel.ls.storage.DataMem
 object CourtServices {
 
     fun createCourt(name : String, id : Id) : Court {
-        return DataMem.createCourt(name, id)
+        return DataMem.createCourt(name, id.id)
     }
     fun getCourt(id : Int ) : Court? {
         return DataMem.getCourt(id)
     }
     fun getCourtsByClub(club : Club) : List<Court> {
-        return DataMem.getCourtsByClub(club)
+        return DataMem.getCourtByClub(club)
     }
 
 }

@@ -30,5 +30,9 @@ Authorization: Bearer 42449fc7-0006-458d-b4dc-324d5583f634
   "id" : 1
 }
 
+###
+GET http://localhost:8082/clubs/1/courts
+Accept: application/json
+
 
 
