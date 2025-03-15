@@ -30,7 +30,7 @@ fun main(){
         rentalWebApi.appRental
     )
 
-    val jettyServer = appRoutes.asServer(Jetty(8081)).start()
+    val jettyServer = appRoutes.asServer(Jetty(8080)).start()
     logger.info("server started")
 
     readln()
