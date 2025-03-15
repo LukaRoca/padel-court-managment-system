@@ -1,6 +1,8 @@
 package pt.isel.ls.storage
 
 import pt.isel.ls.domain.Club
+import pt.isel.ls.domain.Court
+import pt.isel.ls.domain.Rental
 import pt.isel.ls.domain.User
 
 interface IStorage{
@@ -10,4 +12,6 @@ interface IStorage{
     fun createClub(name: String, user: User) : Club
     fun getClubById(cid: Int): Club?
     fun getClubs(): List<Club>
+    fun createRental(cid: Int, crid: Int, date: String, duration: Int): Rental?
+    fun getCourtById(crid: Int): Court?
 }

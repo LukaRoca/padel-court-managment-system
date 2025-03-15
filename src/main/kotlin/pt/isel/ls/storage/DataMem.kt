@@ -20,11 +20,11 @@ object DataMem : IStorage {
     private val courts = mutableListOf<Court>()
 
 
-    private fun getClubById(cid: Int): Club? {
+    override fun getClubById(cid: Int): Club? {
         return clubs.find { it.id.id == cid }
     }
 
-    private fun getCourtById(crid: Int): Court? {
+    override fun getCourtById(crid: Int): Court? {
         return courts.find { it.id.id == crid }
     }
 
@@ -52,7 +52,11 @@ object DataMem : IStorage {
         return newClub
     }
 
-    fun createRental(cid: Int, crid: Int, date: String, duration: Int): Rental? {
+    override fun getClubs(): List<Club> {
+        TODO()
+    }
+
+    override fun createRental(cid: Int, crid: Int, date: String, duration: Int): Rental? {
         val club = getClubById(cid) ?: return null
         val court = getCourtById(crid) ?: return null
         //val newRental = Rental(rid++, Date(date), Duration(duration), User(), court)
