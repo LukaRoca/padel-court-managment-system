@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class Name (val name : String)
 
 @Serializable
-data class Owner (val name : Name)
+data class Owner (val user : User)
 
 @Serializable
 data class Email(val value: String) {

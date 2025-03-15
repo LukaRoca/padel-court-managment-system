@@ -1,4 +1,4 @@
-package pt.isel.ls.webApi.routes.user
+package pt.isel.ls.webApi
 
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
@@ -11,7 +11,9 @@ import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
-import pt.isel.ls.webApi.user.UserDTO
+import pt.isel.ls.webServices.UserServices
+import pt.isel.ls.dto.ResponseUserDto
+import pt.isel.ls.dto.UserDTO
 
 class UserWebApi(private val userService: UserServices) {
 
@@ -26,23 +28,6 @@ class UserWebApi(private val userService: UserServices) {
             request.header("accept"),
         )
     }
-    /*
-    fun getUsers(request: Request): Response {
-        logRequest(request)
-        val users = userService.getUsers()
-        return Response(OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(users))
-    }}
-    */
-    fun createUser(request: Request): Response {
-        logRequest(request)
-        val user = Json.decodeFromString<UserDTO>(request.bodyString())
-        val createduser = userService.createUser(user.name, user.email)
-        return Response(CREATED)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(createduser))
-    }
 
     fun getUserById(request: Request): Response {
         logRequest(request)
@@ -54,7 +39,7 @@ class UserWebApi(private val userService: UserServices) {
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
         }
 
-        val user = userService.getUserById(userId)
+        val user = UserServices.getUserById(userId)
         return if (user != null) {
             Response(OK)
                 .header("content-type", "application/json")
@@ -64,6 +49,15 @@ class UserWebApi(private val userService: UserServices) {
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "User not found")))
         }
+    }
+
+    fun createUser(request: Request): Response {
+        logRequest(request)
+        val user = Json.decodeFromString<UserDTO>(request.bodyString())
+        val (userId, token) = UserServices.createUser(user.name, user.email)
+        return Response(CREATED)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(ResponseUserDto(userId, token)))
     }
 
     //Rotas

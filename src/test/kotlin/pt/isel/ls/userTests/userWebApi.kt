@@ -9,7 +9,7 @@ import org.http4k.core.Status
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.Serializable
 import org.http4k.core.Method.GET
-import pt.isel.ls.webApi.routes.user.UserServices
+import pt.isel.ls.webServices.UserServices
 
 @Serializable
 data class UserDTO(val name: String, val email: String)

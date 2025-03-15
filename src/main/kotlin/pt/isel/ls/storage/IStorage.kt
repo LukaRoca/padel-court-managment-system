@@ -12,6 +12,8 @@ interface IStorage{
 
      */
 
-    fun createUser(name: String, email: String) : User
+    fun createUser(name: String, email: String) : Pair<Int, String>
     fun getUserById(userId: Int): User?
+    fun getUserByToken(token: String): User?
+    fun createClub(name: String, user: User) : Club
 }
