@@ -2,21 +2,16 @@ package pt.isel.ls.storage
 
 import pt.isel.ls.domain.Club
 import pt.isel.ls.domain.Court
-import pt.isel.ls.domain.Id
+import pt.isel.ls.domain.Rental
 import pt.isel.ls.domain.User
 
 interface IStorage{
-    /*
-    fun getUsers(): List<User>
-    fun getUserById(userId: Int): User?
-    fun getClubs() : List<Club>
-    fun getClubById(clubId: Int) : Club?
-
-     */
-
     fun createUser(name: String, email: String) : Pair<Int, String>
     fun getUserById(userId: Int): User?
     fun getUserByToken(token: String): User?
     fun createClub(name: String, user: User) : Club
-    fun createCourt(name: String, id: Id) : Court
+    fun getClubById(cid: Int): Club?
+    fun getClubs(): List<Club>
+    fun createRental(cid: Int, crid: Int, date: String, duration: Int): Rental?
+    fun getCourtById(crid: Int): Court?
 }

@@ -23,3 +23,7 @@ data class Id (val id : Int){
             throw IllegalArgumentException("Id must be positive and non-zero")
     }
 }
+
+data class Date (val date : String)
+
+data class Duration (val hours : Int)

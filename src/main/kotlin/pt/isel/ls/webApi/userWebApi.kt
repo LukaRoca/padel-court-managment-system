@@ -15,7 +15,7 @@ import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.dto.ResponseUserDto
 import pt.isel.ls.dto.UserDTO
 
-class UserWebApi {
+class UserWebApi(private val userServices: UserServices) {
 
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
