@@ -40,5 +40,11 @@ object DataMem : IStorage {
         return newClub
     }
 
+    override fun getClubById(cid: Int): Club? {
+        return clubs.find { it.id.id == cid }
+    }
 
+    override fun getClubs(): List<Club> {
+        return clubs
+    }
 }

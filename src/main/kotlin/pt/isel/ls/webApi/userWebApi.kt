@@ -14,8 +14,9 @@ import org.slf4j.LoggerFactory
 import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.dto.ResponseUserDto
 import pt.isel.ls.dto.UserDTO
+import pt.isel.ls.webServices.ClubServices
 
-class UserWebApi {
+class UserWebApi (private val userServices: UserServices ) {
 
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 

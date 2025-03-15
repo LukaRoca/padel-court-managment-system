@@ -1,18 +1,28 @@
 GET http://localhost:8080/users/1
 
 ###
-GET http://localhost:8080/students
+GET http://localhost:8080/clubs/1
 Accept: application/json
 
 ###
-GET http://localhost:8080/students/20
+GET http://localhost:8080/clubs
 Accept: application/json
+
+###
+POST http://localhost:8080/club
+Authorization: Bearer b9cefee5-e848-40d3-834f-450687a3cca0
+Content-Type: application/json
+
+{
+  "name": "Padel N"
+}
 
 ###
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-    "name": "Pedro Pereira",
-    "email": "pp@gmail.com"
+    "name": "Bernardo Jaco",
+    "email": "bjaco@gmail.com"
 }
+

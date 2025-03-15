@@ -1,17 +1,22 @@
 package pt.isel.ls.webApi
 
 import kotlinx.serialization.json.Json
+import org.eclipse.jetty.websocket.core.CoreSession.Empty
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
+import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
+import pt.isel.ls.domain.Club
 import pt.isel.ls.dto.ClubDTO
 import pt.isel.ls.dto.ResponseClubDto
 import pt.isel.ls.webServices.ClubServices
+import pt.isel.ls.webServices.UserServices
 
 class ClubWebApi(private val clubServices: ClubServices) {
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.club.ClubsRoute")
@@ -43,7 +48,45 @@ class ClubWebApi(private val clubServices: ClubServices) {
 
     }
 
+    private fun getClubById(request: Request): Response {
+        logRequest(request)
+        val clubId = request.path("id")?.toIntOrNull()
+        if (clubId == null) {
+            return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
+        }
+
+        val club = ClubServices.getClubById(clubId)
+        return if (club != null) {
+            Response(OK)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(club))
+        } else {
+            Response(Status.NOT_FOUND)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "User not found")))
+        }
+    }
+
+    private fun getClubs(request: Request): Response {
+        logRequest(request)
+        val clubs = clubServices.getClubs()
+        return if (clubs is Empty) {
+            Response(Status.NOT_FOUND)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "List is Empty")))
+        } else {
+            Response(OK)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(clubs))
+        }
+    }
+
     val appClubs = routes(
-        "clubs" bind Method.POST to ::createClub,
+        "club" bind Method.POST to ::createClub,
+        "clubs/{id}" bind Method.GET to ::getClubById,
+        "clubs" bind Method.GET to ::getClubs,
+
     )
 }
