@@ -10,4 +10,9 @@ object RentalServices {
 
     }
 
+    fun getRentalById(rentalId: Int): Rental? {
+        return DataMem.getRentalById(rentalId)
+
+    }
+
 }

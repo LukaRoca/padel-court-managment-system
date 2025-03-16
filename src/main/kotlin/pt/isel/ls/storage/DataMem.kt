@@ -75,7 +75,9 @@ object DataMem : IStorage {
         return newRental
     }
 
-
+    override fun getRentalById(rentalId: Int): Rental? {
+        return rentals.find { it.rid.id == rentalId }
+    }
 
 
 }

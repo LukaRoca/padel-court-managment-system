@@ -13,4 +13,5 @@ interface IStorage{
     fun getCourtByClub(club: Club): List<Court>
     fun createCourt(name: String, cid: Int): Court
     fun getCourt(id : Int ) : Court?
+    fun getRentalById(rentalId: Int): Rental?
 }

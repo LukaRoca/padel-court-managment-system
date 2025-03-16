@@ -24,19 +24,20 @@ Accept: application/json
 
 
 
+#create a new user -> create a new club -> create a new court -> create a new rental -> get the rental
 
 ###
 POST http://localhost:8081/users
 Content-Type: application/json
 
 {
-    "name": "Afonso Santos",
+    "name": "Afonso Vela",
     "email": "afonso@gmail.com"
 }
 
 ###
 POST http://localhost:8081/club
-Authorization: Bearer 3403bcbc-6981-46e8-b81b-81d23f200d6a
+Authorization: Bearer 5a1d4881-59f6-4910-aea0-031de3fd6124
 Content-Type: application/json
 
 {
@@ -47,16 +48,16 @@ Content-Type: application/json
 ###
 POST http://localhost:8081/courts
 Content-Type: application/json
-Authorization: Bearer 3403bcbc-6981-46e8-b81b-81d23f200d6a
+Authorization: Bearer 5a1d4881-59f6-4910-aea0-031de3fd6124
 
 {
-  "name": "Padel Court 1",
-  "id" : 1
+  "name": "Padel Court 2",
+  "id" : 2
 }
 
 ###
 POST http://localhost:8081/rental
-Authorization: Bearer 3403bcbc-6981-46e8-b81b-81d23f200d6a
+Authorization: Bearer 5a1d4881-59f6-4910-aea0-031de3fd6124
 Content-Type: application/json
 
 {
@@ -67,3 +68,5 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:8081/rental/2
+Content-Type: application/json

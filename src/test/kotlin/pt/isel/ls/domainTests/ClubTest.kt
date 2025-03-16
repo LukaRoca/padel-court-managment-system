@@ -8,21 +8,21 @@ class ClubTest {
     @Test
     fun `club creation with valid name`() {
         val name = Name("PadelClub")
-        val owner = Owner(Name("Luka Roca"))
-        val club = Club(1, name, owner)
+        val owner = Owner(User(Id(1), Name("Luka Roca"), Email("123@gmail.com")))
+        val club = Club(Id(1), name, owner)
 
-        assertEquals(1, club.id)
+        assertEquals(1, club.id.id)
         assertEquals("PadelClub", club.name.name)
-        assertEquals("Luka Roca", club.owner.name.name)
+        assertEquals("Luka Roca", club.owner.user.name.name)
     }
 
     @Test
     fun `club creation with empty name should fail`() {
         val name = Name("")
-        val owner = Owner(Name("Luka Roca"))
+        val owner = Owner(User(Id(1), Name("Luka Roca"), Email("123@gmail.com")))
 
         assertFailsWith<IllegalArgumentException> {
-            Club(1, name, owner)
+            Club(Id(1), name, owner)
         }
     }
 }

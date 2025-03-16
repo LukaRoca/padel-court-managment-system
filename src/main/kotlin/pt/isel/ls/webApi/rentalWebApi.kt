@@ -7,6 +7,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.routing.bind
+import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Date
@@ -45,7 +46,28 @@ class RentalWebApi(private val rentalServices: RentalServices) {
             )
     }
 
+    private fun getRentalById(request: Request): Response {
+        logRequest(request)
+
+        val rentalId = request.path("id")?.toIntOrNull()
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid rental ID")))
+
+        val rental = rentalServices.getRentalById(rentalId)
+        return if (rental != null) {
+            Response(Status.OK)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(rental))
+        } else {
+            Response(Status.NOT_FOUND)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Rental not found")))
+        }
+    }
+
     val appRental = routes(
         "rental" bind Method.POST to ::createRental,
+        "/rental/{id}" bind Method.GET to ::getRentalById
     )
 }

@@ -24,6 +24,8 @@ data class Id (val id : Int){
     }
 }
 
+@Serializable
 data class Date (val date : String)
 
+@Serializable
 data class Duration (val hours : Int)

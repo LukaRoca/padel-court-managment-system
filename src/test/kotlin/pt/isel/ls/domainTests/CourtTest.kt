@@ -12,15 +12,15 @@ class CourtTest {
             name = Name("Tubarao"),
             club = Club(
                 name = Name("PadelClub"),
-                id = 1,
-                owner = Owner(Name("Luka Roca"))
+                id = Id(1),
+                owner = Owner(User(Id(1), Name("Luka Roca"), Email("123@gmail.com")))
             )
         )
 
         assertEquals(1, court.id.id)
         assertEquals("Tubarao", court.name.name)
         assertEquals("PadelClub", court.club.name.name)
-        assertEquals("Luka Roca", court.club.owner.name.name)
+        assertEquals("Luka Roca", court.club.owner.user.name.name)
     }
 
     @Test
@@ -31,8 +31,8 @@ class CourtTest {
                 name = Name(""),
                 club = Club(
                     name = Name("PadelClub"),
-                    id = 1,
-                    owner = Owner(Name("Luka Roca"))
+                    id = Id(1),
+                    owner = Owner(User(Id(1), Name("Luka Roca"), Email("123@gmail.com")))
                 )
             )
         }
@@ -47,8 +47,8 @@ class CourtTest {
                 name = Name("Luka Roca"),
                 club = Club(
                     name = Name(""),
-                    id = 1,
-                    owner = Owner(Name("Luka Roca"))
+                    id = Id(1),
+                    owner = Owner(User(Id(1), Name("Luka Roca"), Email("123@gmail.com")))
                 )
             )
         }
