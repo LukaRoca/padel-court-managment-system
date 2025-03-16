@@ -1,17 +1,10 @@
 package pt.isel.ls.server
 
 import org.http4k.routing.routes
-import org.http4k.server.Jetty
-import org.http4k.server.asServer
+import org.http4k.server.*
 import org.slf4j.LoggerFactory
-import pt.isel.ls.webApi.UserWebApi
-import pt.isel.ls.webApi.ClubWebApi
-import pt.isel.ls.webApi.CourtWebApi
-import pt.isel.ls.webApi.RentalWebApi
-import pt.isel.ls.webServices.ClubServices
-import pt.isel.ls.webServices.CourtServices
-import pt.isel.ls.webServices.RentalServices
-import pt.isel.ls.webServices.UserServices
+import pt.isel.ls.webApi.*
+import pt.isel.ls.webServices.*
 
 
 private val logger = LoggerFactory.getLogger("HTTPServer")

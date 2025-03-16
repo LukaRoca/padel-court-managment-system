@@ -31,7 +31,7 @@ class CourtWebApi( private val courtServices: CourtServices){
             request.header("accept"),
         )
     }
-    private fun createCourt(request: Request): Response {
+    fun createCourt(request: Request): Response {
         logRequest(request)
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: return Response(Status.UNAUTHORIZED)
