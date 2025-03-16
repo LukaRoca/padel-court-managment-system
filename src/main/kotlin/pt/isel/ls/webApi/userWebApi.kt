@@ -51,7 +51,7 @@ class UserWebApi(private val userServices: UserServices) {
         }
     }
 
-    private fun createUser(request: Request): Response {
+    fun createUser(request: Request): Response {
         logRequest(request)
         val user = Json.decodeFromString<UserDTO>(request.bodyString())
         val (userId, token) = UserServices.createUser(user.name, user.email)

@@ -1,25 +1,56 @@
 package pt.isel.ls.clubTests
-/*
+
 import kotlinx.serialization.json.Json
-import org.http4k.core.Method.GET
+import org.http4k.core.Method
 import org.http4k.core.Request
-import org.http4k.core.Status
+import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.OK
 import pt.isel.ls.domain.Club
-import pt.isel.ls.storage.DataMem
-import pt.isel.ls.storage.IStorage
+import pt.isel.ls.dto.ClubDTO
+import pt.isel.ls.dto.ResponseClubDto
+import pt.isel.ls.webApi.ClubWebApi
+import pt.isel.ls.webServices.ClubServices
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class clubWebApi {
-
-    val storage: IStorage = DataMem
-    //val client = okHttp()
+class ClubWebApiTests {
+    private val clubWebApi = ClubWebApi(ClubServices)
 
     @Test
-    fun `get users`() {
-        val req = client(Request(GET, "/clubs"))
-        assertEquals(Status.OK, req.status)
-        assertEquals(req.header("content-type"), "application/json")
-        assertEquals(storage.getClubs(), Json.decodeFromString<List<Club>>(req.bodyString()))
+    fun `should create club successfully`() {
+        val clubDto = ClubDTO(name = "Club 1")
+        val request = Request(Method.POST, "/club")
+            .header("Authorization", "Bearer 42449fc7-0006-458d-b4dc-324d5583f634")
+            .body(Json.encodeToString(clubDto))
+        val response = clubWebApi.appClubs(request)
+        assertEquals(CREATED, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        val responseBody = response.bodyString()
+        val actualResponse = Json.decodeFromString<ResponseClubDto>(responseBody)
+        assertTrue(actualResponse.cid > 0)
     }
-}*/
+
+    @Test
+    fun `should return NOT_FOUND for a non-existent club ID`() {
+        val request = Request(Method.GET, "/clubs/0")
+        val response = clubWebApi.appClubs(request)
+        assertEquals(NOT_FOUND, response.status)
+        assertEquals(
+            "{\"error\":\"User not found\"}",
+            response.bodyString()
+        )
+    }
+
+    @Test
+    fun `should return OK if clubs exist`() {
+        val request = Request(Method.GET, "/clubs")
+        val response = clubWebApi.appClubs(request)
+        assertEquals(OK, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        val responseBody = response.bodyString()
+        val clubs: List<Club> = Json.decodeFromString(responseBody)
+        assertTrue(clubs.isNotEmpty(), "There should be at least one club")
+    }
+}

@@ -64,7 +64,7 @@ object DataMem : IStorage {
     }
 
     override fun getClubs(): List<Club> {
-        TODO()
+        return clubs
     }
 
     override fun createRental(cid: Int, crid: Int, date: Date, duration: Int, token: String): Rental? {
