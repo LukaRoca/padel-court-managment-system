@@ -9,6 +9,8 @@ import org.http4k.core.Status
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.Serializable
 import org.http4k.core.Method.GET
+import org.http4k.core.Status.Companion.CREATED
+import pt.isel.ls.dto.ResponseUserDto
 import pt.isel.ls.webServices.UserServices
 
 @Serializable
@@ -26,15 +28,11 @@ class UserWebApiTests {
 
     private fun createUser(request: Request): Response {
         logRequest(request)
-        val user = Json.decodeFromString<UserDTO>(request.bodyString())
-        val createdUser = UserServices.createUser(user.name, user.email)
-        val responseUser = mapOf(
-            "name" to createdUser.user.name,
-            "email" to createdUser.email.value
-        )
-        return Response(Status.CREATED)
+        val user = Json.decodeFromString<pt.isel.ls.dto.UserDTO>(request.bodyString())
+        val (userId, token) = UserServices.createUser(user.name, user.email)
+        return Response(CREATED)
             .header("content-type", "application/json")
-            .body(Json.encodeToString(responseUser))
+            .body(Json.encodeToString(ResponseUserDto(userId, token)))
     }
 
     @Test
@@ -82,34 +80,35 @@ class UserWebApiTests {
         assertEquals(Json.encodeToString(expectedUser), response.bodyString())
     }
 
-    private fun getUsers(request: Request): Response {
-        logRequest(request)
-        val users = UserServices.getUsers()
-        val userResponses = users.map {
-            UserResponse(
-                id = it.uid.id,
-                user = it.user.name,
-                email = it.email.value
-            )
+    /*
+        private fun getUsers(request: Request): Response {
+            logRequest(request)
+            val users = UserServices.getUsers()
+            val userResponses = users.map {
+                UserResponse(
+                    id = it.uid.id,
+                    user = it.user.name,
+                    email = it.email.value
+                )
+            }
+            return Response(Status.OK)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(userResponses))
         }
-        return Response(Status.OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(userResponses))
-    }
-/*
-    @Test
-    fun `should get all users`() {
-        val users = listOf(
-            UserResponse(1, "Michael Jackson", "michael@gmail.com"),
-            UserResponse(2, "Luka Roca", "luka@gmail.com") // Adicione outro usuário para garantir que estamos lidando com uma lista
-        )
-        val response = getUsers(Request(GET, "/users"))
 
-        assertEquals(Status.OK, response.status)
-        assertEquals("application/json", response.header("content-type"))
-        assertEquals(Json.encodeToString(users), response.bodyString())
-    }
-*/
+            @Test
+            fun `should get all users`() {
+                val users = listOf(
+                    UserResponse(1, "Michael Jackson", "michael@gmail.com"),
+                    UserResponse(2, "Luka Roca", "luka@gmail.com") // Adicione outro usuário para garantir que estamos lidando com uma lista
+                )
+                val response = getUsers(Request(GET, "/users"))
+
+                assertEquals(Status.OK, response.status)
+                assertEquals("application/json", response.header("content-type"))
+                assertEquals(Json.encodeToString(users), response.bodyString())
+            }
+        */
 }
 
 /*

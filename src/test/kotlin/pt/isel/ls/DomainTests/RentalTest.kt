@@ -9,48 +9,48 @@ class RentalTest {
 
     @Test
     fun `Rental is correct`(){
-        val rental = Rental(Number(2),
-            Date(2004, 4, 5),
+        val rental = Rental(Id(2),
+            Date("2004-4-5"),
             Duration(2),
             User(Id(10), Name("Jaco"), Email("bjaco@gmail.com")),
-            Court(Id(1), Name("Luz"), Owner(Name("Luis")) ))
-        assertEquals(2, rental.rid.rid)
-        assertEquals(2004, rental.date.year)
+            Court(Id(1), Name("Luz"), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luka Roca"), Email("123@gmail.com"))))))
+        assertEquals(2, rental.rid.id)
+        assertEquals(Date("2004-4-5"), rental.date)
         assertEquals(2, rental.duration.hours)
-        assertEquals(10, rental.user.id.id)
+        assertEquals(Id(10), rental.user.uid)
         assertEquals("Luz", rental.court.name.name)
     }
 
     @Test
     fun `Rental Duration not Valid`(){
         assertFailsWith<IllegalArgumentException> {
-            Rental(Number(2),
-                Date(2004, 4, 5),
+            Rental(Id(2),
+                Date("2004-04-05"),
                 Duration(-4),
                 User(Id(10), Name("Jaco"), Email("bjaco@gmail.com")),
-                Court(Id(1), Name("Luz"), Owner(Name("Luis")) ))
+                Court(Id(1), Name("Luz"), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luis"), Email("luis@gmail.com"))))))
         }
     }
 
     @Test
     fun `Rental Date not Valid`(){
         assertFailsWith<IllegalArgumentException> {
-            Rental(Number(2),
-                Date(0, 0, 0),
+            Rental(Id(2),
+                Date("0000-00-00"),
                 Duration(4),
                 User(Id(10), Name("Jaco"), Email("bjaco@gmail.com")),
-                Court(Id(1), Name("Luz"), Owner(Name("Luis")) ))
+                Court(Id(1), Name("Luz"), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luis"), Email("luis@gmail.com"))))))
         }
     }
 
     @Test
     fun `Court name not Valid`(){
         assertFailsWith<IllegalArgumentException> {
-            Rental(Number(2),
-                Date(0, 0, 0),
+            Rental(Id(2),
+                Date("0000-00-00"),
                 Duration(4),
                 User(Id(10), Name("Jaco"), Email("bjaco@gmail.com")),
-                Court(Id(1), Name(""), Owner(Name("Luis")) ))
+                Court(Id(1), Name(""), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luis"), Email("luis@gmail.com"))))))
         }
     }
 }

@@ -41,7 +41,7 @@ class RentalWebApi(private val rentalServices: RentalServices) {
                 .body(Json.encodeToString(mapOf("error" to "Invalid rental")))
         return Response(CREATED)
             .header("content-type", "application/json")
-            .body(Json.encodeToString(ResponseRentalDto(rental.rid.id,token))
+            .body(Json.encodeToString(ResponseRentalDto(rental.rid.id))
             )
     }
 
