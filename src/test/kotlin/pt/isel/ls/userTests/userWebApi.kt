@@ -55,7 +55,7 @@ class UserWebApiTests {
         val responseUser = getUserByID?.let {
             UserResponse(
                 id = it.uid.id,
-                user = it.user.name,
+                user = it.name.name,
                 email = it.email.value
             )
         }

@@ -9,7 +9,7 @@ interface IStorage{
     fun createClub(name: String, user: User) : Club
     fun getClubById(cid: Int): Club?
     fun getClubs(): List<Club>
-    fun createRental(cid: Int, crid: Int, date: String, duration: Int): Rental?
+    fun createRental(cid: Int, crid: Int, date: Date, duration: Int, token: String): Rental?
     fun getCourtByClub(club: Club): List<Court>
     fun createCourt(name: String, cid: Int): Court
     fun getCourt(id : Int ) : Court?

@@ -20,3 +20,50 @@ Content-Type: application/json
 ###
 GET http://localhost:8081/users/2
 Accept: application/json
+
+
+
+
+
+###
+POST http://localhost:8081/users
+Content-Type: application/json
+
+{
+    "name": "Afonso Santos",
+    "email": "afonso@gmail.com"
+}
+
+###
+POST http://localhost:8081/club
+Authorization: Bearer 3403bcbc-6981-46e8-b81b-81d23f200d6a
+Content-Type: application/json
+
+{
+"name": "Fly Padel"
+}
+
+
+###
+POST http://localhost:8081/courts
+Content-Type: application/json
+Authorization: Bearer 3403bcbc-6981-46e8-b81b-81d23f200d6a
+
+{
+  "name": "Padel Court 1",
+  "id" : 1
+}
+
+###
+POST http://localhost:8081/rental
+Authorization: Bearer 3403bcbc-6981-46e8-b81b-81d23f200d6a
+Content-Type: application/json
+
+{
+  "cid": 2,
+  "crid": 2,
+  "date": "2021-06-01",
+  "duration": 2
+}
+
+###

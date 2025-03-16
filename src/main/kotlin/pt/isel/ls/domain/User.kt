@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    val uid : Id ,
-    val user : Name,
+    val uid : Id,
+    val name : Name,
     val email : Email,
 ){
     init {
-        require(user.name.isNotBlank()) { "User must have a name" }
+        require(name.name.isNotBlank()) { "User must have a name" }
     }
 }

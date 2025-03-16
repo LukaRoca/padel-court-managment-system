@@ -67,14 +67,12 @@ object DataMem : IStorage {
         TODO()
     }
 
-    override fun createRental(cid: Int, crid: Int, date: String, duration: Int): Rental? {
-        /*val club = getClubById(cid) ?: return null
-        val court = getCourtById(crid) ?: return null
-        val newRental = Rental(rid++, Date(date), Duration(duration), User(), court)
+    override fun createRental(cid: Int, crid: Int, date: Date, duration: Int, token: String): Rental? {
+        val court = getCourt(crid) ?: return null
+        val user = getUserById(cid) ?: return null
+        val newRental = Rental(Id(rid++), date, Duration(duration), User(user.uid, user.name, user.email), court)
         rentals.add(newRental)
         return newRental
-*/
-        TODO()
     }
 
 
