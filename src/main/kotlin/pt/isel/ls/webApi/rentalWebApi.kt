@@ -12,6 +12,7 @@ import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Date
 import pt.isel.ls.dto.RentalDTO
+import pt.isel.ls.dto.RentalListDTO
 import pt.isel.ls.dto.ResponseRentalDto
 import pt.isel.ls.webServices.RentalServices
 
@@ -38,7 +39,7 @@ class RentalWebApi(private val rentalServices: RentalServices) {
         val rentalData = Json.decodeFromString<RentalDTO>(request.bodyString())
 
         val rental = rentalServices.createRental(rentalData.cid, rentalData.crid, Date(rentalData.date), rentalData.duration, token)
-            ?: return Response(Status.UNAUTHORIZED)
+            ?: return Response(Status.NOT_FOUND)
                 .body(Json.encodeToString(mapOf("error" to "Invalid rental")))
         return Response(CREATED)
             .header("content-type", "application/json")
@@ -66,8 +67,23 @@ class RentalWebApi(private val rentalServices: RentalServices) {
         }
     }
 
+    private fun getRentalList(request: Request): Response{
+        logRequest(request)
+
+        val rentalDto = Json.decodeFromString<RentalListDTO>(request.bodyString())
+
+        val rentalList = rentalServices.getRentalList(rentalDto.cid,rentalDto.crid,Date(rentalDto.date))
+                ?: return Response(Status.NOT_FOUND)
+                    .body(Json.encodeToString(mapOf("error" to "No rentals found")))
+        return Response(Status.OK)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(rentalList))
+
+    }
+
     val appRental = routes(
         "rental" bind Method.POST to ::createRental,
-        "/rental/{id}" bind Method.GET to ::getRentalById
+        "/rental/{id}" bind Method.GET to ::getRentalById,
+        "/rentals" bind Method.GET to ::getRentalList
     )
 }

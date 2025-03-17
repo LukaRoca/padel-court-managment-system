@@ -31,24 +31,24 @@ POST http://localhost:8081/users
 Content-Type: application/json
 
 {
-    "name": "Afonso Vela",
+    "name": "Afonso Santos",
     "email": "afonso@gmail.com"
 }
 
 ###
 POST http://localhost:8081/club
-Authorization: Bearer 5a1d4881-59f6-4910-aea0-031de3fd6124
+Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
 Content-Type: application/json
 
 {
-"name": "Fly Padel"
+"name": "Fly Padel 2"
 }
 
 
 ###
 POST http://localhost:8081/courts
 Content-Type: application/json
-Authorization: Bearer 5a1d4881-59f6-4910-aea0-031de3fd6124
+Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
 
 {
   "name": "Padel Court 2",
@@ -57,7 +57,7 @@ Authorization: Bearer 5a1d4881-59f6-4910-aea0-031de3fd6124
 
 ###
 POST http://localhost:8081/rental
-Authorization: Bearer 5a1d4881-59f6-4910-aea0-031de3fd6124
+Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
 Content-Type: application/json
 
 {
@@ -67,6 +67,27 @@ Content-Type: application/json
   "duration": 2
 }
 
+
 ###
-GET http://localhost:8081/rental/2
+POST http://localhost:8081/rental
+Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
 Content-Type: application/json
+
+{
+  "cid": 2,
+  "crid": 2,
+  "date": "2021-06-01",
+  "duration": 4
+}
+
+###
+GET http://localhost:8081/rentals
+Content-Type: application/json
+
+{
+    "cid": 2,
+    "crid": 2,
+    "date": "2021-06-01"
+}
+
+###

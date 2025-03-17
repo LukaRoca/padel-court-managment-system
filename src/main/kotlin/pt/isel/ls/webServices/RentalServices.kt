@@ -15,4 +15,8 @@ object RentalServices {
 
     }
 
+    fun getRentalList(cid: Int, crid: Int, date: Date): List<Rental>? {
+        return DataMem.getRentalList(cid, crid, date)
+    }
+
 }

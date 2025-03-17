@@ -11,6 +11,13 @@ data class RentalDTO(
 )
 
 @Serializable
+data class RentalListDTO(
+    val cid: Int,
+    val crid: Int,
+    val date: String,
+)
+
+@Serializable
 data class ResponseRentalDto(
     val rid : Int,
 )
