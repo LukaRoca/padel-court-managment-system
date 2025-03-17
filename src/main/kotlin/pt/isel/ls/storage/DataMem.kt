@@ -84,5 +84,9 @@ object DataMem : IStorage {
         return rentals.filter { it.user.uid.id == cid && it.court.id.id == crid && it.date == date }
     }
 
+    override fun getRentalsOfUser(cid: Int): List<Rental> {
+        return rentals.filter { it.user.uid.id == cid }
+    }
+
 
 }

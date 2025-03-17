@@ -1,43 +1,18 @@
-GET http://localhost:8081/users/1
 
-###
-GET http://localhost:8081/students
-Accept: application/json
-
-###
-GET http://localhost:8081/students/20
-Accept: application/json
+#create a new user -> create a new club -> create a new court -> create a new rental -> create another rental -> get the rental list
 
 ###
 POST http://localhost:8081/users
 Content-Type: application/json
 
 {
-  "name": "Pedro Pereira",
-  "email": "pp@gmail.com"
-}
-
-###
-GET http://localhost:8081/users/2
-Accept: application/json
-
-
-
-
-#create a new user -> create a new club -> create a new court -> create a new rental -> get the rental
-
-###
-POST http://localhost:8081/users
-Content-Type: application/json
-
-{
-    "name": "Afonso Santos",
+    "name": "Joao",
     "email": "afonso@gmail.com"
 }
 
 ###
 POST http://localhost:8081/club
-Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
+Authorization: Bearer e7678b86-9474-4341-94ff-85c21732fee7
 Content-Type: application/json
 
 {
@@ -48,7 +23,7 @@ Content-Type: application/json
 ###
 POST http://localhost:8081/courts
 Content-Type: application/json
-Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
+Authorization: Bearer e7678b86-9474-4341-94ff-85c21732fee7
 
 {
   "name": "Padel Court 2",
@@ -57,7 +32,7 @@ Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
 
 ###
 POST http://localhost:8081/rental
-Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
+Authorization: Bearer d95fdab5-6706-42de-982c-cd81aedd243c
 Content-Type: application/json
 
 {
@@ -70,7 +45,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:8081/rental
-Authorization: Bearer 3eb90367-140f-467a-833f-047108baf50d
+Authorization: Bearer d95fdab5-6706-42de-982c-cd81aedd243c
 Content-Type: application/json
 
 {
@@ -91,3 +66,6 @@ Content-Type: application/json
 }
 
 ###
+
+GET http://localhost:8081/rentals/user/2
+Content-Type: application/json

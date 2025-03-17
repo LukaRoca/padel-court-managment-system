@@ -70,9 +70,9 @@ class RentalWebApi(private val rentalServices: RentalServices) {
     private fun getRentalList(request: Request): Response{
         logRequest(request)
 
-        val rentalDto = Json.decodeFromString<RentalListDTO>(request.bodyString())
+        val rentalListDto = Json.decodeFromString<RentalListDTO>(request.bodyString())
 
-        val rentalList = rentalServices.getRentalList(rentalDto.cid,rentalDto.crid,Date(rentalDto.date))
+        val rentalList = rentalServices.getRentalList(rentalListDto.cid,rentalListDto.crid,Date(rentalListDto.date))
                 ?: return Response(Status.NOT_FOUND)
                     .body(Json.encodeToString(mapOf("error" to "No rentals found")))
         return Response(Status.OK)
@@ -81,9 +81,24 @@ class RentalWebApi(private val rentalServices: RentalServices) {
 
     }
 
+    private fun getRentalsOfUser(request: Request): Response{
+        logRequest(request)
+
+        val userId  = request.path("id")?.toIntOrNull()
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
+
+        val rentals =rentalServices.getRentalsOfUser(userId)
+        return Response(Status.OK)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(rentals))
+    }
+
     val appRental = routes(
         "rental" bind Method.POST to ::createRental,
         "/rental/{id}" bind Method.GET to ::getRentalById,
-        "/rentals" bind Method.GET to ::getRentalList
+        "/rentals" bind Method.GET to ::getRentalList,
+        "/rentals/user/{id}" bind Method.GET to ::getRentalsOfUser
     )
 }
