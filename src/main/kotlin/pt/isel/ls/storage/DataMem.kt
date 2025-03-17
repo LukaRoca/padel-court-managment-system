@@ -1,5 +1,8 @@
 package pt.isel.ls.storage
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toLocalDateTime
 import pt.isel.ls.domain.*
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 object DataMem : IStorage {
@@ -79,13 +82,38 @@ object DataMem : IStorage {
         return rentals.find { it.rid.id == rentalId }
     }
 
-    override fun getRentalList(cid: Int, crid: Int, date: Date): List<Rental>? {
+    override fun getRentalList(cid: Int, crid: Int, date: Date): List<Rental> {
 
         return rentals.filter { it.user.uid.id == cid && it.court.id.id == crid && it.date == date }
     }
 
     override fun getRentalsOfUser(cid: Int): List<Rental> {
         return rentals.filter { it.user.uid.id == cid }
+    }
+
+    override fun getAvailableHours(cid: Int, crid: Int, date: Date): List<Int> {
+        val rentals = getRentalList(cid, crid, date)
+        val availableHours = mutableListOf<Int>()
+        val occupiedHours = mutableSetOf<Int>()
+
+        rentals.forEach { rental ->
+            // Convert rental date to LocalDateTime using the method from your Date class
+            val rentalDateTime = rental.date
+
+            // Assuming rental.duration is an integer representing hours
+            for (hour in 0 until rental.duration.hours) {
+                occupiedHours.add(rentalDateTime.hour + hour)
+            }
+        }
+
+        // Check hours from 9 AM to 9 PM
+        for (hour in 9..21) {
+            if (hour !in occupiedHours) {
+                availableHours.add(hour)
+            }
+        }
+
+        return availableHours
     }
 
 

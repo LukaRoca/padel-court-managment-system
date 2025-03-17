@@ -11,10 +11,9 @@ import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Date
-import pt.isel.ls.dto.RentalDTO
-import pt.isel.ls.dto.RentalListDTO
-import pt.isel.ls.dto.ResponseRentalDto
+import pt.isel.ls.dto.*
 import pt.isel.ls.webServices.RentalServices
+import kotlin.math.log
 
 class RentalWebApi(private val rentalServices: RentalServices) {
 
@@ -38,7 +37,9 @@ class RentalWebApi(private val rentalServices: RentalServices) {
 
         val rentalData = Json.decodeFromString<RentalDTO>(request.bodyString())
 
-        val rental = rentalServices.createRental(rentalData.cid, rentalData.crid, Date(rentalData.date), rentalData.duration, token)
+        val date = Date.fromStrings(rentalData.date, rentalData.time)
+
+        val rental = rentalServices.createRental(rentalData.cid, rentalData.crid, date, rentalData.duration, token)
             ?: return Response(Status.NOT_FOUND)
                 .body(Json.encodeToString(mapOf("error" to "Invalid rental")))
         return Response(CREATED)
@@ -72,7 +73,9 @@ class RentalWebApi(private val rentalServices: RentalServices) {
 
         val rentalListDto = Json.decodeFromString<RentalListDTO>(request.bodyString())
 
-        val rentalList = rentalServices.getRentalList(rentalListDto.cid,rentalListDto.crid,Date(rentalListDto.date))
+        val date = Date.fromStrings(rentalListDto.date, rentalListDto.time)
+
+        val rentalList = rentalServices.getRentalList(rentalListDto.cid,rentalListDto.crid, date)
                 ?: return Response(Status.NOT_FOUND)
                     .body(Json.encodeToString(mapOf("error" to "No rentals found")))
         return Response(Status.OK)
@@ -95,10 +98,26 @@ class RentalWebApi(private val rentalServices: RentalServices) {
             .body(Json.encodeToString(rentals))
     }
 
+
+    private fun getAvailableHours(request: Request): Response {
+        logRequest(request)
+
+        val dto = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
+        val date = Date.fromStrings(dto.date, dto.time)
+
+        val availableHours = rentalServices.getAvailableHours(dto.cid, dto.crid, date)
+
+        return Response(Status.OK)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(availableHours))
+    }
+
+
     val appRental = routes(
         "rental" bind Method.POST to ::createRental,
         "/rental/{id}" bind Method.GET to ::getRentalById,
         "/rentals" bind Method.GET to ::getRentalList,
-        "/rentals/user/{id}" bind Method.GET to ::getRentalsOfUser
+        "/rentals/user/{id}" bind Method.GET to ::getRentalsOfUser,
+        "/rentals/available" bind Method.GET to ::getAvailableHours
     )
 }

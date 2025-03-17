@@ -24,4 +24,9 @@ object RentalServices {
 
     }
 
+    fun getAvailableHours(cid: Int, crid: Int, date: Date): List<Int> {
+        return DataMem.getAvailableHours(cid, crid, date)
+
+    }
+
 }

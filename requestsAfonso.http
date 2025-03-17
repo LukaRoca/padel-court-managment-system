@@ -12,7 +12,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:8081/club
-Authorization: Bearer e7678b86-9474-4341-94ff-85c21732fee7
+Authorization: 1e78166a-50c3-4e47-84e6-a435061f4bb0
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 ###
 POST http://localhost:8081/courts
 Content-Type: application/json
-Authorization: Bearer e7678b86-9474-4341-94ff-85c21732fee7
+Authorization: Bearer 1e78166a-50c3-4e47-84e6-a435061f4bb0
 
 {
   "name": "Padel Court 2",
@@ -32,13 +32,14 @@ Authorization: Bearer e7678b86-9474-4341-94ff-85c21732fee7
 
 ###
 POST http://localhost:8081/rental
-Authorization: Bearer d95fdab5-6706-42de-982c-cd81aedd243c
+Authorization: Bearer 1e78166a-50c3-4e47-84e6-a435061f4bb0
 Content-Type: application/json
 
 {
   "cid": 2,
   "crid": 2,
   "date": "2021-06-01",
+  "time": "10:00:00",
   "duration": 2
 }
 
@@ -52,6 +53,7 @@ Content-Type: application/json
   "cid": 2,
   "crid": 2,
   "date": "2021-06-01",
+  "time": "12:00:00",
   "duration": 4
 }
 
@@ -64,6 +66,20 @@ Content-Type: application/json
     "crid": 2,
     "date": "2021-06-01"
 }
+
+
+###
+
+GET http://localhost:8081/rentals/available
+Content-Type: application/json
+
+{
+"cid": 2,
+"crid": 2,
+"date": "2021-06-01",
+"time": "10:00:00"
+}
+
 
 ###
 
