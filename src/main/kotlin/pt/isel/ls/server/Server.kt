@@ -13,19 +13,21 @@ fun main(){
 
     val userService = UserServices
     val clubService = ClubServices
-    val rentalService = RentalServices
     val courtService = CourtServices
+    val rentalService = RentalServices
+
 
     val userWebApi = UserWebApi(userService)
     val clubWebApi = ClubWebApi(clubService)
-    val rentalWebApi = RentalWebApi(rentalService)
     val courtWebApi = CourtWebApi(courtService)
+    val rentalWebApi = RentalWebApi(rentalService)
+
 
     val appRoutes = routes(
         userWebApi.app,
         clubWebApi.appClubs,
-        rentalWebApi.appRental,
-        courtWebApi.appCourts
+        courtWebApi.appCourts,
+        rentalWebApi.appRental
     )
 
     //val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()

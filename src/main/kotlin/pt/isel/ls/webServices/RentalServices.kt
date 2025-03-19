@@ -1,34 +1,33 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.domain.Date
-import pt.isel.ls.domain.Duration
-import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Rental
-import pt.isel.ls.storage.DataMem
+import pt.isel.ls.domain.*
+import pt.isel.ls.storage.RentalDataMem
 
 object RentalServices {
-    fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: String ): Rental? {
-        return DataMem.createRental(cid, crid, date, duration, token)
+
+    fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token ): Rental? {
+        return RentalDataMem.createRental(cid, crid, date, duration, token)
 
     }
 
     fun getRentalById(rentalId: Id): Rental? {
-        return DataMem.getRentalById(rentalId)
+        return RentalDataMem.getRentalById(rentalId)
 
     }
 
     fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental> {
-        return DataMem.getRentalList(cid, crid, date)
+        return RentalDataMem.getRentalList(cid, crid, date)
     }
 
     fun getRentalsOfUser(cid: Id): List<Rental> {
-        return DataMem.getRentalsOfUser(cid)
+        return RentalDataMem.getRentalsOfUser(cid)
 
     }
 
     fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int> {
-        return DataMem.getAvailableHours(cid, crid, date)
+        return RentalDataMem.getAvailableHours(cid, crid, date)
 
     }
 
 }
+

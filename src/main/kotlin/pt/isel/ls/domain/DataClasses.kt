@@ -16,12 +16,16 @@ data class Email(val value: String) {
 }
 
 @Serializable
+data class Token(val token : String)
+
+@Serializable
 data class Id (val id : Int){
     init {
         if(id <= 0)
             throw IllegalArgumentException("Id must be positive and non-zero")
     }
 }
+
 
 @Serializable
 data class Duration (val initDuration : Int, val endDuration : Int) {

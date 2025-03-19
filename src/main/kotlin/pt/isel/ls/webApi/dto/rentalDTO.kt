@@ -6,7 +6,7 @@ import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
 
 @Serializable
-data class RentalDTO(
+data class RentalInput(
     val cid : Int,
     val crid : Int,
     val date : String,
@@ -28,14 +28,14 @@ data class RentalListDTO(
 
 @Serializable
 data class RentalAvailableHoursRequestDTO(
-        val cid: Int,
-        val crid: Int,
-        val date: String,
+        val cid: Id,
+        val crid: Id,
+        val date: Date,
         val initDuration : Int,
         val endDuration : Int,
 )
 
 @Serializable
-data class ResponseRentalDto(
+data class RentalOutput(
     val rid : Id,
 )
