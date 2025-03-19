@@ -12,8 +12,8 @@ import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Id
-import pt.isel.ls.dto.CourtDTO
-import pt.isel.ls.dto.ResponseCourtDto
+import pt.isel.ls.webServices.dto.CourtDTO
+import pt.isel.ls.webServices.dto.ResponseCourtDto
 import pt.isel.ls.webServices.ClubServices
 import pt.isel.ls.webServices.CourtServices
 import pt.isel.ls.webServices.UserServices

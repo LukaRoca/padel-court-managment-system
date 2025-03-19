@@ -12,8 +12,8 @@ import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
-import pt.isel.ls.dto.ClubDTO
-import pt.isel.ls.dto.ResponseClubDto
+import pt.isel.ls.webServices.dto.ClubDTO
+import pt.isel.ls.webServices.dto.ResponseClubDto
 import pt.isel.ls.webServices.ClubServices
 
 

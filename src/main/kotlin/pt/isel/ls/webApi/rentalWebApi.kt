@@ -11,8 +11,8 @@ import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Date
-import pt.isel.ls.dto.RentalDTO
-import pt.isel.ls.dto.ResponseRentalDto
+import pt.isel.ls.webServices.dto.RentalDTO
+import pt.isel.ls.webServices.dto.ResponseRentalDto
 import pt.isel.ls.webServices.RentalServices
 
 class RentalWebApi(private val rentalServices: RentalServices) {
@@ -67,7 +67,7 @@ class RentalWebApi(private val rentalServices: RentalServices) {
     }
 
     val appRental = routes(
-        "rental" bind Method.POST to ::createRental,
+        "rentals" bind Method.POST to ::createRental,
         "/rental/{id}" bind Method.GET to ::getRentalById
     )
 }
