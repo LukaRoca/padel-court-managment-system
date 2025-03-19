@@ -15,8 +15,8 @@ import pt.isel.ls.domain.Email
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.webServices.UserServices
-import pt.isel.ls.dto.ResponseUserDto
-import pt.isel.ls.dto.UserDTO
+import pt.isel.ls.webServices.dto.ResponseUserDto
+import pt.isel.ls.webServices.dto.UserDTO
 
 class UserWebApi(private val userServices: UserServices) {
 

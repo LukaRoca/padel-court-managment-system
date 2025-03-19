@@ -1,4 +1,4 @@
-package pt.isel.ls.dto
+package pt.isel.ls.webServices.dto
 
 import kotlinx.serialization.Serializable
 import pt.isel.ls.domain.Date
