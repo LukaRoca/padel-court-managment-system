@@ -3,19 +3,23 @@ package pt.isel.ls.webServices
 import pt.isel.ls.domain.Club
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
-import pt.isel.ls.storage.DataMem
+import pt.isel.ls.domain.Token
+import pt.isel.ls.storage.ClubDataMem
+import pt.isel.ls.storage.UserDataMem
+import pt.isel.ls.storage.UserIStorage
 
 object ClubServices {
-    fun createClub(name : Name, token : String) : Club? {
-        val user = DataMem.getUserByToken(token) ?: return null
-        return DataMem.createClub(name, user)
+
+    fun createClub(name : Name, token : Token) : Club? {
+        val user = UserDataMem.getUserByToken(token) ?: return null
+        return ClubDataMem.createClub(name, user)
     }
 
     fun getClubById(clubId: Id): Club? {
-        return DataMem.getClubById(clubId)
+        return ClubDataMem.getClubById(clubId)
     }
 
     fun getClubs(): List<Club> {
-        return DataMem.getClubs()
+        return ClubDataMem.getClubs()
     }
 }

@@ -15,8 +15,8 @@ import pt.isel.ls.domain.Email
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.webServices.UserServices
-import pt.isel.ls.webApi.dto.ResponseUserDto
-import pt.isel.ls.webApi.dto.UserDTO
+import pt.isel.ls.webApi.dto.UserOutput
+import pt.isel.ls.webApi.dto.UserInput
 
 class UserWebApi(private val userServices: UserServices) {
 
@@ -36,11 +36,9 @@ class UserWebApi(private val userServices: UserServices) {
         logRequest(request)
 
         val userId = request.path("id")?.toIntOrNull()
-        if (userId == null) {
-            return Response(Status.BAD_REQUEST)
+            ?: return Response(Status.BAD_REQUEST)
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
-        }
 
         val user = UserServices.getUserById(Id(userId))
         return if (user != null) {
@@ -56,11 +54,11 @@ class UserWebApi(private val userServices: UserServices) {
 
     fun createUser(request: Request): Response {
         logRequest(request)
-        val user = Json.decodeFromString<UserDTO>(request.bodyString())
-        val (userId, token) = UserServices.createUser(Name(user.name), Email(user.email))
+        val response = Json.decodeFromString<UserInput>(request.bodyString())
+        val user = UserServices.createUser(Name(response.name), Email(response.email))
         return Response(CREATED)
             .header("content-type", "application/json")
-            .body(Json.encodeToString(ResponseUserDto(Id(userId), token)))
+            .body(Json.encodeToString(UserOutput(user.uid, user.token)))
     }
 
     //Rotas
@@ -68,5 +66,4 @@ class UserWebApi(private val userServices: UserServices) {
         "users" bind Method.POST to ::createUser,
         "users/{id}" bind Method.GET to ::getUserById
     )
-
 }

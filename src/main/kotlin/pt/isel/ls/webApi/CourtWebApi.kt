@@ -1,5 +1,5 @@
 package pt.isel.ls.webApi
-/*
+
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -13,8 +13,9 @@ import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
-import pt.isel.ls.dto.CourtDTO
-import pt.isel.ls.dto.ResponseCourtDto
+import pt.isel.ls.domain.Token
+import pt.isel.ls.webApi.dto.CourtInput
+import pt.isel.ls.webApi.dto.CourtOutput
 import pt.isel.ls.webServices.ClubServices
 import pt.isel.ls.webServices.CourtServices
 import pt.isel.ls.webServices.UserServices
@@ -34,19 +35,23 @@ class CourtWebApi( private val courtServices: CourtServices){
     }
     fun createCourt(request: Request): Response {
         logRequest(request)
+
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: return Response(Status.UNAUTHORIZED)
                 .body(Json.encodeToString(mapOf("error" to "Missing or invalid token")))
-        if (UserServices.getUserByToken(token) == null) {
+
+        if (UserServices.getUserByToken(Token(token)) == null) {
             return Response(Status.UNAUTHORIZED)
                 .body(Json.encodeToString(mapOf("error" to "Invalid token")))
         }
-        val courtDto = Json.decodeFromString<CourtDTO>(request.bodyString())
+
+        val courtDto = Json.decodeFromString<CourtInput>(request.bodyString())
+
         return try {
             val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.id))
             Response(CREATED)
                 .header("content-type", "application/json")
-                .body(Json.encodeToString(ResponseCourtDto(court.id.id)))
+                .body(Json.encodeToString(CourtOutput(court.id)))
         } catch (e: IllegalArgumentException) {
             Response(Status.BAD_REQUEST)
                 .body(Json.encodeToString(mapOf("error" to e.message)))
@@ -55,12 +60,13 @@ class CourtWebApi( private val courtServices: CourtServices){
 
 
     private fun getCourtById(request: Request): Response {
+        logRequest(request)
         val crid = request.path("id")?.toIntOrNull()
             ?: return Response(Status.BAD_REQUEST)
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
 
-        val court = courtServices.getCourt(Id(crid))
+        val court = courtServices.getCourtById(Id(crid))
         return if (court != null) {
             Response(OK)
                 .header("content-type", "application/json")
@@ -106,4 +112,3 @@ class CourtWebApi( private val courtServices: CourtServices){
 
 }
 
- */

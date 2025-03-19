@@ -7,8 +7,8 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import pt.isel.ls.domain.Club
-import pt.isel.ls.webApi.dto.ClubDTO
-import pt.isel.ls.webApi.dto.ResponseClubDto
+import pt.isel.ls.webApi.dto.ClubInput
+import pt.isel.ls.webApi.dto.ClubOutput
 import pt.isel.ls.webApi.ClubWebApi
 import pt.isel.ls.webServices.ClubServices
 import kotlin.test.Test
@@ -20,7 +20,7 @@ class ClubWebApiTests {
 
     @Test
     fun `should create club successfully`() {
-        val clubDto = ClubDTO(name = "Club 1")
+        val clubDto = ClubInput(name = "Club 1")
         val request = Request(Method.POST, "/club")
             .header("Authorization", "Bearer 42449fc7-0006-458d-b4dc-324d5583f634")
             .body(Json.encodeToString(clubDto))
@@ -28,7 +28,7 @@ class ClubWebApiTests {
         assertEquals(CREATED, response.status)
         assertEquals("application/json", response.header("content-type"))
         val responseBody = response.bodyString()
-        val actualResponse = Json.decodeFromString<ResponseClubDto>(responseBody)
+        val actualResponse = Json.decodeFromString<ClubOutput>(responseBody)
         assertTrue(actualResponse.cid > 0)
     }
 

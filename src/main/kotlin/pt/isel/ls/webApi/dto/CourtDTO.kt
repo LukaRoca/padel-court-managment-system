@@ -2,14 +2,15 @@ package pt.isel.ls.webApi.dto
 
 
 import kotlinx.serialization.Serializable
+import pt.isel.ls.domain.Id
 
 @Serializable
-data class CourtDTO(
+data class CourtInput(
     val name : String,
     val id : Int,
 )
 
 @Serializable
-data class ResponseCourtDto(
-    val crid : Int
+data class CourtOutput(
+    val crid : Id
 )
