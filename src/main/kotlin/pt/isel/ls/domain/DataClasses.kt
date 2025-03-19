@@ -18,6 +18,8 @@ data class Email(val value: String) {
     }
 }
 
+@Serializable
+data class Token(val token : String)
 
 @Serializable
 data class Id (val id : Int){

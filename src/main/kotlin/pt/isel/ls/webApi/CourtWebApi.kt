@@ -1,5 +1,5 @@
 package pt.isel.ls.webApi
-
+/*
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -104,3 +104,5 @@ class CourtWebApi( private val courtServices: CourtServices){
     )
 
 }
+
+ */

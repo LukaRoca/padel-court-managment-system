@@ -1,5 +1,5 @@
 package pt.isel.ls.webServices
-
+/*
 import pt.isel.ls.domain.Date
 import pt.isel.ls.domain.Rental
 import pt.isel.ls.storage.DataMem
@@ -30,3 +30,5 @@ object RentalServices {
     }
 
 }
+
+ */

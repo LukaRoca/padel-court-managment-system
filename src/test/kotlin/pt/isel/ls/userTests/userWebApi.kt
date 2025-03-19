@@ -6,7 +6,7 @@ import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import kotlinx.serialization.json.Json
 import org.http4k.core.Status.Companion.CREATED
-import pt.isel.ls.webServices.dto.UserDTO
+import pt.isel.ls.webApi.dto.UserInput
 import pt.isel.ls.webApi.UserWebApi
 import pt.isel.ls.webServices.UserServices
 
@@ -15,7 +15,7 @@ class UserWebApiTests {
 
     @Test
     fun `create a valid user`() {
-        val usDto = UserDTO("Jaco", "bjaco@gmail.com")
+        val usDto = UserInput("Jaco", "bjaco@gmail.com")
         val request = Request(POST, "/users")
             .header("content-type", "application/json")
             .body(Json.encodeToString(usDto))

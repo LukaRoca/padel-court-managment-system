@@ -1,5 +1,5 @@
 package pt.isel.ls.webApi
-
+/*
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -11,8 +11,11 @@ import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Date
-import pt.isel.ls.dto.*
 import pt.isel.ls.webServices.RentalServices
+import pt.isel.ls.webServices.dto.RentalAvailableHoursRequestDTO
+import pt.isel.ls.webServices.dto.RentalDTO
+import pt.isel.ls.webServices.dto.RentalListDTO
+import pt.isel.ls.webServices.dto.ResponseRentalDto
 import kotlin.math.log
 
 class RentalWebApi(private val rentalServices: RentalServices) {
@@ -121,3 +124,5 @@ class RentalWebApi(private val rentalServices: RentalServices) {
         "/rentals/available" bind Method.GET to ::getAvailableHours
     )
 }
+
+ */

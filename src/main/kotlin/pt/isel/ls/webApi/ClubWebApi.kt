@@ -1,5 +1,5 @@
 package pt.isel.ls.webApi
-
+/*
 import kotlinx.serialization.json.Json
 import org.eclipse.jetty.websocket.core.CoreSession.Empty
 import org.http4k.core.Method
@@ -90,3 +90,5 @@ class ClubWebApi(private val clubServices: ClubServices) {
 
     )
 }
+
+ */

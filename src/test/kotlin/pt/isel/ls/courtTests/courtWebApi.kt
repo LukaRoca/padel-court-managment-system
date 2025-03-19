@@ -10,8 +10,8 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.NOT_FOUND
 import kotlinx.serialization.json.Json
 import pt.isel.ls.domain.*
-import pt.isel.ls.webServices.dto.CourtDTO
-import pt.isel.ls.webServices.dto.ResponseCourtDto
+import pt.isel.ls.webApi.dto.CourtDTO
+import pt.isel.ls.webApi.dto.ResponseCourtDto
 import pt.isel.ls.webApi.CourtWebApi
 import pt.isel.ls.webServices.*
 import kotlin.test.assertTrue

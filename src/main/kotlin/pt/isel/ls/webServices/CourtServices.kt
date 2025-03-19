@@ -1,5 +1,5 @@
 package pt.isel.ls.webServices
-
+/*
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.DataMem
 
@@ -16,3 +16,5 @@ object CourtServices {
     }
 
 }
+
+ */
