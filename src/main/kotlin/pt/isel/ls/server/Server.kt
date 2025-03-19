@@ -29,7 +29,7 @@ fun main(){
     )
 
     //val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()
-    val jettyServerAfonso = appRoutes.asServer(Jetty(8080)).start()
+    val jettyServerAfonso = appRoutes.asServer(Jetty(8081)).start()
 
     //val jettyServer = appRoutes.asServer(Jetty(8080)).start()
     logger.info("server started")

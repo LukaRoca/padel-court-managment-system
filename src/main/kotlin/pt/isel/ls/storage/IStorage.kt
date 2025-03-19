@@ -14,4 +14,8 @@ interface IStorage{
     fun createCourt(name: String, cid: Int): Court
     fun getCourt(id : Int ) : Court?
     fun getRentalById(rentalId: Int): Rental?
+
+    fun getRentalList(cid: Int, crid: Int, date: Date): List<Rental>?
+    fun getRentalsOfUser(cid: Int): List<Rental>?
+    fun getAvailableHours(cid: Int, crid: Int, date: Date): List<Int>
 }
