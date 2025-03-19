@@ -7,8 +7,8 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import pt.isel.ls.domain.Club
-import pt.isel.ls.webServices.dto.ClubDTO
-import pt.isel.ls.webServices.dto.ResponseClubDto
+import pt.isel.ls.webApi.dto.ClubDTO
+import pt.isel.ls.webApi.dto.ResponseClubDto
 import pt.isel.ls.webApi.ClubWebApi
 import pt.isel.ls.webServices.ClubServices
 import kotlin.test.Test

@@ -6,7 +6,7 @@ import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import kotlinx.serialization.json.Json
 import org.http4k.core.Status.Companion.CREATED
-import pt.isel.ls.webServices.dto.UserDTO
+import pt.isel.ls.webApi.dto.UserDTO
 import pt.isel.ls.webApi.UserWebApi
 import pt.isel.ls.webServices.UserServices
 
