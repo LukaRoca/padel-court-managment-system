@@ -6,7 +6,6 @@ import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
 import pt.isel.ls.storage.ClubDataMem
 import pt.isel.ls.storage.UserDataMem
-import pt.isel.ls.storage.UserIStorage
 
 object ClubServices {
 

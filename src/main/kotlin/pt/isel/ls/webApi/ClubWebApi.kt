@@ -1,17 +1,13 @@
 package pt.isel.ls.webApi
 
 import kotlinx.serialization.json.Json
-import org.eclipse.jetty.websocket.core.CoreSession.Empty
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.http4k.core.Status.Companion.CREATED
-import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
-import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
@@ -20,76 +16,33 @@ import pt.isel.ls.webApi.dto.ClubOutput
 import pt.isel.ls.webServices.ClubServices
 
 
-class ClubWebApi(private val clubServices: ClubServices) {
-    private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.club.ClubsRoute")
+class ClubWebApi(private val services: ClubServices) : WebApiExceptions() {
 
-    private fun logRequest(request: Request) {
-        logger.info(
-            "incoming request: method={}, uri={}, content-type={} accept={}",
-            request.method,
-            request.uri,
-            request.header("content-type"),
-            request.header("accept"),
-        )
-    }
-
-    private fun createClub(request: Request): Response {
-        logRequest(request)
+    fun createClub(request: Request): Response = useWithException {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
-            ?: return Response(Status.UNAUTHORIZED)
-                .body(Json.encodeToString(mapOf("error" to "Missing or invalid token")))
-
-        val response = Json.decodeFromString<ClubInput>(request.bodyString())
-
-        val club = clubServices.createClub(Name(response.name), Token(token))
-            ?: return Response(Status.UNAUTHORIZED)
-                .body(Json.encodeToString(mapOf("error" to "Invalid token")))
-
-        return Response(CREATED)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(ClubOutput(club.id)))
-
+            ?: throw IllegalArgumentException("Missing or invalid token")
+        val clubInput = Json.decodeFromString<ClubInput>(request.bodyString())
+        val club = services.createClub(Name(clubInput.name), Token(token))
+            ?: throw IllegalArgumentException("Invalid token")
+        Response(Status.CREATED).json(ClubOutput(club.id))
     }
 
-    private fun getClubById(request: Request): Response {
-        logRequest(request)
-        val clubId = request.path("id")?.toIntOrNull()
-            ?: return Response(Status.BAD_REQUEST)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
-
-        val club = ClubServices.getClubById(Id(clubId))
-
-        return if (club != null) {
-            Response(OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(club))
-        } else {
-            Response(Status.NOT_FOUND)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "User not found")))
-        }
+    fun getClubById(request: Request): Response = useWithException {
+        val clubId = request.path("id")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid club ID")
+        val club = services.getClubById(Id(clubId)) ?: throw NoSuchElementException("Club not found")
+        Response(Status.OK).json(club)
     }
 
-    private fun getClubs(request: Request): Response {
-        logRequest(request)
-        val clubs = clubServices.getClubs()
-        return if (clubs is Empty) {
-            Response(Status.NOT_FOUND)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "List is Empty")))
-        } else {
-            Response(OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(clubs))
-        }
+    fun getClubs(request: Request): Response = useWithException {
+        val clubs = services.getClubs()
+        if (clubs.isEmpty()) throw NoSuchElementException("List is Empty")
+        Response(Status.OK).json(clubs)
     }
 
     val appClubs = routes(
         "club" bind Method.POST to ::createClub,
         "clubs/{id}" bind Method.GET to ::getClubById,
         "clubs" bind Method.GET to ::getClubs,
-
     )
 }
 
