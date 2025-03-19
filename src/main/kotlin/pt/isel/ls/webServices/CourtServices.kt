@@ -4,7 +4,7 @@ import pt.isel.ls.domain.*
 import pt.isel.ls.storage.CourtDataMem
 import pt.isel.ls.storage.CourtIStorage
 
-open class CourtServices (internal val db: CourtIStorage) {
+open class CourtServices (private val db: CourtIStorage) {
 
     fun createCourt(name : Name, id : Id) : Court {
         return db.createCourt(name, id)

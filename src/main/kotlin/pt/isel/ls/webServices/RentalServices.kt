@@ -5,7 +5,7 @@ import pt.isel.ls.storage.RentalDataMem
 import pt.isel.ls.storage.RentalIStorage
 import pt.isel.ls.storage.UserIStorage
 
-class RentalServices ( val db : RentalIStorage) {
+class RentalServices (private val db : RentalIStorage) {
 
     fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token ): Rental? {
         return db.createRental(cid, crid, date, duration, token)
