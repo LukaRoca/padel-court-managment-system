@@ -2,16 +2,15 @@ package pt.isel.ls.webApi.dto
 
 import kotlinx.serialization.Serializable
 import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Token
 
 @Serializable
-data class UserInput(
+data class UserDTO(
     val name : String,
     val email : String,
 )
 
 @Serializable
-data class UserOutput(
+data class ResponseUserDto(
     val uid : Id,
-    val token : Token,
+    val token : String,
 )

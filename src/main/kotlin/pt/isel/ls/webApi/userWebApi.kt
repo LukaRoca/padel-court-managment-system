@@ -15,8 +15,8 @@ import pt.isel.ls.domain.Email
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.webServices.UserServices
-import pt.isel.ls.webApi.dto.UserOutput
-import pt.isel.ls.webApi.dto.UserInput
+import pt.isel.ls.webApi.dto.ResponseUserDto
+import pt.isel.ls.webApi.dto.UserDTO
 
 class UserWebApi(private val userServices: UserServices) {
 
@@ -34,30 +34,33 @@ class UserWebApi(private val userServices: UserServices) {
 
     private fun getUserById(request: Request): Response {
         logRequest(request)
-        val userId = request.path("id")?.toIntOrNull() ?: return Response(Status.BAD_REQUEST)
+
+        val userId = request.path("id")?.toIntOrNull()
+        if (userId == null) {
+            return Response(Status.BAD_REQUEST)
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
-
-        val user = UserServices.getUserById(Id(userId))
-
-        return when (user) {
-            null -> Response(Status.NOT_FOUND, "User not found")
-            else -> Response(OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(UserOutput(user.uid, user.token)))
         }
 
+        val user = UserServices.getUserById(Id(userId))
+        return if (user != null) {
+            Response(OK)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(user))
+        } else {
+            Response(Status.NOT_FOUND)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "User not found")))
+        }
     }
 
     fun createUser(request: Request): Response {
         logRequest(request)
-        val response = Json.decodeFromString<UserInput>(request.bodyString())
-
-        val user = UserServices.createUser(Name(response.name), Email(response.email))
-
+        val user = Json.decodeFromString<UserDTO>(request.bodyString())
+        val (userId, token) = UserServices.createUser(Name(user.name), Email(user.email))
         return Response(CREATED)
             .header("content-type", "application/json")
-            .body(Json.encodeToString(UserOutput(user.uid, user.token)))
+            .body(Json.encodeToString(ResponseUserDto(Id(userId), token)))
     }
 
     //Rotas
@@ -65,4 +68,5 @@ class UserWebApi(private val userServices: UserServices) {
         "users" bind Method.POST to ::createUser,
         "users/{id}" bind Method.GET to ::getUserById
     )
+
 }
