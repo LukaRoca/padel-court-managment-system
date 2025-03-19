@@ -11,6 +11,9 @@ import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
+import pt.isel.ls.domain.Email
+import pt.isel.ls.domain.Id
+import pt.isel.ls.domain.Name
 import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.dto.ResponseUserDto
 import pt.isel.ls.dto.UserDTO
@@ -39,7 +42,7 @@ class UserWebApi(private val userServices: UserServices) {
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
         }
 
-        val user = UserServices.getUserById(userId)
+        val user = UserServices.getUserById(Id(userId))
         return if (user != null) {
             Response(OK)
                 .header("content-type", "application/json")
@@ -54,10 +57,10 @@ class UserWebApi(private val userServices: UserServices) {
     fun createUser(request: Request): Response {
         logRequest(request)
         val user = Json.decodeFromString<UserDTO>(request.bodyString())
-        val (userId, token) = UserServices.createUser(user.name, user.email)
+        val (userId, token) = UserServices.createUser(Name(user.name), Email(user.email))
         return Response(CREATED)
             .header("content-type", "application/json")
-            .body(Json.encodeToString(ResponseUserDto(userId, token)))
+            .body(Json.encodeToString(ResponseUserDto(Id(userId), token)))
     }
 
     //Rotas

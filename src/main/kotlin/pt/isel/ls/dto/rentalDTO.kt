@@ -2,33 +2,40 @@ package pt.isel.ls.dto
 
 import kotlinx.serialization.Serializable
 import pt.isel.ls.domain.Date
+import pt.isel.ls.domain.Duration
+import pt.isel.ls.domain.Id
 
 @Serializable
 data class RentalDTO(
-        val cid : Int,
-        val crid : Int,
-        val date : String,
-        val time : String,
-        val duration : Int,
+    val cid : Int,
+    val crid : Int,
+    val date : String,
+    val initDuration : Int,
+    val endDuration : Int,
 )
 
+/*
 @Serializable
 data class RentalListDTO(
     val cid: Int,
     val crid: Int,
     val date: String,
-    val time: String
+    val initDuration : Int,
+    val endDuration : Int,
 )
+
+ */
 
 @Serializable
 data class RentalAvailableHoursRequestDTO(
         val cid: Int,
         val crid: Int,
         val date: String,
-        val time: String
+        val initDuration : Int,
+        val endDuration : Int,
 )
 
 @Serializable
 data class ResponseRentalDto(
-    val rid : Int,
+    val rid : Id,
 )

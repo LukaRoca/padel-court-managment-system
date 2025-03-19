@@ -1,14 +1,17 @@
 package pt.isel.ls.webServices
 
+import pt.isel.ls.domain.Email
+import pt.isel.ls.domain.Id
+import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.User
 import pt.isel.ls.storage.DataMem
 
 object UserServices {
-    fun getUserById(userId: Int): User? {
+    fun getUserById(userId: Id): User? {
         return DataMem.getUserById(userId)
     }
 
-    fun createUser(name: String, email: String): Pair<Int, String> {
+    fun createUser(name: Name, email: Email): Pair<Int, String> {
         return DataMem.createUser(name,email)
     }
 

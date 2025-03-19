@@ -11,9 +11,11 @@ import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Date
+import pt.isel.ls.domain.Duration
+import pt.isel.ls.domain.Id
 import pt.isel.ls.dto.*
 import pt.isel.ls.webServices.RentalServices
-import kotlin.math.log
+
 
 class RentalWebApi(private val rentalServices: RentalServices) {
 
@@ -37,14 +39,14 @@ class RentalWebApi(private val rentalServices: RentalServices) {
 
         val rentalData = Json.decodeFromString<RentalDTO>(request.bodyString())
 
-        val date = Date.fromStrings(rentalData.date, rentalData.time)
+        val date = rentalData.date
 
-        val rental = rentalServices.createRental(rentalData.cid, rentalData.crid, date, rentalData.duration, token)
+        val rental = rentalServices.createRental(Id(rentalData.cid), Id(rentalData.crid), Date(date), Duration(rentalData.initDuration, rentalData.endDuration), token)
             ?: return Response(Status.NOT_FOUND)
                 .body(Json.encodeToString(mapOf("error" to "Invalid rental")))
         return Response(CREATED)
             .header("content-type", "application/json")
-            .body(Json.encodeToString(ResponseRentalDto(rental.rid.id))
+            .body(Json.encodeToString(ResponseRentalDto(rental.rid))
             )
     }
 
@@ -56,7 +58,7 @@ class RentalWebApi(private val rentalServices: RentalServices) {
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid rental ID")))
 
-        val rental = rentalServices.getRentalById(rentalId)
+        val rental = rentalServices.getRentalById(Id(rentalId))
         return if (rental != null) {
             Response(Status.OK)
                 .header("content-type", "application/json")
@@ -71,13 +73,12 @@ class RentalWebApi(private val rentalServices: RentalServices) {
     private fun getRentalList(request: Request): Response{
         logRequest(request)
 
-        val rentalListDto = Json.decodeFromString<RentalListDTO>(request.bodyString())
+        val rentalListDto = Json.decodeFromString<RentalDTO>(request.bodyString())
 
-        val date = Date.fromStrings(rentalListDto.date, rentalListDto.time)
+        val date = rentalListDto.date
 
-        val rentalList = rentalServices.getRentalList(rentalListDto.cid,rentalListDto.crid, date)
-                ?: return Response(Status.NOT_FOUND)
-                    .body(Json.encodeToString(mapOf("error" to "No rentals found")))
+        val rentalList = rentalServices.getRentalList(Id(rentalListDto.cid),Id(rentalListDto.crid), Date(date))
+
         return Response(Status.OK)
             .header("content-type", "application/json")
             .body(Json.encodeToString(rentalList))
@@ -92,7 +93,7 @@ class RentalWebApi(private val rentalServices: RentalServices) {
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
 
-        val rentals =rentalServices.getRentalsOfUser(userId)
+        val rentals =rentalServices.getRentalsOfUser(Id(userId))
         return Response(Status.OK)
             .header("content-type", "application/json")
             .body(Json.encodeToString(rentals))
@@ -102,16 +103,20 @@ class RentalWebApi(private val rentalServices: RentalServices) {
     private fun getAvailableHours(request: Request): Response {
         logRequest(request)
 
-        val dto = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
-        val date = Date.fromStrings(dto.date, dto.time)
+        val availableHoursRequest = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
 
-        val availableHours = rentalServices.getAvailableHours(dto.cid, dto.crid, date)
+        val date = availableHoursRequest.date
+
+        val availableHours = rentalServices.getAvailableHours(
+            Id(availableHoursRequest.cid),
+            Id(availableHoursRequest.crid),
+            Date(date)
+        )
 
         return Response(Status.OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(availableHours))
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(availableHours))
     }
-
 
     val appRental = routes(
         "rental" bind Method.POST to ::createRental,

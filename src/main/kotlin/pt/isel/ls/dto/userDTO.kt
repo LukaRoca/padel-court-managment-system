@@ -1,6 +1,7 @@
 package pt.isel.ls.dto
 
 import kotlinx.serialization.Serializable
+import pt.isel.ls.domain.Id
 
 @Serializable
 data class UserDTO(
@@ -10,6 +11,6 @@ data class UserDTO(
 
 @Serializable
 data class ResponseUserDto(
-    val uid : Int,
+    val uid : Id,
     val token : String,
 )

@@ -12,6 +12,7 @@ import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Id
+import pt.isel.ls.domain.Name
 import pt.isel.ls.dto.CourtDTO
 import pt.isel.ls.dto.ResponseCourtDto
 import pt.isel.ls.webServices.ClubServices
@@ -42,7 +43,7 @@ class CourtWebApi( private val courtServices: CourtServices){
         }
         val courtDto = Json.decodeFromString<CourtDTO>(request.bodyString())
         return try {
-            val court = courtServices.createCourt(courtDto.name, Id(courtDto.id)) // Apenas chamamos o Service
+            val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.id))
             Response(CREATED)
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(ResponseCourtDto(court.id.id)))
@@ -59,7 +60,7 @@ class CourtWebApi( private val courtServices: CourtServices){
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
 
-        val court = courtServices.getCourt(crid)
+        val court = courtServices.getCourt(Id(crid))
         return if (court != null) {
             Response(OK)
                 .header("content-type", "application/json")
@@ -79,7 +80,7 @@ class CourtWebApi( private val courtServices: CourtServices){
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
 
-        val club = ClubServices.getClubById(clubId)
+        val club = ClubServices.getClubById(Id(clubId))
         return if (club != null) {
             val courts = CourtServices.getCourtsByClub(club)
             if (courts.isNotEmpty()) {

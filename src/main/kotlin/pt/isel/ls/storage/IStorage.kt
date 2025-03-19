@@ -3,19 +3,18 @@ package pt.isel.ls.storage
 import pt.isel.ls.domain.*
 
 interface IStorage{
-    fun createUser(name: String, email: String) : Pair<Int, String>
-    fun getUserById(userId: Int): User?
+    fun createUser(name: Name, email: Email) : Pair<Int, String>
+    fun getUserById(userId: Id): User?
     fun getUserByToken(token: String): User?
-    fun createClub(name: String, user: User) : Club
-    fun getClubById(cid: Int): Club?
+    fun createClub(name: Name, user: User) : Club
+    fun getClubById(cid: Id): Club?
     fun getClubs(): List<Club>
-    fun createRental(cid: Int, crid: Int, date: Date, duration: Int, token: String): Rental?
+    fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: String): Rental?
     fun getCourtByClub(club: Club): List<Court>
-    fun createCourt(name: String, cid: Int): Court
-    fun getCourt(id : Int ) : Court?
-    fun getRentalById(rentalId: Int): Rental?
-
-    fun getRentalList(cid: Int, crid: Int, date: Date): List<Rental>?
-    fun getRentalsOfUser(cid: Int): List<Rental>?
-    fun getAvailableHours(cid: Int, crid: Int, date: Date): List<Int>
+    fun createCourt(name: Name, cid: Id): Court
+    fun getCourt(id : Id ) : Court?
+    fun getRentalById(rentalId: Id): Rental?
+    fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental>?
+    fun getRentalsOfUser(cid: Id): List<Rental>?
+    fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int>
 }

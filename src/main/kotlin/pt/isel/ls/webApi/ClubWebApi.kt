@@ -12,6 +12,8 @@ import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
+import pt.isel.ls.domain.Id
+import pt.isel.ls.domain.Name
 import pt.isel.ls.dto.ClubDTO
 import pt.isel.ls.dto.ResponseClubDto
 import pt.isel.ls.webServices.ClubServices
@@ -38,7 +40,7 @@ class ClubWebApi(private val clubServices: ClubServices) {
 
         val clubData = Json.decodeFromString<ClubDTO>(request.bodyString())
 
-        val club = clubServices.createClub(clubData.name, token)
+        val club = clubServices.createClub(Name(clubData.name), token)
             ?: return Response(Status.UNAUTHORIZED)
                 .body(Json.encodeToString(mapOf("error" to "Invalid token")))
 
@@ -57,7 +59,7 @@ class ClubWebApi(private val clubServices: ClubServices) {
                 .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
         }
 
-        val club = ClubServices.getClubById(clubId)
+        val club = ClubServices.getClubById(Id(clubId))
         return if (club != null) {
             Response(OK)
                 .header("content-type", "application/json")

@@ -6,13 +6,13 @@ POST http://localhost:8081/users
 Content-Type: application/json
 
 {
-    "name": "Joao",
+    "name": "Miguel",
     "email": "afonso@gmail.com"
 }
 
 ###
 POST http://localhost:8081/club
-Authorization: 1e78166a-50c3-4e47-84e6-a435061f4bb0
+Authorization: 4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
 ###
 POST http://localhost:8081/courts
 Content-Type: application/json
-Authorization: Bearer 1e78166a-50c3-4e47-84e6-a435061f4bb0
+Authorization: Bearer 4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
 
 {
   "name": "Padel Court 2",
@@ -32,29 +32,29 @@ Authorization: Bearer 1e78166a-50c3-4e47-84e6-a435061f4bb0
 
 ###
 POST http://localhost:8081/rental
-Authorization: Bearer 1e78166a-50c3-4e47-84e6-a435061f4bb0
+Authorization: Bearer 4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
 Content-Type: application/json
 
 {
   "cid": 2,
   "crid": 2,
   "date": "2021-06-01",
-  "time": "10:00:00",
-  "duration": 2
+  "initDuration": 12,
+  "endDuration": 16
 }
 
 
 ###
 POST http://localhost:8081/rental
-Authorization: Bearer d95fdab5-6706-42de-982c-cd81aedd243c
+Authorization: Bearer4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
 Content-Type: application/json
 
 {
   "cid": 2,
   "crid": 2,
   "date": "2021-06-01",
-  "time": "12:00:00",
-  "duration": 4
+  "initDuration": 12,
+  "endDuration": 16
 }
 
 ###
@@ -64,7 +64,9 @@ Content-Type: application/json
 {
     "cid": 2,
     "crid": 2,
-    "date": "2021-06-01"
+    "date": "2021-06-01",
+    "initDuration": 0,
+    "endDuration": 16
 }
 
 
@@ -77,7 +79,8 @@ Content-Type: application/json
 "cid": 2,
 "crid": 2,
 "date": "2021-06-01",
-"time": "10:00:00"
+  "initDuration": 12,
+  "endDuration": 16
 }
 
 

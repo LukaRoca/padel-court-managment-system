@@ -1,4 +1,4 @@
-package pt.isel.ls.DomainTests
+package pt.isel.ls.domainTests
 
 import org.junit.Test
 import pt.isel.ls.domain.*
@@ -11,7 +11,7 @@ class RentalTest {
     fun `Rental is correct`(){
         val rental = Rental(Id(2),
             Date("2004-4-5"),
-            Duration(2),
+            Duration(10, 17 ),
             User(Id(10), Name("Jaco"), Email("bjaco@gmail.com")),
             Court(Id(1), Name("Luz"), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luka Roca"), Email("123@gmail.com"))))))
         assertEquals(2, rental.rid.id)
@@ -26,7 +26,7 @@ class RentalTest {
         assertFailsWith<IllegalArgumentException> {
             Rental(Id(2),
                 Date("2004-04-05"),
-                Duration(-4),
+                Duration(-4, 0),
                 User(Id(10), Name("Jaco"), Email("bjaco@gmail.com")),
                 Court(Id(1), Name("Luz"), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luis"), Email("luis@gmail.com"))))))
         }
@@ -37,7 +37,7 @@ class RentalTest {
         assertFailsWith<IllegalArgumentException> {
             Rental(Id(2),
                 Date("0000-00-00"),
-                Duration(4),
+                Duration(4, 20),
                 User(Id(10), Name("Jaco"), Email("bjaco@gmail.com")),
                 Court(Id(1), Name("Luz"), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luis"), Email("luis@gmail.com"))))))
         }
@@ -48,7 +48,7 @@ class RentalTest {
         assertFailsWith<IllegalArgumentException> {
             Rental(Id(2),
                 Date("0000-00-00"),
-                Duration(4),
+                Duration(4, 20),
                 User(Id(10), Name("Jaco"), Email("bjaco@gmail.com")),
                 Court(Id(1), Name(""), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luis"), Email("luis@gmail.com"))))))
         }
