@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Date
 import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
-import pt.isel.ls.dto.*
+import pt.isel.ls.webApi.dto.RentalAvailableHoursRequestDTO
+import pt.isel.ls.webApi.dto.RentalDTO
+import pt.isel.ls.webApi.dto.ResponseRentalDto
 import pt.isel.ls.webServices.RentalServices
 
 

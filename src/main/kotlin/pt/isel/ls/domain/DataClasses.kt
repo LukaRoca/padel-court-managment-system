@@ -15,7 +15,6 @@ data class Email(val value: String) {
     }
 }
 
-
 @Serializable
 data class Id (val id : Int){
     init {
@@ -23,7 +22,6 @@ data class Id (val id : Int){
             throw IllegalArgumentException("Id must be positive and non-zero")
     }
 }
-
 
 @Serializable
 data class Duration (val initDuration : Int, val endDuration : Int) {
