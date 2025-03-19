@@ -14,13 +14,15 @@ import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
+import pt.isel.ls.domain.User
+import pt.isel.ls.storage.CourtIStorage
 import pt.isel.ls.webApi.dto.CourtInput
 import pt.isel.ls.webApi.dto.CourtOutput
 import pt.isel.ls.webServices.ClubServices
 import pt.isel.ls.webServices.CourtServices
 import pt.isel.ls.webServices.UserServices
 
-class CourtWebApi( private val courtServices: CourtServices){
+class CourtWebApi( private val courtServices: CourtServices) {
 
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
@@ -39,11 +41,6 @@ class CourtWebApi( private val courtServices: CourtServices){
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: return Response(Status.UNAUTHORIZED)
                 .body(Json.encodeToString(mapOf("error" to "Missing or invalid token")))
-
-        if (UserServices.getUserByToken(Token(token)) == null) {
-            return Response(Status.UNAUTHORIZED)
-                .body(Json.encodeToString(mapOf("error" to "Invalid token")))
-        }
 
         val courtDto = Json.decodeFromString<CourtInput>(request.bodyString())
 
@@ -79,17 +76,16 @@ class CourtWebApi( private val courtServices: CourtServices){
     }
 
 
-    private fun getCourtsByClub(request: Request): Response {
+    private fun getCourtsByClubId(request: Request): Response {
         logRequest(request)
         val clubId = request.path("id")?.toIntOrNull()
             ?: return Response(Status.BAD_REQUEST)
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
 
-        val club = ClubServices.getClubById(Id(clubId))
-        return if (club != null) {
-            val courts = CourtServices.getCourtsByClub(club)
-            if (courts.isNotEmpty()) {
+        val courts = courtServices.getCourtsByClub(Id(clubId))
+
+        return if (courts.isNullOrEmpty()) {
                 Response(OK)
                     .header("content-type", "application/json")
                     .body(Json.encodeToString(courts))
@@ -98,16 +94,11 @@ class CourtWebApi( private val courtServices: CourtServices){
                     .header("content-type", "application/json")
                     .body(Json.encodeToString(mapOf("error" to "No courts found for this club")))
             }
-        } else {
-            Response(Status.NOT_FOUND)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "Club not found")))
-        }
     }
     val appCourts = routes(
         "courts" bind Method.POST to ::createCourt,
         "courts/{id}" bind Method.GET to ::getCourtById,
-        "clubs/{id}/courts" bind Method.GET to ::getCourtsByClub
+        "clubs/{id}/courts" bind Method.GET to ::getCourtsByClubId
     )
 
 }

@@ -24,11 +24,11 @@ object RentalDataMem : RentalIStorage {
         return rentals.find { it.rid == rentalId }
     }
 
-    override fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental> {
+    override fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental>? {
         return rentals.filter { it.user.uid == cid && it.court.id == crid && it.date == date }
     }
 
-    override fun getRentalsOfUser(cid: Id): List<Rental> {
+    override fun getRentalsOfUser(cid: Id): List<Rental>? {
         return rentals.filter { it.user.uid == cid }
     }
 
@@ -37,7 +37,7 @@ object RentalDataMem : RentalIStorage {
         val availableHours = mutableListOf<Int>()
         val occupiedHours = mutableSetOf<Int>()
 
-        rentals.forEach { rental ->
+        rentals?.forEach { rental ->
             // Get the start hour from the rental duration
             val startHour = rental.duration.initDuration
             // Calculate the end hour by adding the duration hours

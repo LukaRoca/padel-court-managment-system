@@ -40,7 +40,7 @@ class UserWebApi(private val userServices: UserServices) {
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
 
-        val user = UserServices.getUserById(Id(userId))
+        val user = userServices.getUserById(Id(userId))
         return if (user != null) {
             Response(OK)
                 .header("content-type", "application/json")
@@ -55,7 +55,7 @@ class UserWebApi(private val userServices: UserServices) {
     fun createUser(request: Request): Response {
         logRequest(request)
         val response = Json.decodeFromString<UserInput>(request.bodyString())
-        val user = UserServices.createUser(Name(response.name), Email(response.email))
+        val user = userServices.createUser(Name(response.name), Email(response.email))
         return Response(CREATED)
             .header("content-type", "application/json")
             .body(Json.encodeToString(UserOutput(user.uid, user.token)))

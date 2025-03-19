@@ -2,19 +2,20 @@ package pt.isel.ls.webServices
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.UserDataMem
+import pt.isel.ls.storage.UserIStorage
 
-object UserServices {
+class UserServices (private val db : UserIStorage) {
 
     fun getUserById(userId: Id): User? {
-        return UserDataMem.getUserById(userId)
+        return db.getUserById(userId)
     }
 
     fun createUser(name: Name, email: Email): User {
-        return UserDataMem.createUser(name,email)
+        return db.createUser(name,email)
     }
 
     fun getUserByToken(token: Token): User? {
-        return UserDataMem.getUserByToken(token)
+        return db.getUserByToken(token)
     }
 
 }

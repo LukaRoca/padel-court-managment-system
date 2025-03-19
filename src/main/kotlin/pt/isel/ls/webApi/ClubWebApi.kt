@@ -58,7 +58,7 @@ class ClubWebApi(private val clubServices: ClubServices) {
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
 
-        val club = ClubServices.getClubById(Id(clubId))
+        val club = clubServices.getClubById(Id(clubId))
 
         return if (club != null) {
             Response(OK)

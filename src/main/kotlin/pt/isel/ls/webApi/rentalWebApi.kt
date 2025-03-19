@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Date
 import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Token
+import pt.isel.ls.domain.Token  
 import pt.isel.ls.webApi.dto.RentalAvailableHoursRequestDTO
 import pt.isel.ls.webApi.dto.RentalInput
 import pt.isel.ls.webApi.dto.RentalOutput

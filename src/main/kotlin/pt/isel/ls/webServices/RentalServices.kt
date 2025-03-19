@@ -2,31 +2,30 @@ package pt.isel.ls.webServices
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.RentalDataMem
+import pt.isel.ls.storage.RentalIStorage
+import pt.isel.ls.storage.UserIStorage
 
-object RentalServices {
+class RentalServices ( val db : RentalIStorage) {
 
     fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token ): Rental? {
-        return RentalDataMem.createRental(cid, crid, date, duration, token)
-
+        return db.createRental(cid, crid, date, duration, token)
     }
 
     fun getRentalById(rentalId: Id): Rental? {
-        return RentalDataMem.getRentalById(rentalId)
+        return db.getRentalById(rentalId)
 
     }
 
-    fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental> {
-        return RentalDataMem.getRentalList(cid, crid, date)
+    fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental>? {
+        return db.getRentalList(cid, crid, date)
     }
 
-    fun getRentalsOfUser(cid: Id): List<Rental> {
-        return RentalDataMem.getRentalsOfUser(cid)
-
+    fun getRentalsOfUser(cid: Id): List<Rental>? {
+        return db.getRentalsOfUser(cid)
     }
 
     fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int> {
-        return RentalDataMem.getAvailableHours(cid, crid, date)
-
+        return db.getAvailableHours(cid, crid, date)
     }
 
 }

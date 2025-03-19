@@ -7,7 +7,7 @@ import pt.isel.ls.domain.Name
 
 interface CourtIStorage {
 
-    fun getCourtByClub(club: Club): List<Court>
+    fun getCourtByClubId(id: Id): List<Court>?
 
     fun createCourt(name: Name, cid: Id): Court
 

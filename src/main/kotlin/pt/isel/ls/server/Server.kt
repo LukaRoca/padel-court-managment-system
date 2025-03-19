@@ -3,6 +3,10 @@ package pt.isel.ls.server
 import org.http4k.routing.routes
 import org.http4k.server.*
 import org.slf4j.LoggerFactory
+import pt.isel.ls.storage.ClubDataMem
+import pt.isel.ls.storage.CourtDataMem
+import pt.isel.ls.storage.RentalDataMem
+import pt.isel.ls.storage.UserDataMem
 import pt.isel.ls.webApi.*
 import pt.isel.ls.webServices.*
 
@@ -11,32 +15,32 @@ private val logger = LoggerFactory.getLogger("HTTPServer")
 
 fun main(){
 
-    val userService = UserServices
-   // val clubService = ClubServices
-   // val rentalService = RentalServices
-  //  val courtService = CourtServices
+    val userService = UserServices(UserDataMem)
+    val clubService = ClubServices(ClubDataMem)
+    val rentalService = RentalServices(RentalDataMem)
+    val courtService = CourtServices(CourtDataMem)
 
     val userWebApi = UserWebApi(userService)
-   // val clubWebApi = ClubWebApi(clubService)
-    //val rentalWebApi = RentalWebApi(rentalService)
-    //val courtWebApi = CourtWebApi(courtService)
+    val clubWebApi = ClubWebApi(clubService)
+    val rentalWebApi = RentalWebApi(rentalService)
+    val courtWebApi = CourtWebApi(courtService)
 
     val appRoutes = routes(
         userWebApi.app,
-     //   clubWebApi.appClubs,
-      //  rentalWebApi.appRental,
-        //courtWebApi.appCourts
+        clubWebApi.appClubs,
+        rentalWebApi.appRental,
+        courtWebApi.appCourts
     )
 
-    //val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()
+    val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()
     //val jettyServerAfonso = appRoutes.asServer(Jetty(8081)).start()
 
-    val jettyServer = appRoutes.asServer(Jetty(8080)).start()
+    //val jettyServer = appRoutes.asServer(Jetty(8080)).start()
     logger.info("server started")
 
     readln()
-    jettyServer.stop()
-    //jettyServerLuka.stop()
+    //jettyServer.stop()
+    jettyServerLuka.stop()
     //jettyServerAfonso.stop()
     logger.info("server stopped")
 

@@ -10,7 +10,7 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/club
-Authorization: Bearer 990601b6-7240-4b0a-bf87-9e947bea0a88
+Authorization: Bearer 42449fc7-0006-458d-b4dc-324d5583f634
 Content-Type: application/json
 
 {
