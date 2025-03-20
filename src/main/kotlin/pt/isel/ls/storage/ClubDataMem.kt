@@ -1,6 +1,8 @@
 package pt.isel.ls.storage
 
 import pt.isel.ls.domain.*
+import pt.isel.ls.storage.UserDataMem
+import pt.isel.ls.storage.UserDataMem.getUserByToken
 
 object ClubDataMem : ClubIStorage{
 
@@ -15,7 +17,8 @@ object ClubDataMem : ClubIStorage{
         return club.find { it.id == cid }
     }
 
-    override fun createClub(name: Name, user: User): Club {
+    override fun createClub(name: Name, token: Token): Club? {
+        val user = getUserByToken(token) ?: return null
         val newClub = Club(Id(cid), name, Owner(user))
         cid++
         club.add(newClub)

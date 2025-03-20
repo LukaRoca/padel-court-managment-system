@@ -9,8 +9,9 @@ object CourtDataMem : CourtIStorage {
 
     private var crid = 2
 
-    override fun getCourtByClub(club: Club): List<Court> {
-        return courts.filter { it.club.id == club.id }
+
+    override fun getCourtByClubId(id: Id): List<Court>? {
+        return courts.filter { it.club.id == id }
     }
 
     override fun createCourt(name: Name, cid: Id): Court {

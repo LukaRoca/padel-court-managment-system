@@ -5,20 +5,20 @@ import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
 import pt.isel.ls.storage.ClubDataMem
+import pt.isel.ls.storage.ClubIStorage
 import pt.isel.ls.storage.UserDataMem
 
-object ClubServices {
+class ClubServices (private val db : ClubIStorage) {
 
     fun createClub(name : Name, token : Token) : Club? {
-        val user = UserDataMem.getUserByToken(token) ?: return null
-        return ClubDataMem.createClub(name, user)
+        return db.createClub(name, token)
     }
 
     fun getClubById(clubId: Id): Club? {
-        return ClubDataMem.getClubById(clubId)
+        return db.getClubById(clubId)
     }
 
     fun getClubs(): List<Club> {
-        return ClubDataMem.getClubs()
+        return db.getClubs()
     }
 }

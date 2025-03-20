@@ -17,7 +17,7 @@ GET http://localhost:8082/courts/1
 Accept: application/json
 
 ###
-GET http://localhost:8082/courts/2
+GET http://localhost:8082/courts/3
 Accept: application/json
 
 ###
@@ -31,7 +31,7 @@ Authorization: Bearer 42449fc7-0006-458d-b4dc-324d5583f634
 }
 
 ###
-GET http://localhost:8082/clubs/1/courts
+GET http://localhost:8082/clubs/2/courts
 Accept: application/json
 
 
