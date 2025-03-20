@@ -4,9 +4,7 @@ import pt.isel.ls.domain.Club
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
-import pt.isel.ls.storage.ClubDataMem
-import pt.isel.ls.storage.ClubIStorage
-import pt.isel.ls.storage.UserDataMem
+import pt.isel.ls.storage.iStorage.ClubIStorage
 
 class ClubServices (private val db : ClubIStorage) {
 

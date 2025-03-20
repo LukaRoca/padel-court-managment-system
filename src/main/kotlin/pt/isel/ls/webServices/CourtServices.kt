@@ -1,8 +1,7 @@
 package pt.isel.ls.webServices
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.storage.CourtDataMem
-import pt.isel.ls.storage.CourtIStorage
+import pt.isel.ls.storage.iStorage.CourtIStorage
 
 open class CourtServices (private val db: CourtIStorage) {
 

@@ -3,10 +3,10 @@ package pt.isel.ls.server
 import org.http4k.routing.routes
 import org.http4k.server.*
 import org.slf4j.LoggerFactory
-import pt.isel.ls.storage.ClubDataMem
-import pt.isel.ls.storage.CourtDataMem
-import pt.isel.ls.storage.RentalDataMem
-import pt.isel.ls.storage.UserDataMem
+import pt.isel.ls.storage.dataMem.ClubDataMem
+import pt.isel.ls.storage.dataMem.CourtDataMem
+import pt.isel.ls.storage.dataMem.RentalDataMem
+import pt.isel.ls.storage.dataMem.UserDataMem
 import pt.isel.ls.webApi.*
 import pt.isel.ls.webServices.*
 

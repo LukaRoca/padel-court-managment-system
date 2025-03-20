@@ -1,9 +1,7 @@
 package pt.isel.ls.webServices
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.storage.RentalDataMem
-import pt.isel.ls.storage.RentalIStorage
-import pt.isel.ls.storage.UserIStorage
+import pt.isel.ls.storage.iStorage.RentalIStorage
 
 class RentalServices (private val db : RentalIStorage) {
 

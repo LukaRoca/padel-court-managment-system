@@ -7,6 +7,7 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import pt.isel.ls.domain.Club
+import pt.isel.ls.storage.dataMem.ClubDataMem
 import pt.isel.ls.webApi.dto.ClubInput
 import pt.isel.ls.webApi.dto.ClubOutput
 import pt.isel.ls.webApi.ClubWebApi
@@ -16,7 +17,10 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class ClubWebApiTests {
-    private val clubWebApi = ClubWebApi(ClubServices)
+
+    private val db = ClubDataMem
+
+    private val clubWebApi = ClubWebApi(ClubServices(db))
 
     @Test
     fun `should create club successfully`() {
@@ -29,7 +33,7 @@ class ClubWebApiTests {
         assertEquals("application/json", response.header("content-type"))
         val responseBody = response.bodyString()
         val actualResponse = Json.decodeFromString<ClubOutput>(responseBody)
-        assertTrue(actualResponse.cid > 0)
+        assertTrue(actualResponse.cid.id > 0)
     }
 
     @Test

@@ -1,8 +1,9 @@
-package pt.isel.ls.storage
+package pt.isel.ls.storage.dataMem
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.storage.ClubDataMem.getClubById
-import pt.isel.ls.storage.CourtDataMem.getCourt
+import pt.isel.ls.storage.iStorage.RentalIStorage
+import pt.isel.ls.storage.dataMem.ClubDataMem.getClubById
+import pt.isel.ls.storage.dataMem.CourtDataMem.getCourt
 
 object RentalDataMem : RentalIStorage {
 

@@ -1,6 +1,5 @@
-package pt.isel.ls.storage
+package pt.isel.ls.storage.iStorage
 
-import pt.isel.ls.domain.Club
 import pt.isel.ls.domain.Court
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name

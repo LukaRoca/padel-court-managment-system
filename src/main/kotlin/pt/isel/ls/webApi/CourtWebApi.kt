@@ -13,14 +13,9 @@ import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
-import pt.isel.ls.domain.Token
-import pt.isel.ls.domain.User
-import pt.isel.ls.storage.CourtIStorage
 import pt.isel.ls.webApi.dto.CourtInput
 import pt.isel.ls.webApi.dto.CourtOutput
-import pt.isel.ls.webServices.ClubServices
 import pt.isel.ls.webServices.CourtServices
-import pt.isel.ls.webServices.UserServices
 
 class CourtWebApi( private val courtServices: CourtServices) {
 

@@ -1,8 +1,7 @@
 package pt.isel.ls.webServices
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.storage.UserDataMem
-import pt.isel.ls.storage.UserIStorage
+import pt.isel.ls.storage.iStorage.UserIStorage
 
 class UserServices (private val db : UserIStorage) {
 

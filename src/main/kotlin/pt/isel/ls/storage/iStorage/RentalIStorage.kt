@@ -1,4 +1,4 @@
-package pt.isel.ls.storage
+package pt.isel.ls.storage.iStorage
 
 import pt.isel.ls.domain.*
 

@@ -1,10 +1,10 @@
-package pt.isel.ls.storage
+package pt.isel.ls.storage.dataMem
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.storage.UserDataMem
-import pt.isel.ls.storage.UserDataMem.getUserByToken
+import pt.isel.ls.storage.iStorage.ClubIStorage
+import pt.isel.ls.storage.dataMem.UserDataMem.getUserByToken
 
-object ClubDataMem : ClubIStorage{
+object ClubDataMem : ClubIStorage {
 
     val club = mutableListOf(
         Club(Id(1), Name("Padel N"), Owner(User(

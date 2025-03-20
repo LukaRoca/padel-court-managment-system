@@ -1,6 +1,7 @@
-package pt.isel.ls.storage
+package pt.isel.ls.storage.dataMem
 
 import pt.isel.ls.domain.*
+import pt.isel.ls.storage.iStorage.CourtIStorage
 
 object CourtDataMem : CourtIStorage {
 
