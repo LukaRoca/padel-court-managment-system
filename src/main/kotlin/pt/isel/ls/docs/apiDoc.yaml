@@ -1,0 +1,646 @@
+openapi: 3.0.0
+info:
+  title: 'Courts API'
+  description: 'API for managing rental courts for padel'
+  contact:
+    name: 'LS API Team - Group 1'
+    url: 'https://github.com/isel-leic-ls/2425-2-LEIC43D-G01'
+    email: '50584@alunos.isel.ipl.pt , ... ,  ...'
+  version: '1.0.0'
+
+paths:
+  /users:
+    post:
+      tags:
+        - 'Users'
+      summary: 'Create a new user'
+      description: 'Create a new user in the system'
+      operationId: 'createUser'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInput'
+      responses:
+        '201':
+          description: 'User created successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOutput'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{id}:
+    get:
+      tags:
+        - 'Users'
+      summary: 'Get user by ID'
+      description: 'Retrieve a user by their unique identifier'
+      operationId: 'getUserById'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          description: 'ID of the user to retrieve'
+          required: true
+          schema:
+            type: 'integer'
+      responses:
+        '200':
+          description: 'User found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: 'User not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'Invalid ID format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /club:
+    post:
+      tags:
+        - 'Clubs'
+      summary: 'Create a new club'
+      description: 'Create a new club in the system'
+      operationId: 'createClub'
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClubInput'
+      responses:
+        '201':
+          description: 'Club created successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubOutput'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 'Unauthorized - Missing or invalid token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /clubs:
+    get:
+      tags:
+        - 'Clubs'
+      summary: 'Get all clubs'
+      description: 'Retrieve a list of all clubs'
+      operationId: 'getClubs'
+      responses:
+        '200':
+          description: 'List of clubs'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Club'
+        '404':
+          description: 'No clubs found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /clubs/{id}:
+    get:
+      tags:
+        - 'Clubs'
+      summary: 'Get club by ID'
+      description: 'Retrieve a club by its unique identifier'
+      operationId: 'getClubById'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          description: 'ID of the club to retrieve'
+          required: true
+          schema:
+            type: 'integer'
+      responses:
+        '200':
+          description: 'Club found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Club'
+        '404':
+          description: 'Club not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'Invalid ID format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /courts:
+    post:
+      tags:
+        - 'Courts'
+      summary: 'Create a new court'
+      description: 'Create a new court in the system'
+      operationId: 'createCourt'
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourtInput'
+      responses:
+        '201':
+          description: 'Court created successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CourtOutput'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 'Unauthorized - Missing or invalid token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /courts/{id}:
+    get:
+      tags:
+        - 'Courts'
+      summary: 'Get court by ID'
+      description: 'Retrieve a court by its unique identifier'
+      operationId: 'getCourtById'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          description: 'ID of the court to retrieve'
+          required: true
+          schema:
+            type: 'integer'
+      responses:
+        '200':
+          description: 'Court found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Court'
+        '404':
+          description: 'Court not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'Invalid ID format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /clubs/{id}/courts:
+    get:
+      tags:
+        - 'Courts'
+      summary: 'Get courts by club ID'
+      description: 'Retrieve all courts belonging to a specific club'
+      operationId: 'getCourtsByClubId'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          description: 'ID of the club'
+          required: true
+          schema:
+            type: 'integer'
+      responses:
+        '200':
+          description: 'List of courts found'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Court'
+        '404':
+          description: 'No courts found for this club'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'Invalid club ID format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /rental:
+    post:
+      tags:
+        - 'Rentals'
+      summary: 'Create a new rental'
+      description: 'Create a new court rental'
+      operationId: 'createRental'
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalInput'
+      responses:
+        '201':
+          description: 'Rental created successfully'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalOutput'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 'Unauthorized - Missing or invalid token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /rental/{id}:
+    get:
+      tags:
+        - 'Rentals'
+      summary: 'Get rental by ID'
+      description: 'Retrieve a rental by its unique identifier'
+      operationId: 'getRentalById'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          description: 'ID of the rental to retrieve'
+          required: true
+          schema:
+            type: 'integer'
+      responses:
+        '200':
+          description: 'Rental found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rental'
+        '404':
+          description: 'Rental not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'Invalid ID format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /rentals:
+    get:
+      tags:
+        - 'Rentals'
+      summary: 'Get rental list'
+      description: 'Retrieve a list of rentals based on club, court, and date'
+      operationId: 'getRentalList'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalInput'
+      responses:
+        '200':
+          description: 'List of rentals found'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Rental'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /rentals/user/{id}:
+    get:
+      tags:
+        - 'Rentals'
+      summary: 'Get rentals by user ID'
+      description: 'Retrieve all rentals for a specific user'
+      operationId: 'getRentalsOfUser'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          description: 'ID of the user'
+          required: true
+          schema:
+            type: 'integer'
+      responses:
+        '200':
+          description: 'List of user rentals'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/Rental'
+        '404':
+          description: 'No rentals found or user not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'Invalid user ID format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /rentals/available:
+    get:
+      tags:
+        - 'Rentals'
+      summary: 'Get available hours'
+      description: 'Retrieve available time slots for a court on a specific date'
+      operationId: 'getAvailableHours'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentalAvailableHoursRequest'
+      responses:
+        '200':
+          description: 'List of available hours'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  type: 'string'
+                  format: 'time'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 'Resource not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    UserInput:
+      type: 'object'
+      required:
+        - 'name'
+        - 'email'
+      properties:
+        name:
+          type: 'string'
+          description: 'The name of the user'
+        email:
+          type: 'string'
+          format: 'email'
+          description: 'The email address of the user'
+
+    UserOutput:
+      type: 'object'
+      properties:
+        uid:
+          type: 'integer'
+          description: 'The unique identifier for the user'
+        token:
+          type: 'string'
+          description: 'Authentication token for the user'
+
+    User:
+      type: 'object'
+      properties:
+        id:
+          type: 'integer'
+          description: 'The unique identifier for the user'
+        name:
+          type: 'string'
+          description: 'The name of the user'
+        email:
+          type: 'string'
+          format: 'email'
+          description: 'The email address of the user'
+
+    ClubInput:
+      type: 'object'
+      required:
+        - 'name'
+      properties:
+        name:
+          type: 'string'
+          description: 'The name of the club'
+
+    ClubOutput:
+      type: 'object'
+      properties:
+        id:
+          type: 'integer'
+          description: 'The unique identifier for the club'
+
+    Club:
+      type: 'object'
+      properties:
+        id:
+          type: 'integer'
+          description: 'The unique identifier for the club'
+        name:
+          type: 'string'
+          description: 'The name of the club'
+        owner:
+          type: 'object'
+          properties:
+            id:
+              type: 'integer'
+              description: 'The ID of the club owner'
+            name:
+              type: 'string'
+              description: 'The name of the club owner'
+
+    CourtInput:
+      type: 'object'
+      required:
+        - 'name'
+        - 'id'
+      properties:
+        name:
+          type: 'string'
+          description: 'The name of the court'
+        id:
+          type: 'integer'
+          description: 'The ID of the club this court belongs to'
+
+    CourtOutput:
+      type: 'object'
+      properties:
+        id:
+          type: 'integer'
+          description: 'The unique identifier for the court'
+
+    Court:
+      type: 'object'
+      properties:
+        id:
+          type: 'integer'
+          description: 'The unique identifier for the court'
+        name:
+          type: 'string'
+          description: 'The name of the court'
+        clubId:
+          type: 'integer'
+          description: 'The ID of the club this court belongs to'
+
+    RentalInput:
+      type: 'object'
+      required:
+        - 'cid'
+        - 'crid'
+        - 'date'
+        - 'initDuration'
+        - 'endDuration'
+      properties:
+        cid:
+          type: 'integer'
+          description: 'Club ID'
+        crid:
+          type: 'integer'
+          description: 'Court ID'
+        date:
+          type: 'string'
+          format: 'date'
+          description: 'Date of the rental'
+        initDuration:
+          type: 'string'
+          format: 'time'
+          description: 'Start time of the rental'
+        endDuration:
+          type: 'string'
+          format: 'time'
+          description: 'End time of the rental'
+
+    RentalOutput:
+      type: 'object'
+      properties:
+        rid:
+          type: 'integer'
+          description: 'The unique identifier for the rental'
+
+    Rental:
+      type: 'object'
+      properties:
+        rid:
+          type: 'integer'
+          description: 'The unique identifier for the rental'
+        clubId:
+          type: 'integer'
+          description: 'Club ID'
+        courtId:
+          type: 'integer'
+          description: 'Court ID'
+        userId:
+          type: 'integer'
+          description: 'User ID'
+        date:
+          type: 'string'
+          format: 'date'
+          description: 'Date of the rental'
+        startTime:
+          type: 'string'
+          format: 'time'
+          description: 'Start time of the rental'
+        endTime:
+          type: 'string'
+          format: 'time'
+          description: 'End time of the rental'
+
+    RentalAvailableHoursRequest:
+      type: 'object'
+      required:
+        - 'cid'
+        - 'crid'
+        - 'date'
+      properties:
+        cid:
+          type: 'integer'
+          description: 'Club ID'
+        crid:
+          type: 'integer'
+          description: 'Court ID'
+        date:
+          type: 'string'
+          format: 'date'
+          description: 'Date to check for availability'
+
+    Error:
+      type: 'object'
+      properties:
+        error:
+          type: 'string'
+          description: 'Error message'
+
+  securitySchemes:
+    bearerAuth:
+      type: 'http'
+      scheme: 'bearer'
+      bearerFormat: 'JWT'

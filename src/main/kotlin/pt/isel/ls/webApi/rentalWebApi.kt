@@ -21,7 +21,7 @@ import pt.isel.ls.webServices.RentalServices
 
 class RentalWebApi(private val rentalServices: RentalServices) : WebApiExceptions() {
 
-    fun createRental(request: Request): Response = useWithException {
+    private fun createRental(request: Request): Response = useWithException {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: throw AuthorizationException("Missing or invalid token")
         val rentalData = Json.decodeFromString<RentalInput>(request.bodyString())
@@ -37,7 +37,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
             .body(Json.encodeToString(RentalOutput(rental.rid)))
     }
 
-    fun getRentalById(request: Request): Response = useWithException {
+    private fun getRentalById(request: Request): Response = useWithException {
         val rentalId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid rental ID")
         val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException("Rental not found")
@@ -46,7 +46,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
             .body(Json.encodeToString(rental))
     }
 
-    fun getRentalList(request: Request): Response = useWithException {
+   private fun getRentalList(request: Request): Response = useWithException {
         val rentalListDto = Json.decodeFromString<RentalInput>(request.bodyString())
         val rentalList = rentalServices.getRentalList(
             Id(rentalListDto.cid),
@@ -58,7 +58,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
             .body(Json.encodeToString(rentalList))
     }
 
-    fun getRentalsOfUser(request: Request): Response = useWithException {
+    private fun getRentalsOfUser(request: Request): Response = useWithException {
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid user ID")
         val rentals = rentalServices.getRentalsOfUser(Id(userId))
@@ -67,7 +67,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
             .body(Json.encodeToString(rentals))
     }
 
-    fun getAvailableHours(request: Request): Response = useWithException {
+    private fun getAvailableHours(request: Request): Response = useWithException {
         val availableHoursRequest = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
         val availableHours = rentalServices.getAvailableHours(
             availableHoursRequest.cid,
