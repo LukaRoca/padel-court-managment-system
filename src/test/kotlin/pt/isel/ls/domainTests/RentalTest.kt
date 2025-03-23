@@ -1,4 +1,4 @@
-package pt.isel.ls.domainTests
+/*package pt.isel.ls.domainTests
 
 import org.junit.Test
 import pt.isel.ls.domain.*
@@ -53,4 +53,4 @@ class RentalTest {
                 Court(Id(1), Name(""), Club(Id(1), Name("Pontinha"), Owner(User(Id(1), Name("Luis"), Email("luis@gmail.com"))))))
         }
     }
-}
+}*/

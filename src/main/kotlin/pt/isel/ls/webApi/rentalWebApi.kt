@@ -21,7 +21,7 @@ import pt.isel.ls.webServices.RentalServices
 
 class RentalWebApi(private val rentalServices: RentalServices) : WebApiExceptions() {
 
-    private fun createRental(request: Request): Response = useWithException {
+    fun createRental(request: Request): Response = useWithException {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: throw AuthorizationException("Missing or invalid token")
         val rentalData = Json.decodeFromString<RentalInput>(request.bodyString())
@@ -37,13 +37,28 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
             .body(Json.encodeToString(RentalOutput(rental.rid)))
     }
 
-    private fun getRentalById(request: Request): Response = useWithException {
+    fun getRentalById(request: Request): Response = useWithException {
         val rentalId = request.path("id")?.toIntOrNull()
-            ?: throw IllegalArgumentException("Invalid rental ID")
-        val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException("Rental not found")
-        Response(Status.OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(rental))
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid rental ID")))
+
+        return try {
+            val rental = rentalServices.getRentalById(Id(rentalId))
+            if (rental != null) {
+                Response(Status.OK)
+                    .header("content-type", "application/json")
+                    .body(Json.encodeToString(rental))
+            } else {
+                Response(Status.NOT_FOUND)
+                    .header("content-type", "application/json")
+                    .body(Json.encodeToString(mapOf("error" to "Rental not found")))
+            }
+        } catch (e: Exception) {
+            Response(Status.INTERNAL_SERVER_ERROR)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to e.message)))
+        }
     }
 
    private fun getRentalList(request: Request): Response = useWithException {

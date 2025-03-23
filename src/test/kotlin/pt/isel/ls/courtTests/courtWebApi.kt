@@ -42,7 +42,7 @@ class CourtWebApiTests {
         val response = courtWebApi.appCourts(request)
         assertEquals(NOT_FOUND, response.status)
         assertEquals(
-            "{\"error\":\"Club not found\"}",
+            "{\"error\":\"No courts found for this club\"}",
             response.bodyString()
         )
     }
@@ -51,7 +51,7 @@ class CourtWebApiTests {
     fun `should return OK if club has courts`() {
         val clubId = 1
         val request = Request(GET, "/clubs/$clubId/courts")
-        val response = CourtWebApi(CourtServices(db)).appCourts(request)
+        val response = courtWebApi.appCourts(request)
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
         val responseBody = response.bodyString()

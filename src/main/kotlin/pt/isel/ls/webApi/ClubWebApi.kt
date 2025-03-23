@@ -67,7 +67,7 @@ class ClubWebApi(private val clubServices: ClubServices) {
         } else {
             Response(Status.NOT_FOUND)
                 .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "User not found")))
+                .body(Json.encodeToString(mapOf("error" to "Club not found")))
         }
     }
 

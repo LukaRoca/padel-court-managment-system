@@ -7,6 +7,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
@@ -64,7 +65,7 @@ class CourtWebApi( private val courtServices: CourtServices) {
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(court))
         } else {
-            Response(Status.NOT_FOUND)
+            Response(NOT_FOUND)
                 .header("content-type", "application/json")
                 .body(Json.encodeToString(mapOf("error" to "Court not found")))
         }
@@ -80,15 +81,21 @@ class CourtWebApi( private val courtServices: CourtServices) {
 
         val courts = courtServices.getCourtsByClub(Id(clubId))
 
-        return if (courts.isNullOrEmpty()) {
+        return if (courts != null) {
+            if (courts.isNotEmpty()) {
                 Response(OK)
                     .header("content-type", "application/json")
                     .body(Json.encodeToString(courts))
             } else {
-                Response(Status.NOT_FOUND)
+                Response(NOT_FOUND)
                     .header("content-type", "application/json")
                     .body(Json.encodeToString(mapOf("error" to "No courts found for this club")))
             }
+        } else {
+            Response(NOT_FOUND)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Club not found")))
+        }
     }
     val appCourts = routes(
         "courts" bind Method.POST to ::createCourt,

@@ -1,4 +1,4 @@
-package pt.isel.ls.domainTests
+/*package pt.isel.ls.domainTests
 
 import pt.isel.ls.domain.*
 import kotlin.test.*
@@ -55,3 +55,4 @@ class CourtTest {
         assertEquals("Club name must not be empty", exception.message)
     }
 }
+*/

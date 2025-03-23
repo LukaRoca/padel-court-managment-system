@@ -38,11 +38,11 @@ class ClubWebApiTests {
 
     @Test
     fun `should return NOT_FOUND for a non-existent club ID`() {
-        val request = Request(Method.GET, "/clubs/0")
+        val request = Request(Method.GET, "/clubs/9999")
         val response = clubWebApi.appClubs(request)
         assertEquals(NOT_FOUND, response.status)
         assertEquals(
-            "{\"error\":\"User not found\"}",
+            "{\"error\":\"Club not found\"}",
             response.bodyString()
         )
     }

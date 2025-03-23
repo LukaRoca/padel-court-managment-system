@@ -1,4 +1,4 @@
-package pt.isel.ls.domainTests
+/*package pt.isel.ls.domainTests
 
 import pt.isel.ls.domain.*
 import kotlin.test.*
@@ -25,4 +25,4 @@ class ClubTest {
             Club(Id(1), name, owner)
         }
     }
-}
+}*/

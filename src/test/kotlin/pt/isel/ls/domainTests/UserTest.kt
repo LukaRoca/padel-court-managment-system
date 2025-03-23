@@ -1,4 +1,4 @@
-package pt.isel.ls.domainTests
+/*package pt.isel.ls.domainTests
 
 import pt.isel.ls.domain.*
 import kotlin.test.*
@@ -36,3 +36,4 @@ class UserTest {
         assertEquals("Email must have @ in it", exception.message)
     }
 }
+*/

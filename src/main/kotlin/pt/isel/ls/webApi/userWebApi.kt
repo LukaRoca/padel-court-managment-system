@@ -32,7 +32,7 @@ class UserWebApi(private val userServices: UserServices) {
         )
     }
 
-    private fun getUserById(request: Request): Response {
+    fun getUserById(request: Request): Response {
         logRequest(request)
 
         val userId = request.path("id")?.toIntOrNull()
