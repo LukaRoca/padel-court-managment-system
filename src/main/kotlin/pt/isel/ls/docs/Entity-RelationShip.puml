@@ -1,0 +1,35 @@
+@startuml
+
+entity User {
+    +Id uid
+    +Name name
+    +Email email
+    +Token token
+}
+
+entity Club {
+    +Id cid
+    +Name name
+    +Owner owner
+}
+
+entity Court {
+    +Id crid
+    +Name name
+    +Club club
+}
+
+entity Rental {
+    +Id rid
+    +Date date
+    +Duration duration
+    +User user
+    +Court court
+}
+
+User ||--o{ Rental : "makes"
+Club ||--o{ Court : "has"
+Court ||--o{ Rental : "is rented for"
+Club ||--o{ Rental : "has"
+
+@enduml
