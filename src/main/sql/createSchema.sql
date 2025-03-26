@@ -1,26 +1,27 @@
 
-create table "user" (
+create table users (
     uid serial primary key,
+    token uuid unique not null,
     name varchar(255) not null,
     email varchar(255) unique not null
 );
 
 create table club (
-    cid uuid unique primary key,
+    cid serial primary key,
     name varchar(255) unique not null,
-    owner uuid references "user"(uid) /* necessario verificar se é assim */
+    owner int references users(uid)
 );
 
 create table court (
-    crid uuid unique primary key,
+    crid serial unique primary key,
     name varchar(255) not null,
-    club uuid references club(cid) /* necessario verificar se é assim */
+    club int references club(cid)
 );
 
 create table rental (
-    rid uuid unique primary key,
+    rid serial primary key,
     date date not null,
     duration int not null,
-    "user" uuid references "user"(uid), /* necessario verificar se é assim */
-    court uuid references court(crid) /* necessario verificar se é assim */
+    "user" int references users(uid),
+    court int references court(crid)
 )
