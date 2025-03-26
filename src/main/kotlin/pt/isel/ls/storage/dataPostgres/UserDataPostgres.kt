@@ -3,6 +3,8 @@ package pt.isel.ls.storage.dataPostgres
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.UserIStorage
 import java.sql.Connection
+import java.sql.SQLException
+import java.sql.Statement
 import java.util.*
 
 
@@ -11,15 +13,23 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
 
     override fun createUser(name: Name, email: Email) : User {
         val token = UUID.randomUUID()
-        val sql = "INSERT INTO users(uid, token, name, email) VALUES (?, ?, ?,?)"
-        connection.prepareStatement(sql).use {
-            it.setInt(1, uid)
-            it.setObject(2, token)
-            it.setString(3, name.name)
-            it.setString(4, email.value)
-            it.executeUpdate()
+        val sql = "INSERT INTO users(token, name, email) VALUES (?, ?,?)"
+
+        val statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS).apply {
+            setObject(1, token)
+            setString(2, name.name)
+            setString(3, email.value)
         }
-        return User(Id(uid++), name, email, Token(token.toString()))
+        //Fazer função para tratar desta cena
+        if (statement.executeUpdate() == 0) {
+            throw SQLException("Error while creating a new user.")
+        }
+
+        val keys = statement.generatedKeys
+
+        keys.next()
+
+        return User(Id(keys.getInt("uid")), name, email, Token(token.toString()))
     }
 
     override fun getUserById(userId: Id): User? {

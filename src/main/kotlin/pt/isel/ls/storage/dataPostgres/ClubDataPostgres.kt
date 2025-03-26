@@ -6,7 +6,7 @@ import pt.isel.ls.storage.iStorage.ClubIStorage
 import java.sql.Connection
 
 class ClubDataPostgres (private val connection: Connection): ClubIStorage {
-    private var cid = 2
+    private var cid = 1
     override fun getClubById(cid: Id): Club? {
         TODO()
     }
