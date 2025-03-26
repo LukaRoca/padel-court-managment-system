@@ -4,104 +4,56 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
-import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.webApi.dto.CourtInput
 import pt.isel.ls.webApi.dto.CourtOutput
 import pt.isel.ls.webServices.CourtServices
 
-class CourtWebApi( private val courtServices: CourtServices) {
+class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions() {
+    private fun handleError(e: Exception): Response = httpException(e)
 
-    private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
-
-    private fun logRequest(request: Request) {
-        logger.info(
-            "incoming request: method={}, uri={}, content-type={} accept={}",
-            request.method,
-            request.uri,
-            request.header("content-type"),
-            request.header("accept"),
-        )
-    }
-    fun createCourt(request: Request): Response {
-        logRequest(request)
-
-        val token = request.header("Authorization")?.removePrefix("Bearer ")
-            ?: return Response(Status.UNAUTHORIZED)
-                .body(Json.encodeToString(mapOf("error" to "Missing or invalid token")))
-
+    fun createCourt(request: Request): Response = try {
         val courtDto = Json.decodeFromString<CourtInput>(request.bodyString())
-
-        return try {
-            val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.id))
-            Response(CREATED)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(CourtOutput(court.id)))
-        } catch (e: IllegalArgumentException) {
-            Response(Status.BAD_REQUEST)
-                .body(Json.encodeToString(mapOf("error" to e.message)))
-        }
+        val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.id))
+        Response(CREATED)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(CourtOutput(court.id)))
+    } catch (e: Exception) {
+        handleError(e)
     }
-
-
-    private fun getCourtById(request: Request): Response {
-        logRequest(request)
+    fun getCourtById(request: Request): Response = try {
         val crid = request.path("id")?.toIntOrNull()
-            ?: return Response(Status.BAD_REQUEST)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
-
-        val court = courtServices.getCourtById(Id(crid))
-        return if (court != null) {
+            ?: throw IllegalArgumentException("Invalid court ID")
+        val court = courtServices.getCourtById(Id(crid)) ?: throw NoSuchElementException()
+        Response(OK)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(court))
+    } catch (e: Exception) {
+        handleError(e)
+    }
+    fun getCourtsByClub(request: Request): Response = try {
+        val clubId = request.path("id")?.toIntOrNull()
+            ?: throw IllegalArgumentException("Invalid club ID")
+        val courts = courtServices.getCourtsByClub(Id(clubId)) ?: emptyList()
+        if (courts.isNotEmpty()) {
             Response(OK)
                 .header("content-type", "application/json")
-                .body(Json.encodeToString(court))
+                .body(Json.encodeToString(courts))
         } else {
-            Response(NOT_FOUND)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "Court not found")))
+            throw NoSuchElementException()
         }
-    }
-
-
-    private fun getCourtsByClubId(request: Request): Response {
-        logRequest(request)
-        val clubId = request.path("id")?.toIntOrNull()
-            ?: return Response(Status.BAD_REQUEST)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
-
-        val courts = courtServices.getCourtsByClub(Id(clubId))
-
-        return if (courts != null) {
-            if (courts.isNotEmpty()) {
-                Response(OK)
-                    .header("content-type", "application/json")
-                    .body(Json.encodeToString(courts))
-            } else {
-                Response(NOT_FOUND)
-                    .header("content-type", "application/json")
-                    .body(Json.encodeToString(mapOf("error" to "No courts found for this club")))
-            }
-        } else {
-            Response(NOT_FOUND)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "Club not found")))
-        }
+    } catch (e: Exception) {
+        handleError(e)
     }
     val appCourts = routes(
         "courts" bind Method.POST to ::createCourt,
         "courts/{id}" bind Method.GET to ::getCourtById,
-        "clubs/{id}/courts" bind Method.GET to ::getCourtsByClubId
+        "clubs/{id}/courts" bind Method.GET to ::getCourtsByClub
     )
-
 }
-

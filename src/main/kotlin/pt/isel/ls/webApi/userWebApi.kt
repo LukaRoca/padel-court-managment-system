@@ -4,7 +4,6 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
@@ -18,7 +17,8 @@ import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.webApi.dto.UserOutput
 import pt.isel.ls.webApi.dto.UserInput
 
-class UserWebApi(private val userServices: UserServices) {
+class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
+    private fun handleError(e: Exception): Response = httpException(e)
 
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
@@ -31,37 +31,29 @@ class UserWebApi(private val userServices: UserServices) {
             request.header("accept"),
         )
     }
-
-    fun getUserById(request: Request): Response {
+    fun getUserById(request: Request): Response = try {
         logRequest(request)
-
         val userId = request.path("id")?.toIntOrNull()
-            ?: return Response(Status.BAD_REQUEST)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "Invalid user ID")))
-
-        val user = userServices.getUserById(Id(userId))
-        return if (user != null) {
-            Response(OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(user))
-        } else {
-            Response(Status.NOT_FOUND)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(mapOf("error" to "User not found")))
-        }
+            ?: throw IllegalArgumentException("Invalid user ID")
+        val user = userServices.getUserById(Id(userId)) ?: throw NoSuchElementException()
+        Response(OK)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(user))
+    } catch (e: Exception) {
+        handleError(e)
     }
 
-    fun createUser(request: Request): Response {
+    fun createUser(request: Request): Response = try {
         logRequest(request)
         val response = Json.decodeFromString<UserInput>(request.bodyString())
         val user = userServices.createUser(Name(response.name), Email(response.email))
-        return Response(CREATED)
+        Response(CREATED)
             .header("content-type", "application/json")
             .body(Json.encodeToString(UserOutput(user.uid, user.token)))
+    } catch (e: Exception) {
+        handleError(e)
     }
 
-    //Rotas
     val app = routes(
         "users" bind Method.POST to ::createUser,
         "users/{id}" bind Method.GET to ::getUserById
