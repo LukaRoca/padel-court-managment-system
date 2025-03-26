@@ -1,4 +1,4 @@
-GET http://localhost:8080/users/2
+GET http://localhost:8080/users/3
 
 ###
 GET http://localhost:8080/clubs/1
@@ -22,7 +22,7 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-    "name": "Bernardo Jaco",
-    "email": "bjaco@gmail.com"
+    "name": "Bernardo Jacp",
+    "email": "bjpco@gmail.com"
 }
 
