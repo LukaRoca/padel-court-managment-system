@@ -9,10 +9,7 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
-import pt.isel.ls.domain.Date
-import pt.isel.ls.domain.Duration
-import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Token
+import pt.isel.ls.domain.*
 import pt.isel.ls.webApi.dto.RentalAvailableHoursRequestDTO
 import pt.isel.ls.webApi.dto.RentalInput
 import pt.isel.ls.webApi.dto.RentalOutput
@@ -61,13 +58,23 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         }
     }
 
-   private fun getRentalList(request: Request): Response = useWithException {
-        val rentalListDto = Json.decodeFromString<RentalInput>(request.bodyString())
-        val rentalList = rentalServices.getRentalList(
-            Id(rentalListDto.cid),
-            Id(rentalListDto.crid),
-            Date(rentalListDto.date)
-        )
+    private fun getRentalList(request: Request): Response = useWithException {
+        val clubId = request.query("cid")?.toIntOrNull()
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
+
+        val courtId = request.query("crid")?.toIntOrNull()
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid court ID")))
+
+        val date = request.query("date")
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid date")))
+
+        val rentalList = rentalServices.getRentalList(Id(clubId), Id(courtId), Date(date))
         Response(Status.OK)
             .header("content-type", "application/json")
             .body(Json.encodeToString(rentalList))
@@ -83,12 +90,22 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
     }
 
     private fun getAvailableHours(request: Request): Response = useWithException {
-        val availableHoursRequest = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
-        val availableHours = rentalServices.getAvailableHours(
-            availableHoursRequest.cid,
-            availableHoursRequest.crid,
-            availableHoursRequest.date
-        )
+        val clubId = request.query("cid")?.toIntOrNull()
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid club ID")))
+
+        val courtId = request.query("crid")?.toIntOrNull()
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid court ID")))
+
+        val date = request.query("date")
+            ?: return Response(Status.BAD_REQUEST)
+                .header("content-type", "application/json")
+                .body(Json.encodeToString(mapOf("error" to "Invalid date")))
+
+        val availableHours = rentalServices.getAvailableHours(Id(clubId), Id(courtId), Date(date))
         Response(Status.OK)
             .header("content-type", "application/json")
             .body(Json.encodeToString(availableHours))

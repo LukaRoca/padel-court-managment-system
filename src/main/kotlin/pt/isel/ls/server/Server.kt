@@ -32,16 +32,16 @@ fun main(){
         courtWebApi.appCourts
     )
 
-    val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()
-    //val jettyServerAfonso = appRoutes.asServer(Jetty(8081)).start()
+    //val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()
+    val jettyServerAfonso = appRoutes.asServer(Jetty(8081)).start()
 
     //val jettyServer = appRoutes.asServer(Jetty(8080)).start()
     logger.info("server started")
 
     readln()
     //jettyServer.stop()
-    jettyServerLuka.stop()
-    //jettyServerAfonso.stop()
+    //jettyServerLuka.stop()
+    jettyServerAfonso.stop()
     logger.info("server stopped")
 
 }

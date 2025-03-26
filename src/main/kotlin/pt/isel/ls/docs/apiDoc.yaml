@@ -349,12 +349,26 @@ paths:
       summary: 'Get rental list'
       description: 'Retrieve a list of rentals based on club, court, and date'
       operationId: 'getRentalList'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RentalInput'
+      parameters:
+        - name: 'cid'
+          in: 'query'
+          description: 'Club ID'
+          required: true
+          schema:
+            type: 'integer'
+        - name: 'crid'
+          in: 'query'
+          description: 'Court ID'
+          required: true
+          schema:
+            type: 'integer'
+        - name: 'date'
+          in: 'query'
+          description: 'Date of the rental'
+          required: true
+          schema:
+            type: 'string'
+            format: 'date'
       responses:
         '200':
           description: 'List of rentals found'
@@ -414,12 +428,26 @@ paths:
       summary: 'Get available hours'
       description: 'Retrieve available time slots for a court on a specific date'
       operationId: 'getAvailableHours'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RentalAvailableHoursRequest'
+      parameters:
+        - name: 'cid'
+          in: 'query'
+          description: 'Club ID'
+          required: true
+          schema:
+            type: 'integer'
+        - name: 'crid'
+          in: 'query'
+          description: 'Court ID'
+          required: true
+          schema:
+            type: 'integer'
+        - name: 'date'
+          in: 'query'
+          description: 'Date to check for availability'
+          required: true
+          schema:
+            type: 'string'
+            format: 'date'
       responses:
         '200':
           description: 'List of available hours'
