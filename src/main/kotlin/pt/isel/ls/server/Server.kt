@@ -8,6 +8,7 @@ import pt.isel.ls.storage.dataMem.ClubDataMem
 import pt.isel.ls.storage.dataMem.CourtDataMem
 import pt.isel.ls.storage.dataMem.RentalDataMem
 import pt.isel.ls.storage.dataMem.UserDataMem
+import pt.isel.ls.storage.dataPostgres.ClubDataPostgres
 import pt.isel.ls.storage.dataPostgres.UserDataPostgres
 import pt.isel.ls.webApi.*
 import pt.isel.ls.webServices.*
@@ -23,7 +24,7 @@ fun main(){
 
 
     val userService = UserServices(UserDataPostgres(dataSource.connection))
-    val clubService = ClubServices(ClubDataMem)
+    val clubService = ClubServices(ClubDataPostgres(dataSource.connection))
     val rentalService = RentalServices(RentalDataMem)
     val courtService = CourtServices(CourtDataMem)
 

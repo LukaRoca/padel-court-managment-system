@@ -10,7 +10,7 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/club
-Authorization: Bearer 42449fc7-0006-458d-b4dc-324d5583f634
+Authorization: Bearer 306281d7-958c-41d5-9812-eacdca0bb27d
 Content-Type: application/json
 
 {
@@ -22,7 +22,7 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-    "name": "Bernardo Jacooo",
-    "email": "bjacoo@gmail.com"
+    "name": "Bernardo Jaco",
+    "email": "bjaco@gmail.com"
 }
 

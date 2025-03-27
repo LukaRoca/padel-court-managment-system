@@ -9,8 +9,6 @@ import java.util.*
 
 
 class UserDataPostgres (private val connection : Connection) : UserIStorage {
-    private var uid = 1
-
     override fun createUser(name: Name, email: Email) : User {
         val token = UUID.randomUUID()
         val sql = "INSERT INTO users(token, name, email) VALUES (?, ?,?)"
@@ -29,7 +27,7 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
 
         keys.next()
 
-        return User(Id(keys.getInt("uid")), name, email, Token(token.toString()))
+        return User(Id(keys.getInt(1)), name, email, Token(token.toString()))
     }
 
     override fun getUserById(userId: Id): User? {
@@ -53,7 +51,7 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
     }
 
     override fun getUserByToken(token: Token): User? {
-        val sql = "SELECT token FROM users WHERE token = ?"
+        val sql = "SELECT * FROM users WHERE token = ?"
         connection.prepareStatement(sql).use { stmt ->
             stmt.setString(1, token.token)
             stmt.executeQuery().use { result ->
