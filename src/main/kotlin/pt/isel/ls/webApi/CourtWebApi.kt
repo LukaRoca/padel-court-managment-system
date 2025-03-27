@@ -20,10 +20,8 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
 
     fun createCourt(request: Request): Response = try {
         val courtDto = Json.decodeFromString<CourtInput>(request.bodyString())
-        val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.id))
-        Response(CREATED)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(court?.let { CourtOutput(it.id) }))
+        val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.cid)) ?: throw NoSuchElementException()
+        Response(CREATED).json(CourtOutput(court.id))
     } catch (e: Exception) {
         handleError(e)
     }

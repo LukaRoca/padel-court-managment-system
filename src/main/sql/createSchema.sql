@@ -23,6 +23,6 @@ create table rental (
     rid serial primary key,
     date date not null,
     duration int not null,
-    "user" int references users(uid),
+    usr int references users(uid),
     court int references court(crid)
 )
