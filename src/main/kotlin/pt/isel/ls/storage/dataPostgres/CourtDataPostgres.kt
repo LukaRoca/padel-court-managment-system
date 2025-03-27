@@ -1,5 +1,5 @@
 package pt.isel.ls.storage.dataPostgres
-
+import pt.isel.ls.domain.Club
 import pt.isel.ls.domain.Court
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
@@ -23,14 +23,17 @@ class CourtDataPostgres (private val connection: Connection) : CourtIStorage{
     }
     override fun getCourt(id: Id): Court? {
         val sql = "SELECT * FROM courts WHERE crid = ?"
-        connection.prepareStatement(sql).use {
-            it.setInt(1, id.id)
-            val rs = it.executeQuery()
-            if(rs.next()){
-                val name = rs.getString("name")
-                val cid = rs.getInt("cid")
-                val club = getClubById(Id(cid)) ?: throw IllegalArgumentException("Club not found")
-                return Court(id, Name(name), club)
+        val club = getClubById(cid = id) ?: throw IllegalArgumentException("Club not found")
+        connection.prepareStatement(sql).use { stmt ->
+            stmt.setInt(1, id.id)
+            stmt.executeQuery().use { result ->
+                if (result.next()) {
+                    return Court(
+                        Id(result.getInt("crid")),
+                        Name(result.getString("name")),
+                        Club(club.id, name = club.name, owner = club.owner),
+                    )
+                }
             }
         }
         return null
