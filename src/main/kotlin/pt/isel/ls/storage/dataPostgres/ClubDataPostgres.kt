@@ -32,7 +32,7 @@ class ClubDataPostgres (private val connection: Connection): ClubIStorage {
     }
 
     override fun createClub(name: Name, token: Token) : Club? {
-        val user = userData.getUserByToken(token) ?: return null
+        val user = userData.getUserByToken(token) ?: return throw IllegalArgumentException("No user with token $token")
         val sql = "INSERT INTO club(name, owner) VALUES (?, ?)"
 
         val statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS).apply {

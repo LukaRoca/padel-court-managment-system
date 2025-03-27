@@ -10,7 +10,7 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/club
-Authorization: Bearer d89cccc4-d541-452f-a26f-234910a8fbe1
+Authorization: Bearer 46fc162a-309d-4609-8307-3bf81bb55b52
 Content-Type: application/json
 
 {
@@ -26,3 +26,62 @@ Content-Type: application/json
     "email": "bjaco@gmail.com"
 }
 
+
+###
+POST http://localhost:8080/rental
+Authorization: Bearer 4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
+Content-Type: application/json
+
+{
+  "cid": 1,
+  "crid": 1,
+  "date": "2021-06-01",
+  "initDuration": 12,
+  "endDuration": 16
+}
+
+
+###
+POST http://localhost:8080/rental
+Authorization: Bearer4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
+Content-Type: application/json
+
+{
+  "cid": 2,
+  "crid": 2,
+  "date": "2021-06-01",
+  "initDuration": 12,
+  "endDuration": 16
+}
+
+###
+GET http://localhost:8080/rentals
+Content-Type: application/json
+
+{
+  "cid": 2,
+  "crid": 2,
+  "date": "2021-06-01",
+  "initDuration": 0,
+  "endDuration": 16
+}
+
+
+###
+
+GET http://localhost:8080/rentals/available
+Content-Type: application/json
+
+{
+  "cid": 2,
+  "crid": 2,
+  "date": "2021-06-01",
+  "initDuration": 12,
+  "endDuration": 16
+}
+
+
+###
+
+GET http://localhost:8080/rentals/user/1
+Content-Type: application/json

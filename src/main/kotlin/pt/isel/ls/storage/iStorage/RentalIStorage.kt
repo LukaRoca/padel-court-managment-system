@@ -10,7 +10,7 @@ interface RentalIStorage {
 
     fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental>?
 
-    fun getRentalsOfUser(cid: Id): List<Rental>?
+    fun getRentalsOfUser(uid: Id): List<Rental>?
 
     fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int>
 
