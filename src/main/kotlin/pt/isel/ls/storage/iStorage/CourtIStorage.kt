@@ -8,7 +8,7 @@ interface CourtIStorage {
 
     fun getCourtByClubId(id: Id): List<Court>?
 
-    fun createCourt(name: Name, cid: Id): Court
+    fun createCourt(name: Name, cid: Id): Court?
 
     fun getCourt(id : Id) : Court?
 }

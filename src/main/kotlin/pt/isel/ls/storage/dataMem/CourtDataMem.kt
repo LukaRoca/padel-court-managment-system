@@ -15,7 +15,7 @@ object CourtDataMem : CourtIStorage {
         return courts.filter { it.club.id == id }
     }
 
-    override fun createCourt(name: Name, cid: Id): Court {
+    override fun createCourt(name: Name, cid: Id): Court? {
         val club = ClubDataMem.club.find { it.id == cid } ?: throw IllegalArgumentException("Club not found")
         val newCourt = Court(Id(crid),name, club)
         crid++

@@ -23,7 +23,7 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
         val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.id))
         Response(CREATED)
             .header("content-type", "application/json")
-            .body(Json.encodeToString(CourtOutput(court.id)))
+            .body(Json.encodeToString(court?.let { CourtOutput(it.id) }))
     } catch (e: Exception) {
         handleError(e)
     }
