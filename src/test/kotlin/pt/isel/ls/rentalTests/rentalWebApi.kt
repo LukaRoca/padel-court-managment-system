@@ -42,10 +42,7 @@ class RentalWebApiTests {
         val request = Request(GET, "/rentals/10")
         val response = rentalWebApi.getRentalById(request)
         assertEquals(NOT_FOUND, response.status)
-        assertEquals(
-            "{\"error\":\"Rental not found\"}",
-            response.bodyString()
-        )
+        assertEquals("\"Not found\"", response.bodyString())
     }
 
     @Test

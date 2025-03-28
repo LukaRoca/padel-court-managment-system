@@ -27,7 +27,7 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
     }
     fun getCourtById(request: Request): Response = try {
         val crid = request.path("id")?.toIntOrNull()
-            ?: throw IllegalArgumentException("Invalid court ID")
+            ?: throw IllegalArgumentException()
         val court = courtServices.getCourtById(Id(crid)) ?: throw NoSuchElementException()
         Response(OK)
             .header("content-type", "application/json")
@@ -37,7 +37,7 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
     }
     fun getCourtsByClub(request: Request): Response = try {
         val clubId = request.path("id")?.toIntOrNull()
-            ?: throw IllegalArgumentException("Invalid club ID")
+            ?: throw IllegalArgumentException()
         val courts = courtServices.getCourtsByClub(Id(clubId)) ?: emptyList()
         if (courts.isNotEmpty()) {
             Response(OK)

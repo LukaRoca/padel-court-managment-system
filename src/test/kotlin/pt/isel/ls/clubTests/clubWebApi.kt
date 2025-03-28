@@ -41,9 +41,7 @@ class ClubWebApiTests {
         val request = Request(Method.GET, "/clubs/9999")
         val response = clubWebApi.appClubs(request)
         assertEquals(NOT_FOUND, response.status)
-        assertEquals(
-            "{\"error\":\"Club not found\"}",
-            response.bodyString()
+        assertEquals("\"Not found\"", response.bodyString()
         )
     }
 
