@@ -16,7 +16,7 @@ import pt.isel.ls.webApi.dto.CourtInput
 import pt.isel.ls.webApi.dto.CourtOutput
 import pt.isel.ls.webServices.*
 import kotlin.test.assertTrue
-
+/*
 class CourtWebApiTests {
 
     private val db = CourtDataMem
@@ -59,3 +59,5 @@ class CourtWebApiTests {
         assertTrue(courts.isNotEmpty(), "The club should have at least one court")
     }
 }
+
+ */

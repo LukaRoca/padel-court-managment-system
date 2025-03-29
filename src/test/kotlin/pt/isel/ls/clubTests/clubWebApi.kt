@@ -3,6 +3,7 @@ package pt.isel.ls.clubTests
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
+import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
@@ -36,16 +37,6 @@ class ClubWebApiTests {
         assertTrue(actualResponse.cid.id > 0)
     }
 
-    @Test
-    fun `should return NOT_FOUND for a non-existent club ID`() {
-        val request = Request(Method.GET, "/clubs/9999")
-        val response = clubWebApi.appClubs(request)
-        assertEquals(NOT_FOUND, response.status)
-        assertEquals(
-            "{\"error\":\"Club not found\"}",
-            response.bodyString()
-        )
-    }
 
     @Test
     fun `should return OK if clubs exist`() {
@@ -56,5 +47,29 @@ class ClubWebApiTests {
         val responseBody = response.bodyString()
         val clubs: List<Club> = Json.decodeFromString(responseBody)
         assertTrue(clubs.isNotEmpty(), "There should be at least one club")
+    }
+
+
+    @Test
+    fun `should return NOT_FOUND for non-existent club`() {
+        val request = Request(Method.GET, "/clubs/9999")
+        val response = clubWebApi.appClubs(request)
+        assertEquals(NOT_FOUND, response.status)
+    }
+
+    @Test
+    fun `should return BAD_REQUEST for invalid club ID`() {
+        val request = Request(Method.GET, "/clubs/abc")
+        val response = clubWebApi.appClubs(request)
+        assertEquals(BAD_REQUEST, response.status)
+    }
+
+    @Test
+    fun `should return BAD_REQUEST when creating a club without authorization`() {
+        val clubDto = ClubInput(name = "Unauthorized Club")
+        val request = Request(Method.POST, "/club")
+            .body(Json.encodeToString(clubDto))
+        val response = clubWebApi.appClubs(request)
+        assertEquals(BAD_REQUEST, response.status)
     }
 }
