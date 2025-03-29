@@ -24,7 +24,7 @@ class CourtWebApiTests {
     private val courtWebApi = CourtWebApi(CourtServices(db))
     @Test
     fun `should create court successfully`() {
-        val courtDto = CourtInput(id = 1, name = "Court 1")
+        val courtDto = CourtInput(name = "Court 1", cid = 1)
         val request = Request(POST, "/courts")
             .header("Authorization", "Bearer 42449fc7-0006-458d-b4dc-324d5583f634")
             .body(Json.encodeToString(courtDto))
@@ -35,16 +35,15 @@ class CourtWebApiTests {
         val actualResponse = Json.decodeFromString<CourtOutput>(responseBody)
         assertTrue(actualResponse.crid.id > 0)
     }
-
     @Test
-    fun `should return NOT_FOUND for a non-existent club ID`() {
-        val request = Request(GET, "/clubs/10/courts")
+    fun `should return NOT_FOUND if club has no courts`() {
+        val clubId = 10
+        val request = Request(GET, "/clubs/$clubId/courts")
         val response = courtWebApi.appCourts(request)
         assertEquals(NOT_FOUND, response.status)
-        assertEquals(
-            "{\"error\":\"No courts found for this club\"}",
-            response.bodyString()
-        )
+        assertEquals("application/json", response.header("content-type"))
+        val expectedResponse = "\"Not found\""
+        assertEquals(expectedResponse, response.bodyString())
     }
 
     @Test
