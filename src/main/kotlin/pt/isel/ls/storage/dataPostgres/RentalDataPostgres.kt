@@ -1,7 +1,6 @@
 package pt.isel.ls.storage.dataPostgres
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.storage.dataMem.RentalDataMem
 import pt.isel.ls.storage.iStorage.RentalIStorage
 import java.sql.Connection
 import java.sql.SQLException
@@ -13,14 +12,11 @@ class RentalDataPostgres (private val connection : Connection) : RentalIStorage 
     private val userData = UserDataPostgres(connection)
     private val clubData = ClubDataPostgres(connection)
     private val courtData = CourtDataPostgres(connection)
-
     override fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token): Rental? {
         val club = clubData.getClubById(cid) ?: return throw IllegalArgumentException("No club with id $cid")
-        val court = courtData.getCourt(crid) ?: return throw IllegalArgumentException("No court with id $crid")
+        val court = courtData.getCourtById(crid) ?: return throw IllegalArgumentException("No court with id $crid")
         val user = club.owner.user
-
         val sql = "INSERT INTO rental(date, initDuration, endDuration, usr, court) VALUES(?, ?, ?, ?, ?)"
-
         val statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS).apply {
             setString(1, date.value)
             setInt(2, duration.initDuration)
@@ -28,26 +24,21 @@ class RentalDataPostgres (private val connection : Connection) : RentalIStorage 
             setInt(4, user.uid.id)
             setInt(5, court.id.id)
         }
-
         if (statement.executeUpdate() == 0) {
             throw SQLException("Error while creating a new rental.")
         }
-
         val keys = statement.generatedKeys
-
         keys.next()
-
         return Rental(Id(keys.getInt("rid")), date, duration, user, court)
     }
 
     override fun getRentalById(rentalId: Id): Rental? {
         val sql = "SELECT * FROM rental WHERE rid = ?"
-
         connection.prepareStatement(sql).use { stmt ->
             stmt.setInt(1, rentalId.id)
             stmt.executeQuery().use { rs ->
                 if (rs.next()) {
-                    val court = courtData.getCourt(Id(rs.getInt("court"))) ?: return null
+                    val court = courtData.getCourtById(Id(rs.getInt("court"))) ?: return null
                     val user = userData.getUserById(Id(rs.getInt("usr"))) ?: return null
                     return Rental(
                         Id(rs.getInt("rid")),
@@ -66,7 +57,7 @@ class RentalDataPostgres (private val connection : Connection) : RentalIStorage 
         val sql = "SELECT * FROM rental WHERE usr = ? AND court = ? AND date = ?"
         val rentals = mutableListOf<Rental>()
         val club = clubData.getClubById(cid) ?: return throw IllegalArgumentException("No club with id $cid")
-        val court = courtData.getCourt(crid) ?: return throw IllegalArgumentException("No court with this id $crid")
+        val court = courtData.getCourtById(crid) ?: return throw IllegalArgumentException("No court with this id $crid")
         val user = club.owner.user
         connection.prepareStatement(sql).use {stmt ->
             stmt.setInt(1, user.uid.id)
@@ -96,7 +87,7 @@ class RentalDataPostgres (private val connection : Connection) : RentalIStorage 
                     val date = rs.getString("date")
                     val initDuration = rs.getInt("initDuration")
                     val endDuration = rs.getInt("endDuration")
-                    val court = courtData.getCourt(Id(rs.getInt("court"))) ?: throw SQLException("No court with this id $rid")
+                    val court = courtData.getCourtById(Id(rs.getInt("court"))) ?: throw SQLException("No court with this id $rid")
                     rentals.add(Rental(Id(rid), Date(date), Duration(initDuration, endDuration), user, court))
                 }
             }
@@ -121,7 +112,6 @@ class RentalDataPostgres (private val connection : Connection) : RentalIStorage 
                 availableHours.add(hour)
             }
         }
-
         return availableHours
     }
 }

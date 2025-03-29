@@ -24,13 +24,13 @@ class CourtDataMemTest {
 
     @Test
     fun `Get Court by ID`() {
-        val court = CourtDataMem.getCourt(Id(1))
+        val court = CourtDataMem.getCourtById(Id(1))
         assertEquals("Padel Court 1", court?.name?.name)
     }
 
     @Test
     fun `Get Court by Nonexistent ID`() {
-        val court = CourtDataMem.getCourt(Id(999))
+        val court = CourtDataMem.getCourtById(Id(999))
         assertEquals(null, court)
     }
 

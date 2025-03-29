@@ -29,7 +29,7 @@ class CourtDataPostgres (private val connection: Connection) : CourtIStorage{
             Id(key.getInt("crid")), name, club)
     }
 
-    override fun getCourt(id: Id): Court? {
+    override fun getCourtById(id: Id): Court? {
         val sql = "SELECT * FROM court WHERE crid = ?"
 
         connection.prepareStatement(sql).use { stmt ->

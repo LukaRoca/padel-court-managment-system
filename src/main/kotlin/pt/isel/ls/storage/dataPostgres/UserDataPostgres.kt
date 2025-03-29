@@ -7,12 +7,10 @@ import java.sql.SQLException
 import java.sql.Statement
 import java.util.*
 
-
 class UserDataPostgres (private val connection : Connection) : UserIStorage {
     override fun createUser(name: Name, email: Email) : User {
         val token = UUID.randomUUID()
         val sql = "INSERT INTO users(token, name, email) VALUES (?, ?,?)"
-
         val statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS).apply {
             setObject(1, token)
             setString(2, name.name)
@@ -22,11 +20,8 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
         if (statement.executeUpdate() == 0) {
             throw SQLException("Error while creating a new user.")
         }
-
         val keys = statement.generatedKeys
-
         keys.next()
-
         return User(Id(keys.getInt(1)), name, email, Token(token.toString()))
     }
 
@@ -46,7 +41,6 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
                 }
             }
         }
-
         return null
     }
 
@@ -67,5 +61,4 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
         }
         return null
     }
-
 }

@@ -3,7 +3,7 @@ package pt.isel.ls.storage.dataMem
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.RentalIStorage
 import pt.isel.ls.storage.dataMem.ClubDataMem.getClubById
-import pt.isel.ls.storage.dataMem.CourtDataMem.getCourt
+import pt.isel.ls.storage.dataMem.CourtDataMem.getCourtById
 
 object RentalDataMem : RentalIStorage {
 
@@ -12,7 +12,7 @@ object RentalDataMem : RentalIStorage {
     private val rentals = mutableListOf<Rental>()
 
     override fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token): Rental? {
-        val court = getCourt(crid) ?: return null
+        val court = getCourtById(crid) ?: return null
         val club = getClubById(cid) ?: return null
         val user = club.owner.user
         val newRental = Rental(Id(rid), date, duration, user, court)
@@ -37,7 +37,6 @@ object RentalDataMem : RentalIStorage {
         val rentals = getRentalList(cid, crid, date)
         val availableHours = mutableListOf<Int>()
         val occupiedHours = mutableSetOf<Int>()
-
         rentals?.forEach { rental ->
             val startHour = rental.duration.initDuration
             val endHour = rental.duration.endDuration
@@ -45,15 +44,11 @@ object RentalDataMem : RentalIStorage {
                 occupiedHours.add(hour)
             }
         }
-        for (hour in 0..24) {
-
+        for (hour in 7..21) {
             if (hour !in occupiedHours) {
                 availableHours.add(hour)
             }
         }
-
         return availableHours
     }
-
-
 }
