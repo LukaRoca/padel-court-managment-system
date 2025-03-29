@@ -16,7 +16,6 @@ We highlight the following aspects:
 
 - Type of each attribute: This is important because in our work we defined each attribute with a class that we created, this was done to make the code more readable and to make it easier to understand the code.
 - Cardinality of each relationship: This is important because it allows us to understand how the tables are related to each other and how the information is stored in the database.
-- ADICIONAR MAIS
 
 
 The conceptual model has the following restrictions:
@@ -28,7 +27,11 @@ The conceptual model has the following restrictions:
 
 ### Physical Model ###
 
-The physical model of the database is available in this SQL script.
+The physical model has the following tables:
+- User: This table stores information about users, including their ID, name, email, and password.
+- Club: This table stores information about clubs, including their ID, name.
+- Court: This table stores information about courts, including their ID, name, and location.
+- Rental: This table stores information about rentals, including their ID, date, start and end time, user ID, and court ID.
 
 We highlight the following aspects of this model:  
 
@@ -57,7 +60,7 @@ In our Open-API specification, we highlight the following aspects:
 
 When a request is made to the API, it goes through the following elements:
 
-1. **Controller**: The request is first handled by the appropriate controller class which is located in the corresponding webAPI file.This maps the request to the corresponding endpoint.
+1. **WebApi**: The request is first handled by the appropriate controller class which is located in the corresponding webAPI file.This maps the request to the corresponding endpoint.
 2. **Service**: The controller then calls the relevant service class, which contains the business logic for processing the request.
 3. **Storage**: The service interacts with the storage layer, which is responsible for managing the database operations and data memory.
 
@@ -71,7 +74,9 @@ The relevant classes/functions used internally in a request include for example:
 
 In our application, connection management is handled as follows:
 
-- Creation: Connections to the PostgreSQL database are created using a Connection object. This object is passed to the DataPostgres classes, which manages database operations.
+- It was created an environment variable to store the connection string to the database. This allows for easy configuration and management of the database connection.
+
+- Creation: Connections to the PostgresSQL database are created using a Connection object. This object is passed to the DataPostgres classes, which manages database operations.
 - Usage: When a request is made that requires database access, the DataPostgres classes uses the connection to execute SQL statements. Prepared statements are used to prevent SQL injection and ensure efficient execution of queries.
 - Disposal: Connections are managed externally and should be closed after all database operations are completed to ensure that resources are not leaked
 
@@ -107,7 +112,6 @@ SELECT * FROM rental WHERE usr = ?
 (_describe how errors are handled and their effects on the application behavior_).
 
 ## Critical Evaluation
-
 
 - Identified Defects: There are known issues with the date handling in rental bookings, which need to be addressed.
 
