@@ -1,5 +1,4 @@
 package pt.isel.ls.domain
-
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -26,7 +25,6 @@ data class Id (val id : Int){
     }
 }
 
-
 @Serializable
 data class Duration (val initDuration : Int, val endDuration : Int) {
     val hours = endDuration - initDuration
@@ -37,6 +35,3 @@ data class Duration (val initDuration : Int, val endDuration : Int) {
 
 @Serializable
 data class Date( val value: String)
-
-
-

@@ -2,6 +2,7 @@ package pt.isel.ls.rentalTests
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import org.http4k.core.Method.POST
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
@@ -15,7 +16,6 @@ import pt.isel.ls.webApi.RentalWebApi
 import pt.isel.ls.webApi.dto.RentalInput
 import pt.isel.ls.webApi.dto.RentalOutput
 import pt.isel.ls.webServices.*
-import kotlin.test.assertTrue
 
 class RentalWebApiTests {
 
@@ -42,7 +42,9 @@ class RentalWebApiTests {
         val request = Request(GET, "/rentals/10")
         val response = rentalWebApi.getRentalById(request)
         assertEquals(NOT_FOUND, response.status)
-        assertEquals("\"Not found\"", response.bodyString())
+        assertEquals("application/json", response.header("content-type"))
+        val expectedResponse = "\"Not found\""
+        assertEquals(expectedResponse, response.bodyString())
     }
 
     @Test
@@ -56,4 +58,17 @@ class RentalWebApiTests {
         val rental: Rental = Json.decodeFromString(responseBody)
         assertEquals(rentalId, rental.rid.id)
     }
+
+    @Test
+    fun `should return rentals of a user`() {
+        val userId = 1
+        val request = Request(GET, "/rentals/user/$userId")
+        val response = rentalWebApi.getRentalsOfUser(request)
+        assertEquals(OK, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        val responseBody = response.bodyString()
+        val rentals: List<Rental> = Json.decodeFromString(responseBody)
+        assertTrue(rentals.isNotEmpty())
+    }
+
 }

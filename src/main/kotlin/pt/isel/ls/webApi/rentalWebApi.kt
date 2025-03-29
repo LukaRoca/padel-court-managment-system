@@ -30,7 +30,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
             Date(rentalData.date),
             Duration(rentalData.initDuration, rentalData.endDuration),
             Token(token)
-        ) ?: throw NoSuchElementException("Invalid rental")
+        ) ?: throw NoSuchElementException()
         Response(CREATED)
             .header("content-type", "application/json")
             .body(Json.encodeToString(RentalOutput(rental.rid)))
@@ -41,7 +41,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
     fun getRentalById(request: Request): Response = try {
         val rentalId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid rental ID")
-        val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException("Rental not found")
+        val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException()
         Response(OK)
             .header("content-type", "application/json")
             .body(Json.encodeToString(rental))
@@ -65,7 +65,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
 
     fun getRentalsOfUser(request: Request): Response = try {
         val userId = request.path("id")?.toIntOrNull()
-            ?: throw IllegalArgumentException("Invalid user ID")
+            ?: throw IllegalArgumentException()
         val rentals = rentalServices.getRentalsOfUser(Id(userId))
         Response(OK)
             .header("content-type", "application/json")

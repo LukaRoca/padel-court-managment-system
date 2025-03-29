@@ -9,7 +9,7 @@ open class CourtServices (private val db: CourtIStorage) {
         return db.createCourt(name, id)
     }
     fun getCourtById(id : Id ) : Court? {
-        return db.getCourt(id)
+        return db.getCourtById(id)
     }
     fun getCourtsByClub(id : Id) : List<Court>? {
         return db.getCourtByClubId(id)
