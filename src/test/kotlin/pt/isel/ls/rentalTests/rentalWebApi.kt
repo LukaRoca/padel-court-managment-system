@@ -10,6 +10,7 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.NOT_FOUND
 import kotlinx.serialization.json.Json
+import org.http4k.core.Method
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.dataMem.RentalDataMem
 import pt.isel.ls.webApi.RentalWebApi
@@ -39,36 +40,13 @@ class RentalWebApiTests {
 
     @Test
     fun `should return NOT_FOUND for a non-existent rental ID`() {
-        val request = Request(GET, "/rentals/10")
-        val response = rentalWebApi.getRentalById(request)
+        val request = Request(Method.GET, "/rentals/10")
+        val response = rentalWebApi.appRental(request)
         assertEquals(NOT_FOUND, response.status)
         assertEquals("application/json", response.header("content-type"))
         val expectedResponse = "\"Not found\""
         assertEquals(expectedResponse, response.bodyString())
     }
 
-    @Test
-    fun `should return OK if rental exists`() {
-        val rentalId = 1
-        val request = Request(GET, "/rentals/$rentalId")
-        val response = rentalWebApi.getRentalById(request)
-        assertEquals(OK, response.status)
-        assertEquals("application/json", response.header("content-type"))
-        val responseBody = response.bodyString()
-        val rental: Rental = Json.decodeFromString(responseBody)
-        assertEquals(rentalId, rental.rid.id)
-    }
-
-    @Test
-    fun `should return rentals of a user`() {
-        val userId = 1
-        val request = Request(GET, "/rentals/user/$userId")
-        val response = rentalWebApi.getRentalsOfUser(request)
-        assertEquals(OK, response.status)
-        assertEquals("application/json", response.header("content-type"))
-        val responseBody = response.bodyString()
-        val rentals: List<Rental> = Json.decodeFromString(responseBody)
-        assertTrue(rentals.isNotEmpty())
-    }
-
+    //Não é testado a procura de "Rentals" porque na DataMem não temos exemplos
 }

@@ -49,7 +49,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         handleError(e)
     }
 
-    private fun getRentalList(request: Request): Response = try {
+    fun getRentalList(request: Request): Response = try {
         val rentalListDto = Json.decodeFromString<RentalInput>(request.bodyString())
         val rentalList = rentalServices.getRentalList(
             Id(rentalListDto.cid),
@@ -63,7 +63,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         handleError(e)
     }
 
-    private fun getRentalsOfUser(request: Request): Response = try {
+    fun getRentalsOfUser(request: Request): Response = try {
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
         val rentals = rentalServices.getRentalsOfUser(Id(userId))
@@ -74,7 +74,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         handleError(e)
     }
 
-    private fun getAvailableHours(request: Request): Response = try {
+    fun getAvailableHours(request: Request): Response = try {
         val availableHoursRequest = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
         val availableHours = rentalServices.getAvailableHours(
             availableHoursRequest.cid,
@@ -90,9 +90,9 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
 
     val appRental = routes(
         "rental" bind Method.POST to ::createRental,
-        "/rental/{id}" bind Method.GET to ::getRentalById,
-        "/rentals" bind Method.GET to ::getRentalList,
-        "/rentals/user/{id}" bind Method.GET to ::getRentalsOfUser,
-        "/rentals/available" bind Method.GET to ::getAvailableHours
+        "rentals/{id}" bind Method.GET to ::getRentalById,
+        "rentals" bind Method.GET to ::getRentalList,
+        "rentals/user/{id}" bind Method.GET to ::getRentalsOfUser,
+        "rentals/available" bind Method.GET to ::getAvailableHours
     )
 }
