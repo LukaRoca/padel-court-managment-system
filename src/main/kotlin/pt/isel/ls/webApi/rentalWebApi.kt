@@ -49,7 +49,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         handleError(e)
     }
 
-    fun getRentalList(request: Request): Response = try {
+    private fun getRentalList(request: Request): Response = try {
         val rentalListDto = Json.decodeFromString<RentalInput>(request.bodyString())
         val rentalList = rentalServices.getRentalList(
             Id(rentalListDto.cid),
@@ -63,7 +63,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         handleError(e)
     }
 
-    fun getRentalsOfUser(request: Request): Response = try {
+    private fun getRentalsOfUser(request: Request): Response = try {
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
         val rentals = rentalServices.getRentalsOfUser(Id(userId))
@@ -74,7 +74,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         handleError(e)
     }
 
-    fun getAvailableHours(request: Request): Response = try {
+    private fun getAvailableHours(request: Request): Response = try {
         val availableHoursRequest = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
         val availableHours = rentalServices.getAvailableHours(
             availableHoursRequest.cid,
