@@ -109,7 +109,9 @@ SELECT * FROM rental WHERE usr = ?
 
 ### Error Handling/Processing
 
-(_describe how errors are handled and their effects on the application behavior_).
+The errors are handled in the following way:
+
+- By a try-catch block that is going to call another class that treats the error by their type and returns the exact type in Http error number format (ex: 404, 500, etc.).
 
 ## Critical Evaluation
 

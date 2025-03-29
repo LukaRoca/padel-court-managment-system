@@ -39,20 +39,14 @@ object RentalDataMem : RentalIStorage {
         val occupiedHours = mutableSetOf<Int>()
 
         rentals?.forEach { rental ->
-            // Get the start hour from the rental duration
             val startHour = rental.duration.initDuration
-            // Calculate the end hour by adding the duration hours
             val endHour = rental.duration.endDuration
-
-            // Mark all hours in this rental as occupied
             for (hour in startHour until endHour) {
                 occupiedHours.add(hour)
             }
         }
+        for (hour in 0..24) {
 
-        // Check all hours from 7 AM to 9 PM (21:00)
-        for (hour in 7..21) {
-            // If the hour is not in occupied hours, it's available
             if (hour !in occupiedHours) {
                 availableHours.add(hour)
             }
