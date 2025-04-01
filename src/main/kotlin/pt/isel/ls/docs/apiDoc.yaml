@@ -549,7 +549,7 @@ components:
       type: 'object'
       required:
         - 'name'
-        - 'id'
+        - 'cid'
       properties:
         name:
           type: 'string'

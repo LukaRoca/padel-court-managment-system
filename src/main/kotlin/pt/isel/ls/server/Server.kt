@@ -25,9 +25,10 @@ fun main(){
     dataSource.setURL(jdbcDatabaseURL)
     //dataSource.setURL("jdbc:postgresql://localhost/postgres?user=postgres&password=tubarao")
 
+
     val userService = UserServices(UserDataPostgres(dataSource.connection))
     val clubService = ClubServices(ClubDataPostgres(dataSource.connection))
-    val rentalService = RentalServices(RentalDataPostgres(dataSource.connection))
+    val rentalService = RentalServices(RentalDataPostgres(dataSource.connection), UserDataPostgres(dataSource.connection))
     val courtService = CourtServices(CourtDataPostgres(dataSource.connection))
 
     val userWebApi = UserWebApi(userService)
