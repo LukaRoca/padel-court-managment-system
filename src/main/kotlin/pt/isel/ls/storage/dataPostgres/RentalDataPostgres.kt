@@ -95,7 +95,7 @@ class RentalDataPostgres (private val connection : Connection) : RentalIStorage 
         }
     }
 
-    override fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int> {
+    override fun getAvailableHours(cid: Id, crid: Id, date: Date, duration: Duration): List<Int> {
         val rentals = getRentalList(cid, crid, date)
         val availableHours = mutableListOf<Int>()
         val occupiedHours = mutableSetOf<Int>()
@@ -107,7 +107,7 @@ class RentalDataPostgres (private val connection : Connection) : RentalIStorage 
                 occupiedHours.add(hour)
             }
         }
-        for (hour in 7..21) {
+        for (hour in 0..24) {
             if (hour !in occupiedHours) {
                 availableHours.add(hour)
             }

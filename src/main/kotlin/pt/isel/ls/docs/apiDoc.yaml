@@ -77,7 +77,7 @@ paths:
       description: 'Create a new club in the system'
       operationId: 'createClub'
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -169,7 +169,7 @@ paths:
       description: 'Create a new court in the system'
       operationId: 'createCourt'
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -274,7 +274,7 @@ paths:
       description: 'Create a new court rental'
       operationId: 'createRental'
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -447,6 +447,18 @@ paths:
           schema:
             type: 'string'
             format: 'date'
+        - name: 'initDuration'
+          in: 'query'
+          description: 'Start time of the rental'
+          required: true
+          schema:
+            type: 'integer'
+        - name: 'endDuration'
+          in: 'query'
+          description: 'End time of the rental'
+          required: true
+          schema:
+            type: 'integer'
       responses:
         '200':
           description: 'List of available hours'

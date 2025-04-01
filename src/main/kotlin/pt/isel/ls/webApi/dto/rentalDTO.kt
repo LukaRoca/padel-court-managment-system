@@ -14,17 +14,6 @@ data class RentalInput(
     val endDuration : Int,
 )
 
-/*
-@Serializable
-data class RentalListDTO(
-    val cid: Int,
-    val crid: Int,
-    val date: String,
-    val initDuration : Int,
-    val endDuration : Int,
-)
-
- */
 
 @Serializable
 data class RentalAvailableHoursRequestDTO(

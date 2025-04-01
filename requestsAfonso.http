@@ -32,7 +32,7 @@ Authorization: 0005d4c5-82c1-468c-bdef-e4db4e5700f3
 
 ###
 POST http://localhost:8081/rental
-Authorization: Bearer 4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
+Authorization: Bearer 0005d4c5-82c1-468c-bdef-e4db4e5700f3
 Content-Type: application/json
 
 {
@@ -62,26 +62,20 @@ GET http://localhost:8081/rentals
 Content-Type: application/json
 
 {
-    "cid": 2,
-    "crid": 2,
+    "cid": 1,
+    "crid": 1,
     "date": "2021-06-01",
     "initDuration": 0,
-    "endDuration": 16
+    "endDuration": 1
 }
 
 
 ###
 
-GET http://localhost:8081/rentals/available
+GET http://localhost:8081/rentals/available?cid=1&crid=1&date=2021-06-01&initDuration=12&endDuration=16
 Content-Type: application/json
 
-{
-"cid": 2,
-"crid": 2,
-"date": "2021-06-01",
-  "initDuration": 12,
-  "endDuration": 16
-}
+
 
 
 ###

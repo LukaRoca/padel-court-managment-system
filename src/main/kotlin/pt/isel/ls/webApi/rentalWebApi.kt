@@ -75,11 +75,17 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
     }
 
     fun getAvailableHours(request: Request): Response = try {
-        val availableHoursRequest = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
+        val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
+        val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
+        val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
+        val initDuration = request.query("initDuration")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'initDuration'")
+        val endDuration = request.query("endDuration")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'endDuration'")
+
         val availableHours = rentalServices.getAvailableHours(
-            availableHoursRequest.cid,
-            availableHoursRequest.crid,
-            availableHoursRequest.date
+            Id(cid),
+            Id(crid),
+            Date(date),
+            Duration(initDuration, endDuration)
         )
         Response(OK)
             .header("content-type", "application/json")

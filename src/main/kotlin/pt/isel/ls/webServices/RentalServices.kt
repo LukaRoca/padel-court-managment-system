@@ -30,8 +30,8 @@ class RentalServices (private val db : RentalIStorage, private val userDb: UserI
         return db.getRentalsOfUser(cid)
     }
 
-    fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int> {
-        return db.getAvailableHours(cid, crid, date)
+    fun getAvailableHours(cid: Id, crid: Id, date: Date, duration: Duration): List<Int> {
+        return db.getAvailableHours(cid, crid, date, duration)
     }
 
 }

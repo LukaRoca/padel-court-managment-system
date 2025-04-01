@@ -33,7 +33,7 @@ object RentalDataMem : RentalIStorage {
         return rentals.filter { it.user.uid == uid }
     }
 
-    override fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int> {
+    override fun getAvailableHours(cid: Id, crid: Id, date: Date, duration: Duration): List<Int> {
         val rentals = getRentalList(cid, crid, date)
         val availableHours = mutableListOf<Int>()
         val occupiedHours = mutableSetOf<Int>()
@@ -44,7 +44,7 @@ object RentalDataMem : RentalIStorage {
                 occupiedHours.add(hour)
             }
         }
-        for (hour in 7..21) {
+        for (hour in 0..24) {
             if (hour !in occupiedHours) {
                 availableHours.add(hour)
             }
