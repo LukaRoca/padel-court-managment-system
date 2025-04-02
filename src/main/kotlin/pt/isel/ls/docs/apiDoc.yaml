@@ -5,7 +5,6 @@ info:
   contact:
     name: 'LS API Team - Group 1'
     url: 'https://github.com/isel-leic-ls/2425-2-LEIC43D-G01'
-    email: '50584@alunos.isel.ipl.pt , ... ,  ...'
   version: '1.0.0'
 
 paths:
@@ -78,7 +77,7 @@ paths:
       description: 'Create a new club in the system'
       operationId: 'createClub'
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -170,7 +169,7 @@ paths:
       description: 'Create a new court in the system'
       operationId: 'createCourt'
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -275,7 +274,7 @@ paths:
       description: 'Create a new court rental'
       operationId: 'createRental'
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -448,6 +447,18 @@ paths:
           schema:
             type: 'string'
             format: 'date'
+        - name: 'initDuration'
+          in: 'query'
+          description: 'Start time of the rental'
+          required: true
+          schema:
+            type: 'integer'
+        - name: 'endDuration'
+          in: 'query'
+          description: 'End time of the rental'
+          required: true
+          schema:
+            type: 'integer'
       responses:
         '200':
           description: 'List of available hours'
@@ -550,7 +561,7 @@ components:
       type: 'object'
       required:
         - 'name'
-        - 'id'
+        - 'cid'
       properties:
         name:
           type: 'string'

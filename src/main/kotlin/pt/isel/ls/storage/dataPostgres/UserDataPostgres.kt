@@ -7,14 +7,10 @@ import java.sql.SQLException
 import java.sql.Statement
 import java.util.*
 
-
 class UserDataPostgres (private val connection : Connection) : UserIStorage {
-    private var uid = 1
-
     override fun createUser(name: Name, email: Email) : User {
         val token = UUID.randomUUID()
         val sql = "INSERT INTO users(token, name, email) VALUES (?, ?,?)"
-
         val statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS).apply {
             setObject(1, token)
             setString(2, name.name)
@@ -24,12 +20,9 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
         if (statement.executeUpdate() == 0) {
             throw SQLException("Error while creating a new user.")
         }
-
         val keys = statement.generatedKeys
-
         keys.next()
-
-        return User(Id(keys.getInt("uid")), name, email, Token(token.toString()))
+        return User(Id(keys.getInt(1)), name, email, Token(token.toString()))
     }
 
     override fun getUserById(userId: Id): User? {
@@ -48,12 +41,11 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
                 }
             }
         }
-
         return null
     }
 
     override fun getUserByToken(token: Token): User? {
-        val sql = "SELECT token FROM users WHERE token = ?"
+        val sql = "SELECT * FROM users WHERE token = ?"
         connection.prepareStatement(sql).use { stmt ->
             stmt.setString(1, token.token)
             stmt.executeQuery().use { result ->
@@ -69,5 +61,4 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
         }
         return null
     }
-
 }

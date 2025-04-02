@@ -7,7 +7,7 @@ import pt.isel.ls.domain.Id
 @Serializable
 data class CourtInput(
     val name : String,
-    val id : Int,
+    val cid : Int,
 )
 
 @Serializable

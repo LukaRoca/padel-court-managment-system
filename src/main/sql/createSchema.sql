@@ -1,7 +1,7 @@
 
 create table users (
     uid serial primary key,
-    token uuid unique not null,
+    token varchar(255) unique not null,
     name varchar(255) not null,
     email varchar(255) unique not null
 );
@@ -12,6 +12,7 @@ create table club (
     owner int references users(uid)
 );
 
+
 create table court (
     crid serial unique primary key,
     name varchar(255) not null,
@@ -20,8 +21,9 @@ create table court (
 
 create table rental (
     rid serial primary key,
-    date date not null,
-    duration int not null,
-    "user" int references users(uid),
+    date varchar(255) not null,
+    initDuration int not null,
+    endDuration int not null,
+    usr int references users(uid),
     court int references court(crid)
 )

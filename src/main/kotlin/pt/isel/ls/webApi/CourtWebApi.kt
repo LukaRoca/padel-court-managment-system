@@ -20,16 +20,14 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
 
     fun createCourt(request: Request): Response = try {
         val courtDto = Json.decodeFromString<CourtInput>(request.bodyString())
-        val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.id))
-        Response(CREATED)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(CourtOutput(court.id)))
+        val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.cid)) ?: throw NoSuchElementException()
+        Response(CREATED).json(CourtOutput(court.id))
     } catch (e: Exception) {
         handleError(e)
     }
     fun getCourtById(request: Request): Response = try {
         val crid = request.path("id")?.toIntOrNull()
-            ?: throw IllegalArgumentException("Invalid court ID")
+            ?: throw IllegalArgumentException()
         val court = courtServices.getCourtById(Id(crid)) ?: throw NoSuchElementException()
         Response(OK)
             .header("content-type", "application/json")
@@ -39,7 +37,7 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
     }
     fun getCourtsByClub(request: Request): Response = try {
         val clubId = request.path("id")?.toIntOrNull()
-            ?: throw IllegalArgumentException("Invalid club ID")
+            ?: throw IllegalArgumentException()
         val courts = courtServices.getCourtsByClub(Id(clubId)) ?: emptyList()
         if (courts.isNotEmpty()) {
             Response(OK)

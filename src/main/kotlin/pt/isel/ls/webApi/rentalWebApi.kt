@@ -30,7 +30,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
             Date(rentalData.date),
             Duration(rentalData.initDuration, rentalData.endDuration),
             Token(token)
-        ) ?: throw NoSuchElementException("Invalid rental")
+        ) ?: throw NoSuchElementException()
         Response(CREATED)
             .header("content-type", "application/json")
             .body(Json.encodeToString(RentalOutput(rental.rid)))
@@ -41,7 +41,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
     fun getRentalById(request: Request): Response = try {
         val rentalId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid rental ID")
-        val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException("Rental not found")
+        val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException()
         Response(OK)
             .header("content-type", "application/json")
             .body(Json.encodeToString(rental))
@@ -65,7 +65,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
 
     fun getRentalsOfUser(request: Request): Response = try {
         val userId = request.path("id")?.toIntOrNull()
-            ?: throw IllegalArgumentException("Invalid user ID")
+            ?: throw IllegalArgumentException()
         val rentals = rentalServices.getRentalsOfUser(Id(userId))
         Response(OK)
             .header("content-type", "application/json")
@@ -75,11 +75,17 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
     }
 
     fun getAvailableHours(request: Request): Response = try {
-        val availableHoursRequest = Json.decodeFromString<RentalAvailableHoursRequestDTO>(request.bodyString())
+        val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
+        val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
+        val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
+        val initDuration = request.query("initDuration")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'initDuration'")
+        val endDuration = request.query("endDuration")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'endDuration'")
+
         val availableHours = rentalServices.getAvailableHours(
-            availableHoursRequest.cid,
-            availableHoursRequest.crid,
-            availableHoursRequest.date
+            Id(cid),
+            Id(crid),
+            Date(date),
+            Duration(initDuration, endDuration)
         )
         Response(OK)
             .header("content-type", "application/json")
@@ -90,9 +96,9 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
 
     val appRental = routes(
         "rental" bind Method.POST to ::createRental,
-        "/rental/{id}" bind Method.GET to ::getRentalById,
-        "/rentals" bind Method.GET to ::getRentalList,
-        "/rentals/user/{id}" bind Method.GET to ::getRentalsOfUser,
-        "/rentals/available" bind Method.GET to ::getAvailableHours
+        "rentals/{id}" bind Method.GET to ::getRentalById,
+        "rentals" bind Method.GET to ::getRentalList,
+        "rentals/user/{id}" bind Method.GET to ::getRentalsOfUser,
+        "rentals/available" bind Method.GET to ::getAvailableHours
     )
 }

@@ -1,51 +1,63 @@
 package pt.isel.ls.storage.dataPostgres
-
+import pt.isel.ls.domain.Club
 import pt.isel.ls.domain.Court
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
-import pt.isel.ls.storage.dataMem.ClubDataMem.getClubById
 import pt.isel.ls.storage.iStorage.CourtIStorage
 import java.sql.Connection
+import java.sql.SQLException
+import java.sql.Statement
 
 class CourtDataPostgres (private val connection: Connection) : CourtIStorage{
-    private var crid = 1
-    override fun createCourt(name: Name, cid: Id): Court {
-        val sql = "INSERT INTO courts(crid, name, cid) VALUES (?, ?, ?)"
-        connection.prepareStatement(sql).use {
-            it.setInt(1, crid)
-            it.setString(2, name.name)
-            it.setInt(3, cid.id)
-            it.executeUpdate()
+
+    private val clubData = ClubDataPostgres(connection)
+
+    override fun createCourt(name: Name, cid: Id): Court? {
+        val club = clubData.getClubById(cid) ?: return null
+        val sql = "INSERT INTO court(name, club) VALUES (?, ?)"
+
+        val statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS).apply {
+            setString(1, name.name)
+            setInt(2, club.id.id)
         }
-        val club = getClubById(cid) ?: throw IllegalArgumentException("Club not found")
-        crid++
-        return Court(Id(crid),name, club)
+        if (statement.executeUpdate() == 0) {
+            throw SQLException("Error while creating a new court.")
+        }
+        val key = statement.generatedKeys
+        key.next()
+        return Court(
+            Id(key.getInt("crid")), name, club)
     }
-    override fun getCourt(id: Id): Court? {
-        val sql = "SELECT * FROM courts WHERE crid = ?"
-        connection.prepareStatement(sql).use {
-            it.setInt(1, id.id)
-            val rs = it.executeQuery()
-            if(rs.next()){
-                val name = rs.getString("name")
-                val cid = rs.getInt("cid")
-                val club = getClubById(Id(cid)) ?: throw IllegalArgumentException("Club not found")
-                return Court(id, Name(name), club)
+
+    override fun getCourtById(id: Id): Court? {
+        val sql = "SELECT * FROM court WHERE crid = ?"
+
+        connection.prepareStatement(sql).use { stmt ->
+            stmt.setInt(1, id.id)
+            stmt.executeQuery().use { result ->
+                if (result.next()) {
+                    val club = clubData.getClubById(id) ?: throw IllegalArgumentException("Club not found")
+                    return Court(
+                        Id(result.getInt("crid")),
+                        Name(result.getString("name")),
+                        Club(club.id,club.name,club.owner))
+                }
             }
         }
         return null
     }
-    override fun getCourtByClubId(id: Id): List<Court> {
-        val sql = "SELECT * FROM courts WHERE cid = ?"
-        connection.prepareStatement(sql).use {
-            it.setInt(1, id.id)
-            val rs = it.executeQuery()
-            val courts = mutableListOf<Court>()
-            while (rs.next()) {
-                val crid = rs.getInt("crid")
-                val name = rs.getString("name")
-                val club = getClubById(id) ?: throw IllegalArgumentException("Club not found")
-                courts.add(Court(Id(crid), Name(name), club))
+    override fun getCourtByClubId(cid: Id): List<Court> {
+        val sql = "SELECT * FROM court WHERE club = ?"
+        val courts = mutableListOf<Court>()
+        val club = clubData.getClubById(cid) ?: throw IllegalArgumentException("Club not found")
+        connection.prepareStatement(sql).use {stmt ->
+            stmt.setInt(1, club.id.id)
+            stmt.executeQuery().use { result ->
+                while(result.next()) {
+                    val crid = result.getInt("crid")
+                    val name = result.getString("name")
+                    courts.add(Court(Id(crid), Name(name), club))
+                }
             }
             return courts
         }
