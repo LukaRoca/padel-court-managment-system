@@ -17,13 +17,14 @@ import pt.isel.ls.webApi.dto.ClubOutput
 import pt.isel.ls.webServices.ClubServices
 
 
-class ClubWebApi(private val services: ClubServices) : WebApiExceptions() {
+class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
     private fun handleError(e: Exception): Response = httpException(e)
+
     fun createClub(request: Request): Response = try {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: throw IllegalArgumentException("Missing or invalid token")
-        val clubInput = Json.decodeFromString<ClubInput>(request.bodyString())
-        val club = services.createClub(Name(clubInput.name), Token(token)) ?: throw NoSuchElementException()
+        val clubDto = Json.decodeFromString<ClubInput>(request.bodyString())
+        val club = clubServices.createClub(Name(clubDto.name), Token(token)) ?: throw NoSuchElementException()
         Response(CREATED).json(ClubOutput(club.id))
     } catch (e: Exception) {
         handleError(e)
@@ -31,14 +32,14 @@ class ClubWebApi(private val services: ClubServices) : WebApiExceptions() {
 
     fun getClubById(request: Request): Response = try {
         val clubId = request.path("id")?.toIntOrNull() ?: throw IllegalArgumentException()
-        val club = services.getClubById(Id(clubId)) ?: throw NoSuchElementException()
+        val club = clubServices.getClubById(Id(clubId)) ?: throw NoSuchElementException()
         Response(OK).json(club)
     } catch (e: Exception) {
         handleError(e)
     }
 
     fun getClubs(request: Request): Response = try {
-        val clubs = services.getClubs()
+        val clubs = clubServices.getClubs()
         if (clubs.isEmpty()) throw NoSuchElementException()
         Response(OK).json(clubs)
     } catch (e: Exception) {

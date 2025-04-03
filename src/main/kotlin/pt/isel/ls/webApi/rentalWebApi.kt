@@ -20,6 +20,8 @@ import pt.isel.ls.webServices.RentalServices
 
 class RentalWebApi(private val rentalServices: RentalServices) : WebApiExceptions() {
     private fun handleError(e: Exception): Response = httpException(e)
+
+
     fun createRental(request: Request): Response = try {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: throw AuthorizationException("Missing or invalid token")
@@ -50,11 +52,14 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
     }
 
     fun getRentalList(request: Request): Response = try {
-        val rentalListDto = Json.decodeFromString<RentalInput>(request.bodyString())
+        val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
+        val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
+        val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
+
         val rentalList = rentalServices.getRentalList(
-            Id(rentalListDto.cid),
-            Id(rentalListDto.crid),
-            Date(rentalListDto.date)
+            Id(cid),
+            Id(crid),
+            Date(date)
         )
         Response(OK)
             .header("content-type", "application/json")

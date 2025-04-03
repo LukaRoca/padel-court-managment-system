@@ -11,6 +11,7 @@ import org.http4k.routing.path
 import org.http4k.routing.routes
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
+import pt.isel.ls.domain.Token
 import pt.isel.ls.webApi.dto.CourtInput
 import pt.isel.ls.webApi.dto.CourtOutput
 import pt.isel.ls.webServices.CourtServices
@@ -19,8 +20,10 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
     private fun handleError(e: Exception): Response = httpException(e)
 
     fun createCourt(request: Request): Response = try {
+        val token = request.header("Authorization")?.substringAfter("Bearer ")
+            ?: throw IllegalArgumentException()
         val courtDto = Json.decodeFromString<CourtInput>(request.bodyString())
-        val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.cid)) ?: throw NoSuchElementException()
+        val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.cid), Token(token)) ?: throw NoSuchElementException()
         Response(CREATED).json(CourtOutput(court.id))
     } catch (e: Exception) {
         handleError(e)

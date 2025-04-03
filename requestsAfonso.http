@@ -1,4 +1,3 @@
-
 #create a new user -> create a new club -> create a new court -> create a new rental -> create another rental -> get the rental list
 
 ###
@@ -6,28 +5,28 @@ POST http://localhost:8081/users
 Content-Type: application/json
 
 {
-    "name": "Miguel",
-    "email": "afonso@gmail.com"
+  "name": "Miguel",
+  "email": "123@gmail.com"
 }
 
 ###
 POST http://localhost:8081/club
-Authorization: 0005d4c5-82c1-468c-bdef-e4db4e5700f3
+Authorization: 277a96c6-4360-42ed-8a37-bfb0ec41d6ae
 Content-Type: application/json
 
 {
-"name": "Fly Padel 2"
+  "name": "Fly Padel 2"
 }
-
 
 ###
 POST http://localhost:8081/courts
+Authorization: 0cc14d4a-0b1a-4591-b43a-b958f1e3c8e0
 Content-Type: application/json
-Authorization: 0005d4c5-82c1-468c-bdef-e4db4e5700f3
+
 
 {
-  "name": "Padel Court 2",
-  "cid" : 1
+  "name": "Padel Court 3",
+  "cid": 1
 }
 
 ###
@@ -43,10 +42,9 @@ Content-Type: application/json
   "endDuration": "16"
 }
 
-
 ###
 POST http://localhost:8081/rental
-Authorization: 0005d4c5-82c1-468c-bdef-e4db4e5700f3
+Authorization: Bearer 0005d4c5-82c1-468c-bdef-e4db4e5700f3
 Content-Type: application/json
 
 {
@@ -58,27 +56,13 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8081/rentals
+GET http://localhost:8081/rentals?cid=1&crid=1&date=2021-06-01
 Content-Type: application/json
 
-{
-    "cid": 1,
-    "crid": 1,
-    "date": "2021-06-01",
-    "initDuration": 0,
-    "endDuration": 1
-}
-
-
 ###
-
 GET http://localhost:8081/rentals/available?cid=1&crid=1&date=2021-06-01&initDuration=12&endDuration=16
 Content-Type: application/json
 
-
-
-
 ###
-
 GET http://localhost:8081/rentals/user/2
 Content-Type: application/json

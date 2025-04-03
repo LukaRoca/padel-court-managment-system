@@ -1,8 +1,7 @@
 package pt.isel.ls.storage.dataPostgres
-import pt.isel.ls.domain.Club
-import pt.isel.ls.domain.Court
-import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Name
+import pt.isel.ls.domain.*
+import pt.isel.ls.isUserAuthorized
+import pt.isel.ls.storage.dataMem.UserDataMem.getUserByToken
 import pt.isel.ls.storage.iStorage.CourtIStorage
 import java.sql.Connection
 import java.sql.SQLException
@@ -11,9 +10,16 @@ import java.sql.Statement
 class CourtDataPostgres (private val connection: Connection) : CourtIStorage{
 
     private val clubData = ClubDataPostgres(connection)
+    private val userData = UserDataPostgres(connection)
 
-    override fun createCourt(name: Name, cid: Id): Court? {
+    override fun createCourt(name: Name, cid: Id, token: Token): Court? {
+
         val club = clubData.getClubById(cid) ?: return null
+
+        if(club.owner.user.uid != userData.getUserByToken(token)?.uid) {
+            throw IllegalArgumentException("User is not authorized to create a court in this club.")
+        }
+
         val sql = "INSERT INTO court(name, club) VALUES (?, ?)"
 
         val statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS).apply {
