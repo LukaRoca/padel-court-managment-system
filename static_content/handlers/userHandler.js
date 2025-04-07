@@ -11,7 +11,7 @@ function getUserDetails(info, { userId }) {
 
             const a = document.createElement("a")
             a.href = `#/users/${userId}/rentals`
-            a.textContent = "Ver aluguéis"
+            a.textContent = "Rentals"
             div.appendChild(a)
 
             info.replaceChildren(div)
@@ -24,16 +24,15 @@ function getUserRentalsList(info, { userId }) {
         .then(rentals => {
             const div = document.createElement("div")
             const h1 = document.createElement("h1")
-            h1.textContent = `Aluguéis de ${userId}`
+            h1.textContent = `Rentals of ${userId}`
             div.appendChild(h1)
 
             rentals.forEach(r => {
                 const a = document.createElement("a")
-                a.href = `#/rentals/${r.rid}`
-                a.textContent = `Aluguel ${r.rid}`
+                a.href = `#/rentals/${r.id}`
+                a.textContent = `Rental ${r.id}`
                 div.appendChild(a)
             })
-
             info.replaceChildren(div)
         })
 }

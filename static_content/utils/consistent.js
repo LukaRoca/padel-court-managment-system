@@ -11,7 +11,5 @@ export async function Consistent({ path, params }) {
             return div
         }
     }
-
-    // Chama o handler passando os parâmetros, se houver
     return () => handler(document.getElementById("information"), params)
 }

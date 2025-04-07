@@ -1,6 +1,6 @@
 import {parseUrl, renderization} from "./utils/renderization.js"
-import { Consistent } from "./handlers/consistent.js"
-import "./routes.js" // Registra todas as rotas
+import { Consistent } from "./utils/consistent.js"
+
 
 window.addEventListener('load', hashChangeHandler)
 window.addEventListener('hashchange', hashChangeHandler)

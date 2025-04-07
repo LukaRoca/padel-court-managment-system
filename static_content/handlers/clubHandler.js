@@ -6,14 +6,14 @@ function getClubs(info) {
         .then(clubs => {
             const div = document.createElement("div")
             const h1 = document.createElement("h1")
-            h1.textContent = "Clubes"
+            h1.textContent = "Clubs"
             div.appendChild(h1)
 
             clubs.forEach(c => {
                 const p = document.createElement("p")
                 const a = document.createElement("a")
                 a.textContent = c.name
-                a.href = `#/clubs/${c.cid}`
+                //a.href = `#/clubs/${c.cid}` n sei passar o id do clube aqui
                 p.appendChild(a)
                 div.appendChild(p)
             })
@@ -28,12 +28,12 @@ function getClubDetails(info, { clubId }) {
         .then(club => {
             const div = document.createElement("div")
             const h1 = document.createElement("h1")
-            h1.textContent = `Detalhes do Clube: ${club.name}`
+            h1.textContent = `Club details: ${club.name}`
             div.appendChild(h1)
 
             const courtsLink = document.createElement("a")
             courtsLink.href = `#/clubs/${clubId}/courts`
-            courtsLink.textContent = "Ver campos"
+            courtsLink.textContent = "Courts"
             div.appendChild(courtsLink)
 
             info.replaceChildren(div)
