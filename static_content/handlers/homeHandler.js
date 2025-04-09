@@ -1,4 +1,4 @@
-import {API_BASE_URL} from "../utils/configs";
+import {API_BASE_URL} from "../utils/configs.js";
 
 export const getHome = (mainContent) => {
     const h1 = document.createElement("h1")

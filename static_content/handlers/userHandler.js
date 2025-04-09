@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../utils/configs"
+import { API_BASE_URL } from "../utils/configs.js"
 
 function getUserDetails(info, { userId }) {
     fetch(`${API_BASE_URL}users/${userId}`)

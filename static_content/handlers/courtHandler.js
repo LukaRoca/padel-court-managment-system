@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../utils/configs"
+import { API_BASE_URL } from "../utils/configs.js"
 function getCourtsList(info, { clubId }) {
     fetch(`${API_BASE_URL}clubs/${clubId}/courts`)
         .then(res => res.json())

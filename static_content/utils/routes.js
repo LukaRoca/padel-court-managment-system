@@ -1,9 +1,6 @@
-import router from "./router";
-import {getClubs} from "../handlers/clubHandler";
-import {getHome} from "../handlers/homeHandler";
-import courtHandler from "../handlers/courtHandler";
-import rentalHandler from "../handlers/rentalHandler";
-import userHandler from "../handlers/userHandler";
+import router from "./router.js";
+import {getClubs} from "../handlers/clubHandler.js";
+import {getHome} from "../handlers/homeHandler.js";
 
 export default function setupRoutes(router) {
     router.addRouteHandler("home", getHome)
