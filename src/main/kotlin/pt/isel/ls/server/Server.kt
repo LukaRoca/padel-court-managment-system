@@ -1,6 +1,8 @@
 package pt.isel.ls.server
 
+import org.http4k.routing.ResourceLoader
 import org.http4k.routing.routes
+import org.http4k.routing.singlePageApp
 import org.http4k.server.*
 import org.postgresql.ds.PGSimpleDataSource
 import org.slf4j.LoggerFactory
@@ -28,7 +30,7 @@ fun main(){
 
     val userService = UserServices(UserDataPostgres(dataSource.connection))
     val clubService = ClubServices(ClubDataPostgres(dataSource.connection))
-    val rentalService = RentalServices(RentalDataPostgres(dataSource.connection), UserDataPostgres(dataSource.connection))
+    val rentalService = RentalServices(RentalDataPostgres(dataSource.connection),    UserDataPostgres(dataSource.connection))
     val courtService = CourtServices(CourtDataPostgres(dataSource.connection))
 
     val userWebApi = UserWebApi(userService)
@@ -40,19 +42,20 @@ fun main(){
         userWebApi.app,
         clubWebApi.appClubs,
         rentalWebApi.appRental,
-        courtWebApi.appCourts
+        courtWebApi.appCourts,
+        singlePageApp(ResourceLoader.Directory("static_content"))
     )
 
     //val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()
-     val jettyServerAfonso = appRoutes.asServer(Jetty(8081)).start()
+     //val jettyServerAfonso = appRoutes.asServer(Jetty(8081)).start()
 
-    //val jettyServer = appRoutes.asServer(Jetty(8080)).start()
+    val jettyServer = appRoutes.asServer(Jetty(8080)).start()
     logger.info("server started")
 
     readln()
-    //jettyServer.stop()
+    jettyServer.stop()
     //jettyServerLuka.stop()
-    jettyServerAfonso.stop()
+    //jettyServerAfonso.stop()
     logger.info("server stopped")
 
 }

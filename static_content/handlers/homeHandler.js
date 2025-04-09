@@ -1,11 +1,8 @@
-import {Consistent} from "../utils/consistent";
-import {parseUrl, renderization} from "../utils/renderization";
+import {API_BASE_URL} from "../utils/configs";
 
-//incompleto falta bue
-window.addEventListener('load', hashChangeHandler)
-window.addEventListener('hashchange', hashChangeHandler)
-
-function hashChangeHandler() {
-    const path = window.location.hash.replace("#", "/")
-    Consistent(parseUrl(path)).then(renderization)
+export const getHome = (mainContent) => {
+    const h1 = document.createElement("h1")
+    const text = document.createTextNode("Home")
+    h1.appendChild(text)
+    mainContent.replaceChildren(h1)
 }

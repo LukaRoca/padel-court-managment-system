@@ -10,11 +10,11 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/club
-Authorization: Bearer 46fc162a-309d-4609-8307-3bf81bb55b52
+Authorization: Bearer 424b1b62-b3ab-418e-ab13-4188db9f4a0b
 Content-Type: application/json
 
 {
-  "name": "Padel N"
+  "name": "Padeel N"
 }
 
 ###
