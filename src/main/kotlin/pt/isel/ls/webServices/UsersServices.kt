@@ -17,4 +17,8 @@ class UserServices (private val db : UserIStorage) {
         return db.getUserByToken(token)
     }
 
+    fun getAllUsers(): List<User> {
+        return db.getAllUsers()
+    }
+
 }

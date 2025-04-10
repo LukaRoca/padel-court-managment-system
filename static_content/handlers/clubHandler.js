@@ -1,6 +1,8 @@
 import {API_BASE_URL} from "../utils/configs.js";
 
 export const getClubs = (mainContent) => {
+    console.log("API_BASE_URL:", API_BASE_URL);
+
     fetch(API_BASE_URL + "clubs")
         .then(res => res.json())
         .then(clubs => {

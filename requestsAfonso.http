@@ -1,12 +1,12 @@
 #create a new user -> create a new club -> create a new court -> create a new rental -> create another rental -> get the rental list
 
 ###
-POST http://localhost:8081/users
+POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "name": "Miguel",
-  "email": "123@gmail.com"
+  "name": "Pato Donald",
+  "email": "1234@gmail.com"
 }
 
 ###
@@ -66,3 +66,8 @@ Content-Type: application/json
 ###
 GET http://localhost:8081/rentals/user/2
 Content-Type: application/json
+
+###
+GET http://localhost:8080/users
+content-type: application/json
+
