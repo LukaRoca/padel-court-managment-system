@@ -7,4 +7,5 @@ interface UserIStorage {
     fun createUser(name: Name, email: Email) : User
     fun getUserById(userId: Id): User?
     fun getUserByToken(token: Token): User?
+    fun getAllUsers(): List<User>
 }
