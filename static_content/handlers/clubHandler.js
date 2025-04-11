@@ -49,10 +49,11 @@ export const getClubById = (mainContent, params) => {
     fetch(API_BASE_URL + "clubs/" + clubId)
         .then(res => res.json())
         .then(club => {
+
             const court = document.createElement("div");
 
             const courtsLink = document.createElement("a");
-            courtsLink.href = `${API_BASE_URL}#courts`;
+            courtsLink.href = `${API_BASE_URL}#courts/${club.id.id}`;
             courtsLink.textContent = "CourtsList";
 
             court.appendChild(courtsLink);

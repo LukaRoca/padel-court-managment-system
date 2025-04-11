@@ -1,7 +1,7 @@
 import { API_BASE_URL } from "../utils/configs.js"
 
 export const getCourtsList = (mainContent,params) => {
-    const clubId = params.id
+    const clubId = params.cid
     fetch(API_BASE_URL + "clubs/" + clubId + "/courts")
         .then(res => res.json())
         .then(courts => {
@@ -19,7 +19,7 @@ export const getCourtsList = (mainContent,params) => {
                 const attributesList = document.createElement("ul")
                 const idItem = document.createElement("a");
                 idItem.href = `${API_BASE_URL}#court/${court.id.id}`;
-                idItem.textContent = `ID: ${court.id.id}`;
+                idItem.textContent = `Court ID: ${court.id.id}`;
                 attributesList.appendChild(idItem);
 
                 const clubIdItem = document.createElement("li")
