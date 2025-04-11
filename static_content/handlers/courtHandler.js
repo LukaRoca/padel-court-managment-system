@@ -1,7 +1,8 @@
 import { API_BASE_URL } from "../utils/configs.js"
 
-export const getCourtsList = (mainContent) => {
-    fetch(API_BASE_URL + "courts")
+export const getCourtsList = (mainContent,params) => {
+    const clubId = params.id
+    fetch(API_BASE_URL + "clubs/" + clubId + "/courts")
         .then(res => res.json())
         .then(courts => {
             const div = document.createElement("div")
@@ -36,6 +37,9 @@ export const getCourtsList = (mainContent) => {
                 const clubNameItem = document.createElement("li")
                 clubNameItem.textContent = `Club Name: ${court.club.name.name}`
                 attributesList.appendChild(clubNameItem);
+
+                courtItem.appendChild(attributesList);
+                courtList.appendChild(courtItem);
             });
             div.appendChild(courtList)
             mainContent.replaceChildren(div)
@@ -59,55 +63,3 @@ export const getCourtDetails = (mainContent, params) => {
             mainContent.replaceChildren(ulStd)
         })
 }
-export const getCourtRentalList = (mainContent, params) => {
-    const courtId = params.id
-
-    fetch(API_BASE_URL + "courts/" + courtId + "/rentals")
-        .then(res => res.json())
-        .then(rentals => {
-            const div = document.createElement("div");
-            const h1 = document.createElement("h1");
-            const text = document.createTextNode(`Rentals for Court: ${courtId}`);
-            h1.appendChild(text)
-            div.appendChild(h1);
-            if(rentals.length == 0) {
-                const p = document.createElement("p");
-                p.textContent = "No rentals available for this court";
-                div.appendChild(p);}
-            else {
-                const rentalList = document.createElement("ul");
-                rentals.forEach(rental => {
-                    const rentalItem = document.createElement("li");
-                    rentalItem.textContent = `Rental ID: ${rental.rid.id}`;
-                    const attributesList = document.createElement("ul");
-
-                    const dateItem = document.createElement("li");
-                    dateItem.textContent = `Date: ${rental.date}`;
-                    attributesList.appendChild(dateItem);
-
-                    const durationItem = document.createElement("li");
-                    durationItem.textContent = `Duration: ${rental.duration.initDuration}h to ${rental.duration.endDuration}h`;
-                    attributesList.appendChild(durationItem);
-
-                    const userNameItem = document.createElement("li");
-                    userNameItem.textContent = `User name: ${rental.user.name.name}`;
-                    attributesList.appendChild(userNameItem);
-
-                    const userEmailItem = document.createElement("li");
-                    userEmailItem.textContent = `User email: ${user.email.value}`;
-                    attributesList.appendChild(userEmailItem);
-
-                    const courtItem = document.createElement("li");
-                    courtItem.textContent = `Court name: ${rental.court.name.name}`;
-                    attributesList.appendChild(courtItem);
-
-                    rentalItem.appendChild(attributesList);
-                    rentalList.appendChild(rentalItem);
-                });
-
-                div.appendChild(rentalList);
-            }
-            mainContent.replaceChildren(div);
-            })
-}
-

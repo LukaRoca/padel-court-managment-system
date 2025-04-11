@@ -21,3 +21,8 @@ function getRentalDetails(info, { rentalId }) {
 export default {
     getRentalDetails
 }
+
+/*
+export const getCourtRentalList = (mainContent, params) => { Afinal isto e suposto fazer aqui
+
+ */
