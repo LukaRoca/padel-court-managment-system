@@ -1,10 +1,12 @@
 import router from "./router.js";
-import {getClubs} from "../handlers/clubHandler.js";
+import {getClubById, getClubs} from "../handlers/clubHandler.js";
 import {getHome} from "../handlers/homeHandler.js";
 
 export default function setupRoutes(router) {
     router.addRouteHandler("home", getHome)
     router.addRouteHandler("clubs", getClubs)
+    router.addRouteHandler("club/:id", getClubById)
+
 
     router.addDefaultNotFoundRouteHandler(() => window.location.hash = "home")
     /*
