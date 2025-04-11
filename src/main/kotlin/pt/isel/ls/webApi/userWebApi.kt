@@ -54,8 +54,20 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
         handleError(e)
     }
 
+    fun getAllUsers(request: Request): Response = try {
+        logRequest(request)
+        val users = userServices.getAllUsers()
+        if (users.isEmpty()) throw NoSuchElementException("No users found")
+        Response(OK)
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(users))
+    } catch (e: Exception) {
+        handleError(e)
+    }
+
     val app = routes(
         "users" bind Method.POST to ::createUser,
-        "users/{id}" bind Method.GET to ::getUserById
+        "users/{id}" bind Method.GET to ::getUserById,
+        "users" bind Method.GET to ::getAllUsers
     )
 }

@@ -1,6 +1,7 @@
 import router from "./router.js";
 import {getClubById, getClubs} from "../handlers/clubHandler.js";
 import {getHome} from "../handlers/homeHandler.js";
+import {getAllUsers} from "../handlers/userHandler.js"
 
 export default function setupRoutes(router) {
     router.addRouteHandler("home", getHome)
@@ -8,7 +9,11 @@ export default function setupRoutes(router) {
     router.addRouteHandler("club/:id", getClubById)
 
 
+    router.addRouteHandler("users", getAllUsers)
+
     router.addDefaultNotFoundRouteHandler(() => window.location.hash = "home")
+
+
     /*
     router.addRouteHandler("/clubs/:clubId", clubHandler.getClubDetails)
     router.addRouteHandler("/clubs/:clubId/courts", courtHandler.getCourtsList)

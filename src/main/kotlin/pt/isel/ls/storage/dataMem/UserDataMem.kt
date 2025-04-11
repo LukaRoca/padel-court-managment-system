@@ -24,4 +24,7 @@ object UserDataMem : UserIStorage {
     override fun getUserByToken(token: Token): User? {
         return users.find { it.token == token }
     }
+    override fun getAllUsers(): List<User> {
+        return users
+    }
 }

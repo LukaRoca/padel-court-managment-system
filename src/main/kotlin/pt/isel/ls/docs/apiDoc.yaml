@@ -35,6 +35,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+    get:
+      tags:
+        - 'Users'
+      summary: 'Get all users'
+      description: 'Retrieve a list of all users in the system'
+      operationId: 'getAllUsers'
+      responses:
+        '200':
+          description: 'List of users'
+          content:
+            application/json:
+              schema:
+                type: 'array'
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          description: 'No users found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /users/{id}:
     get:
       tags:

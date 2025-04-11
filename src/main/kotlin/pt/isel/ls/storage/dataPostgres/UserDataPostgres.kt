@@ -61,4 +61,24 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
         }
         return null
     }
+
+    override fun getAllUsers(): List<User> {
+        val sql = "SELECT * FROM users"
+        val users = mutableListOf<User>()
+        connection.prepareStatement(sql).use { stmt ->
+            stmt.executeQuery().use { result ->
+                while (result.next()) {
+                    users.add(
+                        User(
+                            Id(result.getInt("uid")),
+                            Name(result.getString("name")),
+                            Email(result.getString("email")),
+                            Token(result.getString("token"))
+                        )
+                    )
+                }
+            }
+        }
+        return users
+    }
 }
