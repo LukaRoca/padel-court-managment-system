@@ -1,8 +1,6 @@
 import {API_BASE_URL} from "../utils/configs.js";
 
 export const getClubs = (mainContent) => {
-    console.log("API_BASE_URL:", API_BASE_URL);
-
     fetch(API_BASE_URL + "clubs")
         .then(res => res.json())
         .then(clubs => {
@@ -22,13 +20,9 @@ export const getClubs = (mainContent) => {
                 const attributesList = document.createElement("ul");
 
                 const idItem = document.createElement("a");
-                idItem.href = `${API_BASE_URL}#club/${club.id.id}`; // Corrigido a construção da URL
-                idItem.textContent = `ID: ${club.id.id}`; // Definindo o texto do link
+                idItem.href = `${API_BASE_URL}#club/${club.id.id}`;
+                idItem.textContent = `ID: ${club.id.id}`;
                 attributesList.appendChild(idItem);
-
-                //const idItem = document.createElement("li");
-                //idItem.textContent = `ID: ${club.id.id}`;
-               // attributesList.appendChild(idItem);
 
                 const ownerItem = document.createElement("li");
                 ownerItem.textContent = `Owner: ${club.owner.user.name.name}`;
@@ -49,25 +43,43 @@ export const getClubs = (mainContent) => {
 }
 
 export const getClubById = (mainContent, params) => {
-    const clubId = params.id
-    console.log(clubId)
+    const clubId = params.id;
+    console.log(clubId);
 
     fetch(API_BASE_URL + "clubs/" + clubId)
         .then(res => res.json())
         .then(club => {
-            const ulStd = document.createElement("ul")
+            const court = document.createElement("div");
 
-            const clubName = document.createElement("li")
-            const textName = document.createTextNode("Name : " + club.name.name)
-            clubName.appendChild(textName)
+            const courtsLink = document.createElement("a");
+            courtsLink.href = `${API_BASE_URL}#courts`;
+            courtsLink.textContent = "CourtsList";
 
-            const liNumber = document.createElement("li")
-            const textNumber = document.createTextNode("Club Id : " + club.id.id)
-            liNumber.appendChild(textNumber)
+            court.appendChild(courtsLink);
 
-            ulStd.appendChild(clubName)
-            ulStd.appendChild(liNumber)
+            // Conteúdo principal
+            const ulStd = document.createElement("ul");
 
-            mainContent.replaceChildren(ulStd)
-        })
-}
+            const clubName = document.createElement("li");
+            clubName.textContent = "Club Name : " + club.name.name;
+
+            const liNumber = document.createElement("li");
+            liNumber.textContent = "Club Id: " + club.id.id;
+
+            const ownerclubId = document.createElement("a");
+            ownerclubId.href = `${API_BASE_URL}#user/${club.owner.user.uid.id}`;
+            ownerclubId.textContent = `Owner: ${club.owner.user.name.name}`;
+
+            ulStd.appendChild(clubName);
+            ulStd.appendChild(liNumber);
+            ulStd.appendChild(ownerclubId);
+
+            // Agrupar tudo
+            const container = document.createElement("div");
+            container.appendChild(court);
+            container.appendChild(ulStd);
+
+            mainContent.replaceChildren(container);
+        });
+};
+

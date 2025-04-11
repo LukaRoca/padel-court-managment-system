@@ -7,6 +7,7 @@ export default function setupRoutes(router) {
     router.addRouteHandler("home", getHome)
     router.addRouteHandler("clubs", getClubs)
     router.addRouteHandler("club/:id", getClubById)
+    //router.addRouteHandler("user/:id", getUserById) //TODO()
 
 
     router.addRouteHandler("users", getAllUsers)
