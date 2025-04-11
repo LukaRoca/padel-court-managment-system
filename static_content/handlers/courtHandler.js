@@ -1,67 +1,65 @@
 import { API_BASE_URL } from "../utils/configs.js"
-function getCourtsList(info, { clubId }) {
-    fetch(`${API_BASE_URL}clubs/${clubId}/courts`)
+
+export const getCourtsList = (mainContent,params) => {
+    const clubId = params.id
+    fetch(API_BASE_URL + "clubs/" + clubId + "/courts")
         .then(res => res.json())
         .then(courts => {
             const div = document.createElement("div")
             const h1 = document.createElement("h1")
-            h1.textContent = "Courts"
+            const text = document.createTextNode("Courts")
+            h1.appendChild(text)
             div.appendChild(h1)
+            const courtList = document.createElement("ul")
 
-            courts.forEach(c => {
-                const p = document.createElement("p")
-                const a = document.createElement("a")
-                //a.href = `#/courts/${c.}` e isto
-                a.textContent = c.name
-                p.appendChild(a)
-                div.appendChild(p)
-            })
+            courts.forEach(court => {
+                const courtItem = document.createElement("li")
+                courtItem.textContent = `Court: ${court.name.name}`;
 
-            info.replaceChildren(div)
+                const attributesList = document.createElement("ul")
+                const idItem = document.createElement("a");
+                idItem.href = `${API_BASE_URL}#court/${court.id.id}`;
+                idItem.textContent = `ID: ${court.id.id}`;
+                attributesList.appendChild(idItem);
+
+                const clubIdItem = document.createElement("li")
+                clubIdItem.textContent = `ClubId: ${court.club.id.id}`
+                attributesList.appendChild(clubIdItem);
+
+                const clubOwnerNameItem = document.createElement("li")
+                clubOwnerNameItem.textContent = `Club Owner: ${court.club.owner.user.name.name}`
+                attributesList.appendChild(clubOwnerNameItem);
+
+                const clubOwnerEmailItem = document.createElement("li")
+                clubOwnerEmailItem.textContent = `Club Owner Email: ${court.club.owner.user.email.value}`
+                attributesList.appendChild(clubOwnerEmailItem);
+
+                const clubNameItem = document.createElement("li")
+                clubNameItem.textContent = `Club Name: ${court.club.name.name}`
+                attributesList.appendChild(clubNameItem);
+
+                courtItem.appendChild(attributesList);
+                courtList.appendChild(courtItem);
+            });
+            div.appendChild(courtList)
+            mainContent.replaceChildren(div)
         })
 }
 
-function getCourtDetails(info, { courtId }) {
-    fetch(`${API_BASE_URL}courts/${courtId}`)
+export const getCourtDetails = (mainContent, params) => {
+    const courtId = params.id
+    fetch(API_BASE_URL + "courts/" + courtId)
         .then(res => res.json())
         .then(court => {
-            const div = document.createElement("div")
-            const h1 = document.createElement("h1")
-            h1.textContent = court.name
-            div.appendChild(h1)
-
-            const a = document.createElement("a")
-            a.href = `#/courts/${courtId}/rentals`
-            a.textContent = "Rentals"
-            div.appendChild(a)
-
-            info.replaceChildren(div)
+            const ulStd = document.createElement("ul")
+            const courtName = document.createElement("li")
+            const textName = document.createTextNode("Name : " + court.name.name)
+            court.appendChild(textName)
+            const liNumber = document.createElement("li")
+            const textNumber = document.createTextNode("Court Id : " + court.id.id)
+            liNumber.appendChild(textNumber)
+            ulStd.appendChild(courtName)
+            ulStd.appendChild(liNumber)
+            mainContent.replaceChildren(ulStd)
         })
-}
-
-function getCourtRentalList(info, { courtId }) {
-    fetch(`${API_BASE_URL}courts/${courtId}/rentals`)
-        .then(res => res.json())
-        .then(rentals => {
-            const div = document.createElement("div")
-            const h1 = document.createElement("h1")
-            h1.textContent = "Rentals"
-            div.appendChild(h1)
-
-            rentals.forEach(r => {
-                const p = document.createElement("p")
-                const a = document.createElement("a")
-                a.href = `#/rentals/${r.id}`
-                //a.textContent = `Rental ID: ${r.id}, Date: ${r.date}, Time: ${r.time}` data
-                p.appendChild(a)
-                div.appendChild(p)
-            })
-
-            info.replaceChildren(div)
-        })
-}
-export default {
-    getCourtsList,
-    getCourtDetails,
-    getCourtRentalList
 }
