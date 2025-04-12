@@ -1,83 +1,38 @@
 import { API_BASE_URL } from "../utils/configs.js";
 
-/*
-export function getUserDetails(mainContent) {
-
-    const userId = window.location.hash.split("/")[2];
-
+export const getUserById = (mainContent, params) => {
+    const userId = params.uid
     fetch(API_BASE_URL + "users/" + userId)
         .then(res => res.json())
         .then(user => {
-            const div = document.createElement("div");
 
-            const h1 = document.createElement("h1");
-            const text = document.createTextNode("User Details");
-            h1.appendChild(text);
-            div.appendChild(h1);
+            const rental = document.createElement("div");
 
-            const userDetailsList = document.createElement("ul");
+            const rentalLink = document.createElement("a");
+            rentalLink.href = `${API_BASE_URL}#rentals/${user.uid.id}`;
+            rentalLink.textContent = "RentalsList";
 
-            const idItem = document.createElement("li");
-            idItem.textContent = `ID: ${user.id.id}`;
-            userDetailsList.appendChild(idItem);
+            rental.appendChild(rentalLink);
 
-            const nameItem = document.createElement("li");
-            nameItem.textContent = `Name: ${user.name.name}`;
-            userDetailsList.appendChild(nameItem);
+            const ulStd = document.createElement("ul");
 
-            const emailItem = document.createElement("li");
-            emailItem.textContent = `Email: ${user.email.value}`;
-            userDetailsList.appendChild(emailItem);
+            const UserName = document.createElement("li");
+            UserName.textContent = "User Name : " + user.name.name;
 
-            div.appendChild(userDetailsList);
+            const UserId = document.createElement("li");
+            UserId.textContent = "User Id: " + user.uid.id;
 
-            mainContent.replaceChildren(div);
+            const UserEmail = document.createElement("li");
+            UserEmail.textContent = "User Email: " + user.email.email
+
+            ulStd.appendChild(UserName);
+            ulStd.appendChild(UserId);
+            ulStd.appendChild(UserId);
+
+            const container = document.createElement("div");
+            container.appendChild(ulStd);
+            container.appendChild(rental);
+
+            mainContent.replaceChildren(container);
         });
-}
-
- */
-
-export function getAllUsers(mainContent) {
-        fetch(API_BASE_URL + "users", {
-                method: "GET",
-                headers: {
-                        "Content-Type": "application/json"
-                }
-        })
-            .then(res => res.json())
-            .then(users => {
-                    const div = document.createElement("div");
-
-                    const h1 = document.createElement("h1");
-                    h1.textContent = "Users";
-                    div.appendChild(h1);
-
-                    const usersList = document.createElement("ul");
-
-                    users.forEach(user => {
-                            const userItem = document.createElement("li");
-                            userItem.textContent = `User: ${user.name.name}`;
-
-                            const attributesList = document.createElement("ul");
-
-                            const idItem = document.createElement("li");
-                            idItem.textContent = `ID: ${user.uid.id}`;
-                            attributesList.appendChild(idItem);
-
-                            const emailItem = document.createElement("li");
-                            emailItem.textContent = `Email: ${user.email.value}`;
-                            attributesList.appendChild(emailItem);
-
-                            userItem.appendChild(attributesList);
-                            usersList.appendChild(userItem);
-                    });
-
-                    div.appendChild(usersList);
-
-                    mainContent.replaceChildren(div);
-            })
-            .catch(error => {
-                    console.error("Erro ao buscar usuários:", error);
-                    mainContent.textContent = "Erro ao carregar a lista de usuários.";
-            });
 }

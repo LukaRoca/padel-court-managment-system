@@ -1,7 +1,7 @@
 GET http://localhost:8080/users/1
 
 ###
-GET http://localhost:8082/clubs/1
+GET http://localhost:8080/clubs/1
 Accept: application/json
 
 ###
@@ -9,7 +9,7 @@ GET http://localhost:8080/clubs
 Accept: application/json
 
 ###
-POST http://localhost:8082/club
+POST http://localhost:8080/club
 Authorization: Bearer e8c7ee5d-9365-4754-8413-fe0961ce2cb0
 Content-Type: application/json
 
@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ###
 POST http://localhost:8080/rental
-Authorization: Bearer 4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
+Authorization: Bearer 424b1b62-b3ab-418e-ab13-4188db9f4a0b
 Content-Type: application/json
 
 {
@@ -59,8 +59,8 @@ GET http://localhost:8080/rentals
 Content-Type: application/json
 
 {
-  "cid": 2,
-  "crid": 2,
+  "cid": 1,
+  "crid": 1,
   "date": "2021-06-01",
   "initDuration": 0,
   "endDuration": 16

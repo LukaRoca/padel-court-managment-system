@@ -44,8 +44,6 @@ export const getClubs = (mainContent) => {
 
 export const getClubById = (mainContent, params) => {
     const clubId = params.id;
-    console.log(clubId);
-
     fetch(API_BASE_URL + "clubs/" + clubId)
         .then(res => res.json())
         .then(club => {
