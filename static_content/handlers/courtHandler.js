@@ -47,19 +47,38 @@ export const getCourtsList = (mainContent,params) => {
 }
 
 export const getCourtDetails = (mainContent, params) => {
-    const courtId = params.id
+    const courtId = params.crid
+
     fetch(API_BASE_URL + "courts/" + courtId)
         .then(res => res.json())
         .then(court => {
-            const ulStd = document.createElement("ul")
-            const courtName = document.createElement("li")
-            const textName = document.createTextNode("Name : " + court.name.name)
-            court.appendChild(textName)
-            const liNumber = document.createElement("li")
-            const textNumber = document.createTextNode("Court Id : " + court.id.id)
-            liNumber.appendChild(textNumber)
-            ulStd.appendChild(courtName)
-            ulStd.appendChild(liNumber)
-            mainContent.replaceChildren(ulStd)
-        })
-}
+            const ulStd = document.createElement("ul");
+
+            const courtName = document.createElement("li");
+            const textName = document.createTextNode("Name : " + court.name.name);
+            courtName.appendChild(textName);
+
+            const courtId = document.createElement("li");
+            const textNumber = document.createTextNode("Court Id : " + court.id.id);
+            courtId.appendChild(textNumber);
+
+            const clubId = document.createElement("li");
+            const clubIdLink = document.createElement("a");
+            clubIdLink.href = `${API_BASE_URL}#club/${court.club.id.id}`;
+            clubIdLink.textContent = `Club Id: ${court.club.id.id}`;
+            clubId.appendChild(clubIdLink);
+
+            const rentalList = document.createElement("li");
+            const rentalListLink = document.createElement("a");
+            rentalListLink.href = `${API_BASE_URL}#court/${court.id.id}/rentals`;
+            rentalListLink.textContent = "Court Rentals List";
+            rentalList.appendChild(rentalListLink);
+
+            ulStd.appendChild(courtName);
+            ulStd.appendChild(courtId);
+            ulStd.appendChild(clubId);
+            ulStd.appendChild(rentalList)
+
+            mainContent.replaceChildren(ulStd);
+        });
+};

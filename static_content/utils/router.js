@@ -41,7 +41,9 @@ function matchHandlerPath(handlerPath, path) {
     const handlerParts = handlerPath.split('/');
     const pathParts = path.split('/');
 
-    if (pathParts[1] == null) return { isMatch: false}
+    if (handlerParts.length !== pathParts.length) {
+        return { isMatch: false };
+    }
 
     for (let i = 0; i < handlerParts.length; i++) {
         const handlerPart = handlerParts[i];
