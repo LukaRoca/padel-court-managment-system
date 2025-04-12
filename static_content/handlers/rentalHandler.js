@@ -79,5 +79,46 @@ export const getRentalsByUid = (mainContent, params) => {
 
             mainContent.replaceChildren(div);
         });
+}
 
+export const getRentalByCrid = (mainContent, params) => {
+    const crid = params.crid
+    fetch(API_BASE_URL + "rentals/courts/" + crid)
+        .then(res => res.json())
+        .then(rentals => {
+
+            const div = document.createElement("div");
+
+            const CourtLink = document.createElement("a");
+            CourtLink.href = `${API_BASE_URL}#court/${crid}`;
+            CourtLink.textContent = "Court";
+
+            const h1 = document.createElement("h1");
+            const text = document.createTextNode(`Rentals of Court: ${crid}`)
+            h1.appendChild(text)
+
+            div.appendChild(CourtLink);
+            div.appendChild(h1)
+
+            rentals.forEach( rental => {
+                const rentalAtributes = document.createElement("div")
+
+                const rentalId = document.createElement("a");
+                rentalId.href = `${API_BASE_URL}#rental/${rental.rid.id}`;
+                rentalId.textContent = `ID: ${rental.rid.id}`;
+
+                const rentalDate = document.createElement("li")
+                rentalDate.textContent = `Date: ${rental.date.value}`
+
+                const rentalDuration = document.createElement("li")
+                rentalDuration.textContent = `Duration: ${rental.duration.endDuration - rental.duration.initDuration} Hours`
+
+                rentalAtributes.appendChild(rentalId);
+                rentalAtributes.appendChild(rentalDate);
+                rentalAtributes.appendChild(rentalDuration);
+                div.appendChild(rentalAtributes);
+            })
+
+            mainContent.replaceChildren(div);
+        });
 }

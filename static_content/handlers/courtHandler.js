@@ -70,7 +70,7 @@ export const getCourtDetails = (mainContent, params) => {
 
             const rentalList = document.createElement("li");
             const rentalListLink = document.createElement("a");
-            rentalListLink.href = `${API_BASE_URL}#court/${court.id.id}/rentals`;
+            rentalListLink.href = `${API_BASE_URL}#court/rentals/${court.id.id}`;
             rentalListLink.textContent = "Court Rentals List";
             rentalList.appendChild(rentalListLink);
 

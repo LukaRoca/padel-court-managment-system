@@ -79,6 +79,16 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         handleError(e)
     }
 
+    fun getRentalsOfCourt(request: Request): Response = try {
+        val courtId = request.path("crid")?.toIntOrNull() ?: throw IllegalArgumentException()
+        val rentals = rentalServices.getRentalsOfCourt(Id(courtId))
+        Response(OK)
+        .header("content-type", "application/json")
+        .body(Json.encodeToString(rentals))
+    } catch (e: Exception) {
+        handleError(e)
+    }
+
     fun getAvailableHours(request: Request): Response = try {
         val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
         val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
@@ -104,6 +114,7 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         "rentals/{id}" bind Method.GET to ::getRentalById,
         "rentals" bind Method.GET to ::getRentalList,
         "rentals/user/{id}" bind Method.GET to ::getRentalsOfUser,
-        "rentals/available" bind Method.GET to ::getAvailableHours
+        "rentals/available" bind Method.GET to ::getAvailableHours,
+        "rentals/courts/{crid}" bind Method.GET to ::getRentalsOfCourt
     )
 }

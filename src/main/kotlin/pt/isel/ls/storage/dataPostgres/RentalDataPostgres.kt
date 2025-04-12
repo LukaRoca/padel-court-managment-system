@@ -87,7 +87,27 @@ class RentalDataPostgres (private val connection : Connection) : RentalIStorage 
                     val date = rs.getString("date")
                     val initDuration = rs.getInt("initDuration")
                     val endDuration = rs.getInt("endDuration")
-                    val court = courtData.getCourtById(Id(rs.getInt("court"))) ?: throw SQLException("No court with this id $rid")
+                    val court = courtData.getCourtById(Id(rs.getInt("court"))) ?: throw SQLException("No court with this id")
+                    rentals.add(Rental(Id(rid), Date(date), Duration(initDuration, endDuration), user, court))
+                }
+            }
+            return rentals
+        }
+    }
+
+    override fun getRentalsOfCourt(crid: Id): List<Rental>? {
+        val sql = "SELECT * FROM rental WHERE court = ?"
+        val rentals = mutableListOf<Rental>()
+        val court = courtData.getCourtById(crid) ?: return throw IllegalArgumentException("No court with this id $crid")
+        connection.prepareStatement(sql).use {stmt ->
+            stmt.setInt(1, court.id.id)
+            stmt.executeQuery().use { rs ->
+                while (rs.next()) {
+                    val rid = rs.getInt("rid")
+                    val date = rs.getString("date")
+                    val initDuration = rs.getInt("initDuration")
+                    val endDuration = rs.getInt("endDuration")
+                    val user = userData.getUserById(Id(rs.getInt("usr"))) ?: throw SQLException("No user with this id")
                     rentals.add(Rental(Id(rid), Date(date), Duration(initDuration, endDuration), user, court))
                 }
             }

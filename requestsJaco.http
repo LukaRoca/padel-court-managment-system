@@ -85,3 +85,8 @@ Content-Type: application/json
 
 GET http://localhost:8080/rentals/user/1
 Content-Type: application/json
+
+###
+
+GET http://localhost:8080/rentals/courts/1
+Content-Type: application/json

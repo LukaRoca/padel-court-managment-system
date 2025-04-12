@@ -29,6 +29,10 @@ object RentalDataMem : RentalIStorage {
         return rentals.filter { it.user.uid == cid && it.court.id == crid && it.date == date }
     }
 
+    override fun getRentalsOfCourt(crid: Id): List<Rental>? {
+        return rentals.filter { it.court.id == crid }
+    }
+
     override fun getRentalsOfUser(uid: Id): List<Rental>? {
         return rentals.filter { it.user.uid == uid }
     }
