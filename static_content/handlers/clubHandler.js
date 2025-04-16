@@ -1,46 +1,27 @@
 import {API_BASE_URL} from "../utils/configs.js";
+import {createElement} from "../html/DSL";
+
 
 export const getClubs = (mainContent) => {
     fetch(API_BASE_URL + "clubs")
         .then(res => res.json())
         .then(clubs => {
-            const div = document.createElement("div");
+            const clubsList = clubs.map(club => {
+                const attributesList = createElement("ul", [
+                    createElement("a", [], { href: `${API_BASE_URL}#club/${club.id.id}` }).replace("</a>", `ID: ${club.id.id}</a>`),
+                    createElement("li", [`Owner: ${club.owner.user.name.name}`]),
+                    createElement("li", [`Email: ${club.owner.user.email.value}`])
+                ]);
 
-            const h1 = document.createElement("h1");
-            const text = document.createTextNode("Clubs")
-            h1.appendChild(text)
-            div.appendChild(h1);
+                return createElement("li", [`Clube: ${club.name.name}`, attributesList]);
+            }).join("");
 
-            const clubsList = document.createElement("ul");
-
-            clubs.forEach(club => {
-                const clubItem = document.createElement("li");
-                clubItem.textContent = `Clube: ${club.name.name}`;
-
-                const attributesList = document.createElement("ul");
-
-                const idItem = document.createElement("a");
-                idItem.href = `${API_BASE_URL}#club/${club.id.id}`;
-                idItem.textContent = `ID: ${club.id.id}`;
-                attributesList.appendChild(idItem);
-
-                const ownerItem = document.createElement("li");
-                ownerItem.textContent = `Owner: ${club.owner.user.name.name}`;
-                attributesList.appendChild(ownerItem);
-
-                const emailItem = document.createElement("li");
-                emailItem.textContent = `Email: ${club.owner.user.email.value}`;
-                attributesList.appendChild(emailItem);
-
-                clubItem.appendChild(attributesList);
-                clubsList.appendChild(clubItem);
-            });
-
-            div.appendChild(clubsList);
-
-            mainContent.replaceChildren(div);
+            mainContent.innerHTML = createElement("div", [
+                createElement("h1", ["Clubs"]),
+                createElement("ul", [clubsList])
+            ]);
         });
-}
+};
 
 export const getClubById = (mainContent, params) => {
     const clubId = params.id;
@@ -81,4 +62,7 @@ export const getClubById = (mainContent, params) => {
             mainContent.replaceChildren(container);
         });
 };
+
+
+
 

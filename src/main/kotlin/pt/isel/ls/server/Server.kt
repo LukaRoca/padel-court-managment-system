@@ -30,7 +30,7 @@ fun main(){
 
     val userService = UserServices(UserDataPostgres(dataSource.connection))
     val clubService = ClubServices(ClubDataPostgres(dataSource.connection))
-    val rentalService = RentalServices(RentalDataPostgres(dataSource.connection),    UserDataPostgres(dataSource.connection))
+    val rentalService = RentalServices(RentalDataPostgres(dataSource.connection), UserDataPostgres(dataSource.connection))
     val courtService = CourtServices(CourtDataPostgres(dataSource.connection))
 
     val userWebApi = UserWebApi(userService)
