@@ -1,27 +1,17 @@
-import {createElement} from "../html/DSL.js";
 import {API_BASE_URL} from "../utils/configs.js";
+import {a, div, h1, li, ul} from "../utils/elements.js";
 
-export const renderClubs = (clubs, mainContent) => {
-    const clubsList = clubs.map(club => {
-        // Criar o link com texto corretamente
-        const linkElement = createElement("a", [`ID: ${club.id.id}`], { href: `${API_BASE_URL}#club/${club.id.id}` });
-
-        const attributesList = createElement("ul", [
-            linkElement,
-            createElement("li", [`Owner: ${club.owner.user.name.name}`]),
-            createElement("li", [`Email: ${club.owner.user.email.value}`])
-        ]);
-
-        return createElement("li", [`Clube: ${club.name.name}`, attributesList]);
-    });
-
-    const clubsListElement = createElement("ul", clubsList);
-
-    const container = createElement("div", [
-        createElement("h1", ["Clubs"]),
-        clubsListElement
-    ]);
-
-    mainContent.innerHTML = '';
-    mainContent.appendChild(container);
+export const renderClubs = (clubs) => {
+    return div(
+        h1({}, "Club List"),
+        ul(
+            {},
+            clubs.map(club =>
+                li(
+                    {},
+                    a({ href: `${API_BASE_URL}#clubs/${club.id}` }, club.name)
+                )
+            )
+        )
+    );
 };

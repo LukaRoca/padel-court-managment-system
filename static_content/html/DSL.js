@@ -9,7 +9,7 @@ export async function createElement(tag, attributes ,...children) {
     else if (attributes != null && typeof attributes === "object") {
         setAttributes(element, attributes);
     } else if (attributes != null) {
-        throw new Error("Invalid attributes for createElement");
+        throw new console.log("Invalid attributes for createElement");
     }
 
     for(let child of children) {
@@ -35,12 +35,13 @@ function appendChild(element, child) {
 
 function setAttributes(element, attributes) {
     for (const attribute in attributes) {
-        if (attribute == null)
-            continue;
+        if (attribute == null) continue;
 
         const value = attributes[attribute];
-        if (value == null)
-            continue;
+        if (value == null) continue;
+
+        // Log do atributo e valor antes de tentar defini-lo
+        console.log(`Tentando definir atributo: ${attribute}, com valor: ${value}`);
 
         switch (attribute) {
             case "onClick":
@@ -59,8 +60,9 @@ function setAttributes(element, attributes) {
                 element.addEventListener("input", value);
                 break;
             case "style":
-                for (const style in value)
+                for (const style in value) {
                     element.style[style] = value[style];
+                }
                 break;
             case "ref":
                 value.resolve(element);
@@ -71,6 +73,9 @@ function setAttributes(element, attributes) {
     }
 }
 
-function isElement(element) {
-    return element instanceof HTMLElement;
+function isElement(obj) {
+    return (
+        typeof HTMLElement === "object" ? obj instanceof HTMLElement :
+            obj && typeof obj === "object" && obj.nodeType === 1 && typeof obj.nodeName === "string"
+    );
 }
