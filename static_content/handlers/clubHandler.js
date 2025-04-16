@@ -7,7 +7,7 @@ import {renderException} from "../views/Exeptions.js";
 export const getClubs = async (mainContent) => {
     try {
         const clubs = await fetchClubs();
-        renderClubs(clubs, mainContent);
+         renderClubs(clubs, mainContent);
     } catch (error) {
         console.error("Erro ao buscar clubes:", error);
         renderException(error,mainContent)
