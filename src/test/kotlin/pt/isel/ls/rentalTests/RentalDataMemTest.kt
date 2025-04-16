@@ -39,8 +39,8 @@ class RentalDataMemTest {
         val rental2 = RentalDataMem.createRental(Id(1), Id(1), Date("2023-10-11"), Duration(14, 16), token)
         assertNotNull(rental1)
         assertNotNull(rental2)
-        assertEquals(Id(1), rental1!!.court.id)
-        assertEquals(Id(1), rental2!!.court.id)
+        assertEquals(Id(1), rental1.court.id)
+        assertEquals(Id(1), rental2.court.id)
         assertEquals(Date("2023-10-10"), rental1.date)
         assertEquals(Date("2023-10-11"), rental2.date)
     }

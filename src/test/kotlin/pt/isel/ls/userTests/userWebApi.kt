@@ -6,8 +6,6 @@ import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
-import org.http4k.core.Response
-import org.http4k.core.Status
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NOT_FOUND
@@ -17,7 +15,6 @@ import pt.isel.ls.webApi.dto.UserInput
 import pt.isel.ls.webApi.UserWebApi
 import pt.isel.ls.webApi.dto.UserOutput
 import pt.isel.ls.webServices.UserServices
-import kotlin.test.assertFailsWith
 
 class UserWebApiTests {
 

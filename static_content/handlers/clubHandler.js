@@ -4,7 +4,6 @@ import {renderClubs} from "../views/clubView.js";
 import {renderException} from "../views/Exeptions.js";
 
 
-
 export const getClubs = async (mainContent) => {
     try {
         const clubs = await fetchClubs();

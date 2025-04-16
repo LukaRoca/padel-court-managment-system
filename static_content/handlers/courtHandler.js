@@ -1,52 +1,29 @@
 import { API_BASE_URL } from "../utils/configs.js"
+import {renderException} from "../views/Exeptions";
+import {renderCourts} from "../views/courtView";
+import {fetchCourtById, fetchCourts} from "../data/courtData";
 
-export const getCourtsList = (mainContent,params) => {
-    const clubId = params.cid
-    fetch(API_BASE_URL + "clubs/" + clubId + "/courts")
-        .then(res => res.json())
-        .then(courts => {
-            const div = document.createElement("div")
-            const h1 = document.createElement("h1")
-            const text = document.createTextNode("Courts")
-            h1.appendChild(text)
-            div.appendChild(h1)
-            const courtList = document.createElement("ul")
+export const getCourtsList = async (mainContent) => {
+    try {
+        const courts = await fetchCourts();
+        renderCourts(courts, mainContent);
+    } catch (error) {
+        console.error("Erro ao buscar courts:", error);
+        renderException(error,mainContent)
+    }
+};
 
-            courts.forEach(court => {
-                const courtItem = document.createElement("li")
-                courtItem.textContent = `Court: ${court.name.name}`;
-
-                const attributesList = document.createElement("ul")
-                const idItem = document.createElement("a");
-                idItem.href = `${API_BASE_URL}#court/${court.id.id}`;
-                idItem.textContent = `Court ID: ${court.id.id}`;
-                attributesList.appendChild(idItem);
-
-                const clubIdItem = document.createElement("li")
-                clubIdItem.textContent = `ClubId: ${court.club.id.id}`
-                attributesList.appendChild(clubIdItem);
-
-                const clubOwnerNameItem = document.createElement("li")
-                clubOwnerNameItem.textContent = `Club Owner: ${court.club.owner.user.name.name}`
-                attributesList.appendChild(clubOwnerNameItem);
-
-                const clubOwnerEmailItem = document.createElement("li")
-                clubOwnerEmailItem.textContent = `Club Owner Email: ${court.club.owner.user.email.value}`
-                attributesList.appendChild(clubOwnerEmailItem);
-
-                const clubNameItem = document.createElement("li")
-                clubNameItem.textContent = `Club Name: ${court.club.name.name}`
-                attributesList.appendChild(clubNameItem);
-
-                courtItem.appendChild(attributesList);
-                courtList.appendChild(courtItem);
-            });
-            div.appendChild(courtList)
-            mainContent.replaceChildren(div)
-        })
-}
-
-export const getCourtDetails = (mainContent, params) => {
+export const getCourtDetails = async (mainContent, params) => {
+    const courtId = params.crid;
+    try {
+        const court = await fetchCourtById(courtId);
+        renderCourts([court], mainContent);
+    } catch (error) {
+        console.error("Erro ao buscar detalhes do court:", error);
+        renderException(error, mainContent);
+    }
+};
+/*export const getCourtDetails = (mainContent, params) => {
     const courtId = params.crid
 
     fetch(API_BASE_URL + "courts/" + courtId)
@@ -81,4 +58,4 @@ export const getCourtDetails = (mainContent, params) => {
 
             mainContent.replaceChildren(ulStd);
         });
-};
+};*/

@@ -2,7 +2,6 @@ package pt.isel.ls.webApi.dto
 
 import kotlinx.serialization.Serializable
 import pt.isel.ls.domain.Date
-import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
 
 @Serializable
