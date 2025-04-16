@@ -10,7 +10,14 @@ class UserServices (private val db : UserIStorage) {
     }
 
     fun createUser(name: Name, email: Email): User {
-        return db.createUser(name,email)
+        val existingUsers = db.getAllUsers()
+        if (existingUsers.any { it.name.name == name.name }) {
+            throw IllegalArgumentException("A user with the same name already exists")
+        }
+        if (existingUsers.any { it.email == email }) {
+            throw IllegalArgumentException("A user with the same email already exists")
+        }
+        return db.createUser(name, email)
     }
 
     fun getUserByToken(token: Token): User? {
@@ -20,5 +27,4 @@ class UserServices (private val db : UserIStorage) {
     fun getAllUsers(): List<User> {
         return db.getAllUsers()
     }
-
 }
