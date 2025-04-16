@@ -1,5 +1,4 @@
 package pt.isel.ls.webApi
-
 import kotlinx.serialization.json.Json
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -13,16 +12,13 @@ import pt.isel.ls.domain.Date
 import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Token
-import pt.isel.ls.webApi.dto.RentalAvailableHoursRequestDTO
 import pt.isel.ls.webApi.dto.RentalInput
 import pt.isel.ls.webApi.dto.RentalOutput
 import pt.isel.ls.webServices.RentalServices
 
 class RentalWebApi(private val rentalServices: RentalServices) : WebApiExceptions() {
-    private fun handleError(e: Exception): Response = httpException(e)
 
-
-    fun createRental(request: Request): Response = try {
+    fun createRental(request: Request): Response = useWithException {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: throw AuthorizationException("Missing or invalid token")
         val rentalData = Json.decodeFromString<RentalInput>(request.bodyString())
@@ -33,80 +29,54 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
             Duration(rentalData.initDuration, rentalData.endDuration),
             Token(token)
         ) ?: throw NoSuchElementException()
-        Response(CREATED)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(RentalOutput(rental.rid)))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(CREATED).json(RentalOutput(rental.rid))
     }
 
-    fun getRentalById(request: Request): Response = try {
+    fun getRentalById(request: Request): Response = useWithException {
         val rentalId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid rental ID")
         val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException()
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(rental))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(rental)
     }
 
-    fun getRentalList(request: Request): Response = try {
+    fun getRentalList(request: Request): Response = useWithException {
         val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
         val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
         val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
-
         val rentalList = rentalServices.getRentalList(
             Id(cid),
             Id(crid),
             Date(date)
         )
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(rentalList))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(rentalList)
     }
 
-    fun getRentalsOfUser(request: Request): Response = try {
+    fun getRentalsOfUser(request: Request): Response = useWithException {
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
         val rentals = rentalServices.getRentalsOfUser(Id(userId))
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(rentals))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(rentals)
     }
 
-    fun getRentalsOfCourt(request: Request): Response = try {
+    fun getRentalsOfCourt(request: Request): Response = useWithException {
         val courtId = request.path("crid")?.toIntOrNull() ?: throw IllegalArgumentException()
         val rentals = rentalServices.getRentalsOfCourt(Id(courtId))
-        Response(OK)
-        .header("content-type", "application/json")
-        .body(Json.encodeToString(rentals))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(rentals)
     }
 
-    fun getAvailableHours(request: Request): Response = try {
+    fun getAvailableHours(request: Request): Response = useWithException {
         val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
         val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
         val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
         val initDuration = request.query("initDuration")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'initDuration'")
         val endDuration = request.query("endDuration")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'endDuration'")
-
         val availableHours = rentalServices.getAvailableHours(
             Id(cid),
             Id(crid),
             Date(date),
             Duration(initDuration, endDuration)
         )
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(availableHours))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(availableHours)
     }
 
     val appRental = routes(
