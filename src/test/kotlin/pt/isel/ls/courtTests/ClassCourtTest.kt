@@ -1,5 +1,4 @@
 package pt.isel.ls.courtTests
-
 import org.junit.Test
 import pt.isel.ls.domain.*
 import kotlin.test.assertEquals
@@ -56,5 +55,4 @@ class ClassCourtTest {
             Court(Id(5), Name("Padel@123"), club)
         }
     }
-
 }

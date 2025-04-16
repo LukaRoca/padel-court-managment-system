@@ -31,38 +31,26 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
             request.header("accept"),
         )
     }
-    fun getUserById(request: Request): Response = try {
+    fun getUserById(request: Request): Response = useWithException {
         logRequest(request)
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid user ID")
         val user = userServices.getUserById(Id(userId)) ?: throw NoSuchElementException()
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(user))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(user)
     }
 
-    fun createUser(request: Request): Response = try {
+    fun createUser(request: Request): Response = useWithException {
         logRequest(request)
         val response = Json.decodeFromString<UserInput>(request.bodyString())
         val user = userServices.createUser(Name(response.name), Email(response.email))
-        Response(CREATED)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(UserOutput(user.uid, user.token)))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(CREATED).json(UserOutput(user.uid, user.token))
     }
 
-    fun getAllUsers(request: Request): Response = try {
+    fun getAllUsers(request: Request): Response = useWithException {
         logRequest(request)
         val users = userServices.getAllUsers()
         if (users.isEmpty()) throw NoSuchElementException("No users found")
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(users))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(users)
     }
 
     val app = routes(
