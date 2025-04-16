@@ -1,26 +1,18 @@
 import {API_BASE_URL} from "../utils/configs.js";
-import {createElement} from "../html/DSL";
+import {fetchClubs} from "../data/clubData.js";
+import {renderClubs} from "../views/clubView.js";
+import {renderException} from "../views/Exeptions.js";
 
 
-export const getClubs = (mainContent) => {
-    fetch(API_BASE_URL + "clubs")
-        .then(res => res.json())
-        .then(clubs => {
-            const clubsList = clubs.map(club => {
-                const attributesList = createElement("ul", [
-                    createElement("a", [], { href: `${API_BASE_URL}#club/${club.id.id}` }).replace("</a>", `ID: ${club.id.id}</a>`),
-                    createElement("li", [`Owner: ${club.owner.user.name.name}`]),
-                    createElement("li", [`Email: ${club.owner.user.email.value}`])
-                ]);
 
-                return createElement("li", [`Clube: ${club.name.name}`, attributesList]);
-            }).join("");
-
-            mainContent.innerHTML = createElement("div", [
-                createElement("h1", ["Clubs"]),
-                createElement("ul", [clubsList])
-            ]);
-        });
+export const getClubs = async (mainContent) => {
+    try {
+        const clubs = await fetchClubs();
+        renderClubs(clubs, mainContent);
+    } catch (error) {
+        console.error("Erro ao buscar clubes:", error);
+        renderException(error,mainContent)
+    }
 };
 
 export const getClubById = (mainContent, params) => {

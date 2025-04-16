@@ -1,17 +1,76 @@
-
-export function createElement(tag, attributes = {}, ...children ) {
+export async function createElement(tag, attributes ,...children) {
     const element = document.createElement(tag);
 
-    for (const [key, value] of Object.entries(attributes)) {
-        element.setAttribute(key, value);
+       attributes = await attributes;
+
+    if (isElement(attributes) || typeof attributes === "string") {
+        appendChild(element, attributes);
+    }
+    else if (attributes != null && typeof attributes === "object") {
+        setAttributes(element, attributes);
+    } else if (attributes != null) {
+        throw new Error("Invalid attributes for createElement");
     }
 
-    children.forEach(child => {
-        if(typeof child === "string") {
-            element.appendChild(document.createTextNode(child));
-        }else{
-            element.appendChild(child);
+    for(let child of children) {
+        child = await child;
+
+        if (child != null && (isElement(child) || typeof child === "string")) {
+            appendChild(element, child);
+        } else if (child != null) {
+            throw new console.log("Invalid child:", child, "for element:", element);
         }
-    })
+    }
+
     return element;
+}
+
+function appendChild(element, child) {
+    if (typeof child === "string") {
+        element.appendChild(document.createTextNode(child));
+    } else {
+        element.appendChild(child);
+    }
+}
+
+function setAttributes(element, attributes) {
+    for (const attribute in attributes) {
+        if (attribute == null)
+            continue;
+
+        const value = attributes[attribute];
+        if (value == null)
+            continue;
+
+        switch (attribute) {
+            case "onClick":
+                element.addEventListener("click", value);
+                break;
+            case "onSubmit":
+                element.addEventListener("submit", value);
+                break;
+            case "onInvalid":
+                element.addEventListener("invalid", value);
+                break;
+            case "onChange":
+                element.addEventListener("change", value);
+                break;
+            case "onInput":
+                element.addEventListener("input", value);
+                break;
+            case "style":
+                for (const style in value)
+                    element.style[style] = value[style];
+                break;
+            case "ref":
+                value.resolve(element);
+                break;
+            default:
+                element.setAttribute(attribute, value);
+        }
+    }
+}
+
+function isElement(element) {
+    return element instanceof HTMLElement;
 }
