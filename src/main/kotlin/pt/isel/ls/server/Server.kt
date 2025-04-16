@@ -6,10 +6,6 @@ import org.http4k.routing.singlePageApp
 import org.http4k.server.*
 import org.postgresql.ds.PGSimpleDataSource
 import org.slf4j.LoggerFactory
-import pt.isel.ls.storage.dataMem.ClubDataMem
-import pt.isel.ls.storage.dataMem.CourtDataMem
-import pt.isel.ls.storage.dataMem.RentalDataMem
-import pt.isel.ls.storage.dataMem.UserDataMem
 import pt.isel.ls.storage.dataPostgres.ClubDataPostgres
 import pt.isel.ls.storage.dataPostgres.CourtDataPostgres
 import pt.isel.ls.storage.dataPostgres.RentalDataPostgres
