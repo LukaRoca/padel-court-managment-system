@@ -17,12 +17,8 @@ export const renderClubs = (mainContent, clubs) => {
                 li(
                     a({
                         href: `${API_BASE_URL}#club/${club.id.id}`,
-                        textContent: `Club: ${club.name.name}`,
-                    }),
-                    ul(
-                        li(`Club ID: ${club.id.id}`),
-                        li(`Owner: ${club.owner.user.name.name}`),
-                        li(`Owner Email: ${club.owner.user.email.value}`),
+                    },
+                        'Club Id: ' + club.id.id,
                     ),
                 ),
             ),
@@ -37,4 +33,39 @@ export const renderClubs = (mainContent, clubs) => {
     }
     mainContent.replaceChildren(content);
     console.log("Clubs rendered successfully");
+};
+
+export const renderClubDetail = (mainContent, club) => {
+    console.log("renderClubDetail called with:", club);
+
+    const courtsLink = a({
+        href: `${API_BASE_URL}#courts/${club.id.id}`,
+        textContent: "CourtsList"
+    });
+
+    const clubDetails = ul(
+        li(`Club Name: ${club.name.name}`),
+        li(`Club Id: ${club.id.id}`),
+        li(
+            a({
+                href: `${API_BASE_URL}#user/${club.owner.user.uid.id}`
+            },
+                `Owner : ${club.owner.user.uid.id}`
+            )
+        )
+    );
+
+    const content = div(
+        h1("Club Details"),
+        div(courtsLink),
+        clubDetails
+    );
+
+    if(!mainContent) {
+        console.error("mainContent is null or undefined");
+        return;
+    }
+
+    mainContent.replaceChildren(content);
+    console.log("Club detail rendered successfully");
 };
