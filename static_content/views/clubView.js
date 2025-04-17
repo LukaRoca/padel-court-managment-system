@@ -38,6 +38,11 @@ export const renderClubs = (mainContent, clubs) => {
 export const renderClubDetail = (mainContent, club) => {
     console.log("renderClubDetail called with:", club);
 
+    const clubsLink = a(
+        {},
+        a({ href: `${API_BASE_URL}#clubs` }, "Club List")
+    );
+
     const courtsLink = a({
         href: `${API_BASE_URL}#courts/${club.id.id}`,
         textContent: "CourtsList"
@@ -57,6 +62,7 @@ export const renderClubDetail = (mainContent, club) => {
 
     const content = div(
         h1("Club Details"),
+        div(clubsLink),
         div(courtsLink),
         clubDetails
     );
