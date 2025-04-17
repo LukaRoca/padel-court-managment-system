@@ -1,13 +1,14 @@
-import { div, a, h1 } from "../utils/elements.js";
+import {div, a, h1, p} from "../utils/elements.js";
 import { API_BASE_URL } from "../utils/configs.js";
 
-export const renderHome = async (mainContent) => {
+export const renderHome = (mainContent) => {
     console.log("renderHome called with:", mainContent);
 
-    const content = await div(
+    const content =  div(
         {},
-        await a({ href: `${API_BASE_URL}#clubs` }, "Club List"),
-        await h1({}, "Home")
+        a({ href: `${API_BASE_URL}#clubs` }, "Club List"),
+        h1({}, "Home"),
+        p({}, "Chelas 2025"),
     );
 
     console.log("Generated content:", content);

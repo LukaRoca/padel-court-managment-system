@@ -1,6 +1,6 @@
 import {createElement} from "../html/DSL.js";
 
-export const renderException = (error, mainContent) => {
+export const renderException = (mainContent,error) => {
 
     const errorCode = error.status || error.code || 'UNKNOWN';
 

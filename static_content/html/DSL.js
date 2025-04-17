@@ -1,7 +1,5 @@
-export async function createElement(tag, attributes ,...children) {
+export function createElement(tag, attributes ,...children) {
     const element = document.createElement(tag);
-
-       attributes = await attributes;
 
     if (isElement(attributes) || typeof attributes === "string") {
         appendChild(element, attributes);
@@ -9,17 +7,16 @@ export async function createElement(tag, attributes ,...children) {
     else if (attributes != null && typeof attributes === "object") {
         setAttributes(element, attributes);
     } else if (attributes != null) {
-        throw new console.log("Invalid attributes for createElement");
+        console.log("Invalid attributes for createElement");
+        throw new Error("Invalid attributes for createElement");
     }
 
     for(let child of children) {
-        child = await child;
-
         if (child != null && (isElement(child) || typeof child === "string")) {
             appendChild(element, child);
         } else if (child != null) {
-            throw new console.log("Invalid child:", child, "for element:", element);
-        }
+            console.log("Invalid child:", child, "for element:", element);
+            throw new Error(`Invalid child for element: ${element.tagName}`);        }
     }
 
     return element;

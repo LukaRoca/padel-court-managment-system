@@ -8,10 +8,10 @@ import {renderException} from "../views/Exeptions.js";
 export const getClubs = async (mainContent) => {
     try {
         const clubs = await fetchClubs();
-         renderClubs(clubs, mainContent);
+        renderClubs(mainContent, clubs);
     } catch (error) {
         console.error("Erro ao buscar clubes:", error);
-        renderException(error,mainContent)
+        renderException(mainContent, error);
     }
 };
 
