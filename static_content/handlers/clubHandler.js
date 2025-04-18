@@ -1,8 +1,6 @@
-import {API_BASE_URL} from "../utils/configs.js";
 import {fetchClubById, fetchClubs} from "../data/clubData.js";
 import {renderClubDetail, renderClubs} from "../views/clubView.js";
 import {renderException} from "../views/Exeptions.js";
-
 
 
 export const getClubs = async (mainContent) => {

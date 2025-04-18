@@ -43,14 +43,15 @@ export const renderClubDetail = (mainContent, club) => {
         a({ href: `${API_BASE_URL}#clubs` }, "Club List")
     );
 
-    const courtsLink = a({
-        href: `${API_BASE_URL}#courts/${club.id.id}`,
-        textContent: "CourtsList"
-    });
-
     const clubDetails = ul(
-        li(`Club Name: ${club.name.name}`),
-        li(`Club Id: ${club.id.id}`),
+        li(`Name: ${club.name.name}`),
+        li(
+            a({
+                href: `${API_BASE_URL}#courts/${club.id.id}`
+            },
+                `Id: ${club.id.id}`
+            )
+        ),
         li(
             a({
                 href: `${API_BASE_URL}#user/${club.owner.user.uid.id}`
@@ -63,7 +64,6 @@ export const renderClubDetail = (mainContent, club) => {
     const content = div(
         h1("Club Details"),
         div(clubsLink),
-        div(courtsLink),
         clubDetails
     );
 
