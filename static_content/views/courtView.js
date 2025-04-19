@@ -1,4 +1,4 @@
-import {a, div, h1, h2, span, p} from "../utils/elements.js";
+import {a, div, h1, h2, span, p, ul, li} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
 
 export const renderCourtsList = (mainContent, courts) => {
@@ -37,7 +37,7 @@ export const renderCourtsList = (mainContent, courts) => {
                         },
                         div(
                             {className: "card-header bg-primary bg-opacity-75 text-white py-3"},
-                            h2({className: "h5 mb-0 fw-bold"}, court.name?.name || 'Unnamed Court')
+                            h2({className: "h5 mb-0 fw-bold"}, court?.name || 'Unnamed Court')
                         ),
                         div(
                             {className: "text-center py-5 bg-light border-top border-bottom"},
@@ -48,22 +48,23 @@ export const renderCourtsList = (mainContent, courts) => {
                             p(
                                 {className: "card-text mb-2"},
                                 span({className: "fw-bold"}, "Club: "),
-                                court.club?.name?.name || 'N/A'
+                                court.club?.name || 'N/A'
                             ),
                             p(
                                 {className: "card-text mb-2"},
                                 span({className: "fw-bold"}, "Owner: "),
-                                court.club?.owner?.user?.name?.name || 'N/A'
+                                court.club.owner?.name || 'N/A'
                             ),
                             p(
                                 {className: "small text-muted mt-3"},
-                                `ID: ${court.id?.id || 'Unknown ID'}`
+                                `ID: ${court?.id || 'Unknown ID'}`
                             )
                         ),
                         div(
                             {className: "card-footer bg-transparent border-top-0 pt-0 pb-3 px-3"},
                             a({
-                                href: `${API_BASE_URL}#court/${court.id?.id || ''}`,
+                                href: `${API_BASE_URL}#court/${court?.id || ''}`,
+                                textContent: `Court Details`,
                                 className: "btn btn-primary w-100 d-inline-flex align-items-center justify-content-center gap-2",
                                 children: [
                                     span({ className: "material-icons" }),
@@ -94,3 +95,34 @@ export const renderCourtsList = (mainContent, courts) => {
     mainContent.replaceChildren(content);
     console.log("Courts list rendered successfully with improved styling.");
 };
+
+export const renderCourtDetail = (mainContent, court) => {
+
+    const courtDetails = ul( {},
+        li({},`Name: ${court.name}`),
+        li({},`Id: ${court.id}`),
+        a({
+            href: `${API_BASE_URL}#club/${court.club.id}`,
+            textContent: `ClubId: ${court.club.id}`
+        })
+    )
+
+    const rentalLink = a({
+        href: `${API_BASE_URL}#court/rentals/${court.id}`,
+        textContent: "RentalsList"
+    });
+
+    const content = div ({},
+        h1({},"Court Details"),
+        courtDetails,
+        div({},rentalLink)
+    );
+
+    if(!mainContent) {
+        console.error("mainContent is null or undefined");
+        return;
+    }
+
+    mainContent.replaceChildren(content);
+    console.log("User detail rendered successfully");
+}

@@ -4,21 +4,21 @@ import {API_BASE_URL} from "../utils/configs.js";
 export const renderUserDetail = (mainContent, user) => {
     console.log("renderUserDetail called with:", user);
 
-    const userDetails = ul(
-        li(`Name: ${user.name.name}`),
-        li(`Id: ${user.uid.id}`),
-        li(`Email: ${user.email.value}`),
+    const userDetails = ul( {},
+        li({},`Name: ${user.name}`),
+        li({},`Id: ${user.id}`),
+        li({},`Email: ${user.email}`),
     );
 
     const rentalLink = a({
-        href: `${API_BASE_URL}#rentals/${user.uid.id}`,
+        href: `${API_BASE_URL}#rentals/${user.id}`,
         textContent: "RentalsList"
     });
 
-    const content = div(
-        h1("User Details"),
+    const content = div ({},
+        h1({},"User Details"),
         userDetails,
-        div(rentalLink)
+        div({},rentalLink)
     );
 
     if(!mainContent) {
