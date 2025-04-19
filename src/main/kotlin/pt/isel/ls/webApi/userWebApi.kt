@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Email
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
+import pt.isel.ls.webApi.dto.UserDetails
 import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.webApi.dto.UserOutput
 import pt.isel.ls.webApi.dto.UserInput
@@ -31,39 +32,32 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
             request.header("accept"),
         )
     }
-    fun getUserById(request: Request): Response = try {
+    private fun getUserById(request: Request): Response = useWithException {
         logRequest(request)
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid user ID")
         val user = userServices.getUserById(Id(userId)) ?: throw NoSuchElementException()
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(user))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(UserDetails(user.uid.id, user.name.name, user.email.value, user.token.token))
     }
 
-    fun createUser(request: Request): Response = try {
+
+    fun createUser(request: Request): Response = useWithException {
         logRequest(request)
         val response = Json.decodeFromString<UserInput>(request.bodyString())
         val user = userServices.createUser(Name(response.name), Email(response.email))
-        Response(CREATED)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(UserOutput(user.uid, user.token)))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(CREATED).json(UserOutput(user.uid.id, user.token.token))
     }
 
-    fun getAllUsers(request: Request): Response = try {
+
+    private fun getAllUsers(request: Request): Response = useWithException {
         logRequest(request)
         val users = userServices.getAllUsers()
         if (users.isEmpty()) throw NoSuchElementException("No users found")
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(users))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(users.map{ user ->
+            UserDetails(user.uid.id, user.name.name, user.email.value, user.token.token)
+        })
     }
+
 
     val app = routes(
         "users" bind Method.POST to ::createUser,

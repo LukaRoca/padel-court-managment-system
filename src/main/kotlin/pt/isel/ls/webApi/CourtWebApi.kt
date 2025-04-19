@@ -12,46 +12,65 @@ import org.http4k.routing.routes
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
-import pt.isel.ls.webApi.dto.CourtInput
-import pt.isel.ls.webApi.dto.CourtOutput
+import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.CourtServices
 
 class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions() {
-    private fun handleError(e: Exception): Response = httpException(e)
 
-    fun createCourt(request: Request): Response = try {
+    fun createCourt(request: Request): Response = useWithException {
         val token = request.header("Authorization")?.substringAfter("Bearer ")
             ?: throw IllegalArgumentException()
         val courtDto = Json.decodeFromString<CourtInput>(request.bodyString())
         val court = courtServices.createCourt(Name(courtDto.name), Id(courtDto.cid), Token(token)) ?: throw NoSuchElementException()
-        Response(CREATED).json(CourtOutput(court.id))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(CREATED).json(CourtOutput(court.id.id))
     }
-    fun getCourtById(request: Request): Response = try {
+
+    private fun getCourtById(request: Request): Response = useWithException {
         val crid = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
         val court = courtServices.getCourtById(Id(crid)) ?: throw NoSuchElementException()
-        Response(OK)
-            .header("content-type", "application/json")
-            .body(Json.encodeToString(court))
-    } catch (e: Exception) {
-        handleError(e)
+        Response(OK).json(CourtDetails(
+            court.id.id,
+            court.name.name,
+            ClubDetails(
+                court.club.id.id,
+                court.club.name.name,
+                UserDetails(
+                    court.club.owner.user.uid.id,
+                    court.club.owner.user.name.name,
+                    court.club.owner.user.email.value,
+                    court.club.owner.user.token.token
+                )
+            )))
     }
-    fun getCourtsByClub(request: Request): Response = try {
+
+
+    private fun getCourtsByClub(request: Request): Response = useWithException {
         val clubId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
-        val courts = courtServices.getCourtsByClub(Id(clubId)) ?: emptyList()
+        val courts = courtServices.getCourtsByClubId(Id(clubId)) ?: emptyList()
         if (courts.isNotEmpty()) {
-            Response(OK)
-                .header("content-type", "application/json")
-                .body(Json.encodeToString(courts))
+            Response(OK).json(courts.map { court ->
+                CourtDetails(
+                    court.id.id,
+                    court.name.name,
+                    ClubDetails(
+                        court.club.id.id,
+                        court.club.name.name,
+                        UserDetails(
+                            court.club.owner.user.uid.id,
+                            court.club.owner.user.name.name,
+                            court.club.owner.user.email.value,
+                            court.club.owner.user.token.token
+                        )
+                    ))
+            })
         } else {
             throw NoSuchElementException()
         }
-    } catch (e: Exception) {
-        handleError(e)
     }
+
+
     val appCourts = routes(
         "courts" bind Method.POST to ::createCourt,
         "courts/{id}" bind Method.GET to ::getCourtById,

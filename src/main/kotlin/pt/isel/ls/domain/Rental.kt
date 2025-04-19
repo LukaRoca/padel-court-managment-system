@@ -1,8 +1,5 @@
 package pt.isel.ls.domain
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class Rental (val rid : Id, val date : Date, val duration : Duration, val user : User, val court : Court) {
     init {
         require(rid.id > 0) { "Rental ID must be greater than zero." }

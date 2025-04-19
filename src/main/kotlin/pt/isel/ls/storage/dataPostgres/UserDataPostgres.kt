@@ -6,57 +6,56 @@ import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import java.util.*
+import javax.sql.DataSource
 
-class UserDataPostgres (private val connection : Connection) : UserIStorage {
+class UserDataPostgres (private val dataSource : DataSource) : UserIStorage {
     override fun createUser(name: Name, email: Email) : User {
         val token = UUID.randomUUID()
         val sql = "INSERT INTO users(token, name, email) VALUES (?, ?,?)"
-        val statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS).apply {
-            setObject(1, token)
-            setString(2, name.name)
-            setString(3, email.value)
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+            stmt.setObject(1, token)
+            stmt.setString(2, name.name)
+            stmt.setString(3, email.value)
+            if (stmt.executeUpdate() == 0) {
+                throw SQLException("Error while creating a new user.")
+            }
+            val keys = stmt.generatedKeys
+            keys.next()
+            return User(Id(keys.getInt(1)), name, email, Token(token.toString()))
         }
-        //Fazer função para tratar desta cena
-        if (statement.executeUpdate() == 0) {
-            throw SQLException("Error while creating a new user.")
-        }
-        val keys = statement.generatedKeys
-        keys.next()
-        return User(Id(keys.getInt(1)), name, email, Token(token.toString()))
     }
-
     override fun getUserById(userId: Id): User? {
         val sql = "SELECT uid, name, email, token FROM users WHERE uid = ?"
-
-        connection.prepareStatement(sql).use { stmt ->
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql)
             stmt.setInt(1, userId.id)
-            stmt.executeQuery().use { result ->
-                if (result.next()) {
-                    return User(
-                        Id(result.getInt("uid")),
-                        Name(result.getString("name")),
-                        Email(result.getString("email")),
-                        Token(result.getString("token"))
-                    )
-                }
+            val rs = stmt.executeQuery()
+            if (rs.next()) {
+                return User(
+                    Id(rs.getInt("uid")),
+                    Name(rs.getString("name")),
+                    Email(rs.getString("email")),
+                    Token(rs.getString("token"))
+                )
             }
         }
         return null
     }
 
     override fun getUserByToken(token: Token): User? {
-        val sql = "SELECT * FROM users WHERE token = ?"
-        connection.prepareStatement(sql).use { stmt ->
+        val sql = "SELECT * FROM users WHERE users.token = ?"
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql)
             stmt.setString(1, token.token)
-            stmt.executeQuery().use { result ->
-                if (result.next()) {
-                    return User(
-                        Id(result.getInt("uid")),
-                        Name(result.getString("name")),
-                        Email(result.getString("email")),
-                        Token(result.getString("token"))
-                    )
-                }
+            val rs = stmt.executeQuery()
+            if (rs.next()) {
+                return User(
+                    Id(rs.getInt("uid")),
+                    Name(rs.getString("name")),
+                    Email(rs.getString("email")),
+                    Token(rs.getString("token"))
+                )
             }
         }
         return null
@@ -65,18 +64,18 @@ class UserDataPostgres (private val connection : Connection) : UserIStorage {
     override fun getAllUsers(): List<User> {
         val sql = "SELECT * FROM users"
         val users = mutableListOf<User>()
-        connection.prepareStatement(sql).use { stmt ->
-            stmt.executeQuery().use { result ->
-                while (result.next()) {
-                    users.add(
-                        User(
-                            Id(result.getInt("uid")),
-                            Name(result.getString("name")),
-                            Email(result.getString("email")),
-                            Token(result.getString("token"))
-                        )
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql)
+            val rs = stmt.executeQuery()
+            while (rs.next()) {
+                users.add(
+                    User(
+                        Id(rs.getInt("uid")),
+                        Name(rs.getString("name")),
+                        Email(rs.getString("email")),
+                        Token(rs.getString("token"))
                     )
-                }
+                )
             }
         }
         return users

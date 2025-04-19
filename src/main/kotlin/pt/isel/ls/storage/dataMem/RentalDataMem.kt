@@ -1,5 +1,5 @@
 package pt.isel.ls.storage.dataMem
-
+/*
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.RentalIStorage
 import pt.isel.ls.storage.dataMem.ClubDataMem.getClubById
@@ -56,3 +56,5 @@ object RentalDataMem : RentalIStorage {
         return availableHours
     }
 }
+
+ */

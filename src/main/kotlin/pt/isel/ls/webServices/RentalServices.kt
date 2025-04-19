@@ -2,41 +2,46 @@ package pt.isel.ls.webServices
 
 import pt.isel.ls.checkIfTokenInDb
 import pt.isel.ls.domain.*
+import pt.isel.ls.storage.iStorage.IStorage
 import pt.isel.ls.storage.iStorage.RentalIStorage
 import pt.isel.ls.storage.iStorage.UserIStorage
 import pt.isel.ls.webApi.TokenNotFoundException
+import java.lang.IllegalStateException
 
-class RentalServices (private val db : RentalIStorage, private val userDb: UserIStorage) {
+class RentalServices (private val db : IStorage) {
 
     fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token ): Rental? {
+        val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
+        val user = db.user.getUserByToken(token) ?: throw IllegalStateException("User not found with this token")
 
-        return if (checkIfTokenInDb(token, userDb)) {
-            db.createRental(cid, crid, date, duration, token)
-        }else{
-            throw TokenNotFoundException("No user found with that token")
-        }
+        return db.rental.createRental(court, date, duration, user)
     }
 
     fun getRentalById(rentalId: Id): Rental? {
-        return db.getRentalById(rentalId)
+        return db.rental.getRentalById(rentalId)
 
     }
 
-    fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental>? {
-        return db.getRentalList(cid, crid, date)
+    fun getRentalsOfUser(uid: Id): List<Rental>? {
+        val user = db.user.getUserById(uid) ?: throw IllegalStateException("User not found with this id")
+        return db.rental.getRentalsOfUser(user)
     }
 
-    fun getRentalsOfUser(cid: Id): List<Rental>? {
-        return db.getRentalsOfUser(cid)
+    fun getRentals(cid: Id, crid: Id, date: Date): List<Rental>? {
+        val club = db.club.getClubById(cid) ?: throw IllegalStateException("Club not found with this id $cid")
+        val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
+        return db.rental.getRentals(club, court, date)
     }
 
     fun getRentalsOfCourt(crid: Id) : List<Rental>? {
-        return db.getRentalsOfCourt(crid)
+        val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
+        return db.rental.getRentalsOfCourt(court)
     }
 
-    fun getAvailableHours(cid: Id, crid: Id, date: Date, duration: Duration): List<Int> {
-        return db.getAvailableHours(cid, crid, date, duration)
+    fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int>? {
+        val club = db.club.getClubById(cid) ?: throw IllegalStateException("Club not found with this id $cid")
+        val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
+        return db.rental.getAvailableHours(club, court, date)
     }
-
 }
 

@@ -2,17 +2,21 @@ package pt.isel.ls.webServices
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.CourtIStorage
+import pt.isel.ls.storage.iStorage.IStorage
 
-open class CourtServices (private val db: CourtIStorage) {
+open class CourtServices (private val db: IStorage) {
 
-    fun createCourt(name : Name, id : Id, token: Token) : Court? {
-        return db.createCourt(name, id, token)
+    fun createCourt(name : Name, cid : Id, token: Token) : Court? {
+        val user = db.user.getUserByToken(token) ?: throw NullPointerException("User with token ${token} not found")
+        val club = db.club.getClubById(cid) ?: throw NullPointerException("Club with id ${cid} not found")
+        if (club.owner.user != user) throw IllegalArgumentException("Id or token not valid")
+        return db.court.createCourt(name, club)
     }
-    fun getCourtById(id : Id ) : Court? {
-        return db.getCourtById(id)
+    fun getCourtById(crid: Id ) : Court? {
+        return db.court.getCourtById(crid)
     }
-    fun getCourtsByClub(id : Id) : List<Court>? {
-        return db.getCourtByClubId(id)
+    fun getCourtsByClubId(cid : Id) : List<Court>? {
+        return db.court.getCourtByClubId(cid)
     }
 
 

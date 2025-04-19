@@ -1,23 +1,17 @@
 package pt.isel.ls.domain
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class Name (val name : String)
 
-@Serializable
 data class Owner (val user : User)
 
-@Serializable
 data class Email(val value: String) {
     init {
         require(value.contains("@")) { "Email must have @ in it" }
     }
 }
 
-@Serializable
 data class Token(val token : String)
 
-@Serializable
 data class Id (val id : Int){
     init {
         if(id <= 0)
@@ -25,7 +19,6 @@ data class Id (val id : Int){
     }
 }
 
-@Serializable
 data class Duration (val initDuration : Int, val endDuration : Int) {
     val hours = endDuration - initDuration
     init {
@@ -33,5 +26,4 @@ data class Duration (val initDuration : Int, val endDuration : Int) {
     }
 }
 
-@Serializable
 data class Date( val value: String)

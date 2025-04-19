@@ -12,6 +12,14 @@ data class UserInput(
 
 @Serializable
 data class UserOutput(
-    val uid : Id,
-    val token : Token,
+    val uid : Int,
+    val token : String
+)
+
+@Serializable
+data class UserDetails(
+    val id : Int,
+    val name : String,
+    val email : String,
+    val token : String
 )
