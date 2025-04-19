@@ -1,18 +1,18 @@
 import {getClubById, getClubs} from "../handlers/clubHandler.js";
 import {getHome} from "../handlers/homeHandler.js";
-import {getCourtDetails, getCourtsList} from "../handlers/courtHandler.js";
+import {getCourtById, getCourtsList} from "../handlers/courtHandler.js";
 import {getUserById} from "../handlers/userHandler.js";
-import {getRentalByCrid, getRentalById, getRentalsByUid} from "../handlers/rentalHandler.js";
+import {getRentalByCrid, getRentalDetail, getRentalsByUid} from "../handlers/rentalHandler.js";
 
 export default function setupRoutes(router) {
     router.addRouteHandler("home", getHome)
     router.addRouteHandler("clubs", getClubs)
     router.addRouteHandler("club/:id", getClubById)
     router.addRouteHandler("courts/:cid", getCourtsList)
-    router.addRouteHandler("court/:crid", getCourtDetails)
+    router.addRouteHandler("court/:crid", getCourtById)
     router.addRouteHandler("user/:uid", getUserById)
     router.addRouteHandler("rentals/:uid", getRentalsByUid)
-    router.addRouteHandler("rental/:rid", getRentalById)
+    router.addRouteHandler("rental/:rid", getRentalDetail)
     router.addRouteHandler("court/rentals/:crid", getRentalByCrid)
 
     router.addDefaultNotFoundRouteHandler(() => window.location.hash = "home")

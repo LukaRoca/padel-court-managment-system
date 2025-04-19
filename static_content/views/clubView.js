@@ -7,6 +7,7 @@ export const renderClubs = (mainContent, clubs) => {
     if (!Array.isArray(clubs)) {
         console.error("clubs is not an array:", clubs);
         clubs = [];
+        console.log(clubs)
     }
 
     const content = div(
@@ -30,7 +31,7 @@ export const renderClubs = (mainContent, clubs) => {
                         {className: "card h-100 border-0 shadow-sm club-card transition-all hover-lift"},
                         div(
                             {className: "card-header bg-primary bg-opacity-75 text-white py-3"},
-                            h2({className: "h5 mb-0 fw-bold"}, club.name?.name || `Club ${club.id.id}`)
+                            h2({className: "h5 mb-0 fw-bold"}, club.name || `Club ${club.id}`)
                         ),
                         div(
                             {className: "text-center py-5 bg-light border-top border-bottom"},
@@ -41,7 +42,7 @@ export const renderClubs = (mainContent, clubs) => {
                             p(
                                 {className: "card-text mb-2"},
                                 span({className: "fw-bold"}, "Club ID: "),
-                                club.id.id
+                                club.id
                             ),
                             p(
                                 {className: "small text-muted mt-3"},
@@ -51,7 +52,7 @@ export const renderClubs = (mainContent, clubs) => {
                         div(
                             {className: "card-footer bg-transparent border-top-0 pt-0 pb-3 px-3"},
                             a({
-                                    href: `${API_BASE_URL}#club/${club.id.id}`,
+                                    href: `${API_BASE_URL}#club/${club.id}`,
                                     className: "btn btn-primary w-100 d-inline-flex align-items-center justify-content-center gap-2"
                                 },
                                 span({className: "material-icons"}),
@@ -97,7 +98,7 @@ export const renderClubDetail = (mainContent, club) => {
             {className: "row mb-5 pb-4 border-bottom"},
             div(
                 {className: "col-12"},
-                h1({className: "display-4 fw-bold text-primary mb-3"}, club.name?.name || "Club Details"),
+                h1({className: "display-4 fw-bold text-primary mb-3"}, club.name || "Club Details"),
                 p({className: "lead text-muted"}, "View club information and browse available courts")
             )
         ),
@@ -117,12 +118,12 @@ export const renderClubDetail = (mainContent, club) => {
                         div(
                             {className: "row mb-3 pb-3 border-bottom"},
                             div({className: "col-4 fw-bold"}, "Club Name:"),
-                            div({className: "col-8"}, club.name?.name || "N/A")
+                            div({className: "col-8"}, club.name || "N/A")
                         ),
                         div(
                             {className: "row mb-3 pb-3 border-bottom"},
                             div({className: "col-4 fw-bold"}, "Club ID:"),
-                            div({className: "col-8"}, club.id?.id || "N/A")
+                            div({className: "col-8"}, club.id || "N/A")
                         ),
                         div(
                             {className: "row"},
@@ -130,11 +131,11 @@ export const renderClubDetail = (mainContent, club) => {
                             div(
                                 {className: "col-8"},
                                 a({
-                                        href: `${API_BASE_URL}#user/${club.owner?.user?.uid?.id || ''}`,
+                                        href: `${API_BASE_URL}#user/${club.owner.id || ''}`,
                                         className: "d-inline-flex align-items-center gap-1 text-decoration-none"
                                     },
                                     span({className: "material-icons", style: "font-size: 1.1em;"}),
-                                    club.owner?.user?.name?.name || club.owner?.user?.uid?.id || "N/A"
+                                    club.owner.name || club.owner.id || "N/A"
                                 )
                             )
                         )
@@ -150,7 +151,7 @@ export const renderClubDetail = (mainContent, club) => {
                 div(
                     {className: "d-grid gap-2"},
                     a({
-                            href: `${API_BASE_URL}#courts/${club.id?.id || ''}`,
+                            href: `${API_BASE_URL}#courts/${club.id || ''}`,
                             className: "btn btn-primary d-inline-flex align-items-center justify-content-center gap-2"
                         },
                         span({className: "material-icons"}),

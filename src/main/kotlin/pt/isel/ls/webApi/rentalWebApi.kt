@@ -136,8 +136,34 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
 
     private fun getRentalsOfCourt(request: Request): Response = useWithException {
         val courtId = request.path("crid")?.toIntOrNull() ?: throw IllegalArgumentException()
-        val rentals = rentalServices.getRentalsOfCourt(Id(courtId))
-        Response(OK).json(rentals)
+        val rentals = rentalServices.getRentalsOfCourt(Id(courtId)) ?: throw NoSuchElementException()
+        Response(OK).json(rentals.map{ rental ->
+            RentalDetails(
+                rental.rid.id,
+                rental.date.value,
+                rental.duration.hours,
+                UserDetails(
+                    rental.user.uid.id,
+                    rental.user.name.name,
+                    rental.user.email.value,
+                    rental.user.token.token
+                ),
+                CourtDetails(
+                    rental.court.id.id,
+                    rental.court.name.name,
+                    ClubDetails(
+                        rental.court.club.id.id,
+                        rental.court.club.name.name,
+                        UserDetails(
+                            rental.user.uid.id,
+                            rental.user.name.name,
+                            rental.user.email.value,
+                            rental.user.token.token
+                        )
+                    )
+                )
+            )
+        })
     }
 
     private fun getAvailableHours(request: Request): Response = useWithException {
