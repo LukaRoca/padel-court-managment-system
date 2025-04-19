@@ -1,5 +1,4 @@
 package pt.isel.ls.rentalTests
-
 import org.junit.Test
 import pt.isel.ls.domain.*
 import pt.isel.ls.domain.Date
@@ -33,13 +32,16 @@ class RentalDataMemTest {
         assertNotNull(retrievedRental)
         assertEquals(rental, retrievedRental)
     }
-    
     @Test
-    fun `Get Available Hours`() {
+    fun `Create Multiple Rentals for Same Court`() {
         val token = Token(UUID.randomUUID().toString())
-        RentalDataMem.createRental(Id(1), Id(1), Date("2023-10-10"), Duration(10, 20), token)
-        val availableHours = RentalDataMem.getAvailableHours(Id(1), Id(1), Date("2023-10-10"))
-        assertNotNull(availableHours)
-        assertEquals((7..9).toList() + (20..21).toList(), availableHours)
+        val rental1 = RentalDataMem.createRental(Id(1), Id(1), Date("2023-10-10"), Duration(10, 12), token)
+        val rental2 = RentalDataMem.createRental(Id(1), Id(1), Date("2023-10-11"), Duration(14, 16), token)
+        assertNotNull(rental1)
+        assertNotNull(rental2)
+        assertEquals(Id(1), rental1!!.court.id)
+        assertEquals(Id(1), rental2!!.court.id)
+        assertEquals(Date("2023-10-10"), rental1.date)
+        assertEquals(Date("2023-10-11"), rental2.date)
     }
 }

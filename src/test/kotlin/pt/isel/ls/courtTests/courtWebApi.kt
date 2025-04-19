@@ -11,6 +11,7 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import kotlinx.serialization.json.Json
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.dataMem.CourtDataMem
+import pt.isel.ls.storage.dataMem.UserDataMem
 import pt.isel.ls.webApi.CourtWebApi
 import pt.isel.ls.webApi.dto.CourtInput
 import pt.isel.ls.webApi.dto.CourtOutput
@@ -20,8 +21,9 @@ import kotlin.test.assertTrue
 class CourtWebApiTests {
 
     private val db = CourtDataMem
+    private val userdb = UserDataMem
 
-    private val courtWebApi = CourtWebApi(CourtServices(db))
+    private val courtWebApi = CourtWebApi(CourtServices(db, userdb))
     @Test
     fun `should create court successfully`() {
         val courtDto = CourtInput(name = "Court 1", cid = 1)

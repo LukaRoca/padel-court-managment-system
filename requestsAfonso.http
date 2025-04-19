@@ -10,12 +10,12 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8081/club
-Authorization: 277a96c6-4360-42ed-8a37-bfb0ec41d6ae
+POST http://localhost:8080/club
+Authorization: 73cf5730-fec3-4202-9a1c-63708d534ab9
 Content-Type: application/json
 
 {
-  "name": "Fly Padel 2"
+  "name": "Bartolo"
 }
 
 ###

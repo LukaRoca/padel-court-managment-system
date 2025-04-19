@@ -1,5 +1,4 @@
 package pt.isel.ls.clubTests
-
 import org.junit.Test
 import pt.isel.ls.domain.*
 import java.util.UUID
