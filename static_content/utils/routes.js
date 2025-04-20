@@ -10,7 +10,7 @@ export default function setupRoutes(router) {
     router.addRouteHandler("club/:id", getClubById)
     router.addRouteHandler("courts/:cid", getCourtsList)
     router.addRouteHandler("court/:crid", getCourtById)
-    router.addRouteHandler("user/:uid", getUserById)
+    router.addRouteHandler("users/:uid", getUserById)
     router.addRouteHandler("rentals/:uid", getRentalsByUid)
     router.addRouteHandler("rental/:rid", getRentalDetail)
     router.addRouteHandler("court/rentals/:crid", getRentalByCrid)

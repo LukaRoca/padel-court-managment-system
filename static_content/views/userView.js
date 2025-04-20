@@ -7,7 +7,6 @@ export const renderUserDetail = (mainContent, user) => {
     const content = div(
         {className: "container py-5"},
 
-        // Header section
         div(
             {className: "row mb-5 pb-4 border-bottom"},
             div(

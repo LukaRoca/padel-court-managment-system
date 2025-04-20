@@ -131,7 +131,7 @@ export const renderClubDetail = (mainContent, club) => {
                             div(
                                 {className: "col-8"},
                                 a({
-                                        href: `${API_BASE_URL}#user/${club.owner.id || ''}`,
+                                        href: `${API_BASE_URL}#users/${club.owner.id || ''}`,
                                         className: "d-inline-flex align-items-center gap-1 text-decoration-none"
                                     },
                                     span({className: "material-icons", style: "font-size: 1.1em;"}),

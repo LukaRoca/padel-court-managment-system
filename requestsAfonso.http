@@ -43,8 +43,8 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8081/rental
-Authorization: Bearer 0005d4c5-82c1-468c-bdef-e4db4e5700f3
+POST http://localhost:8080/rental
+Authorization: Bearer 73cf5730-fec3-4202-9a1c-63708d534ab9
 Content-Type: application/json
 
 {
@@ -56,7 +56,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8081/rentals?cid=1&crid=1&date=2021-06-01
+GET http://localhost:8080/rentals?cid=1&crid=1&date=2021-06-01
 Content-Type: application/json
 
 ###
