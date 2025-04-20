@@ -155,7 +155,7 @@ export const renderClubDetail = (mainContent, club) => {
                             className: "btn btn-primary d-inline-flex align-items-center justify-content-center gap-2"
                         },
                         span({className: "material-icons"}),
-                        "View Club's Courts"
+                        "Club Courts"
                     )
                 )
             )

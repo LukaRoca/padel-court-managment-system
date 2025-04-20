@@ -56,21 +56,21 @@ export const renderRentalDetails = (mainContent, rental) => {
                                     {className: "col-md-6"},
                                     div({className: "mb-2"},
                                         span({className: "fw-bold d-block text-muted small"}, "Duration"),
-                                        span({className: "fs-5"}, `${rental.duration} Hours`)
+                                        span({className: "fs-5"}, `${rental.duration.hours}h`)
                                     )
                                 ),
                                 div(
                                     {className: "col-md-6"},
                                     div({className: "mb-2"},
                                         span({className: "fw-bold d-block text-muted small"}, "Initial Hours"),
-                                        span({className: "fs-5"},  `${rental.duration.initDuration}`)
+                                        span({className: "fs-5"},  `${rental.duration.initDuration}h`)
                                     )
                                 ),
                                 div(
                                     {className: "col-md-6"},
                                     div({className: "mb-2"},
                                         span({className: "fw-bold d-block text-muted small"}, "Final Hours"),
-                                        span({className: "fs-5"}, `${rental.duration.endDuration}`)
+                                        span({className: "fs-5"}, `${rental.duration.endDuration}h`)
                                     )
                                 ),
 
