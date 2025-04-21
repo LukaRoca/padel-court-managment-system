@@ -13,17 +13,23 @@ data class RentalInput(
     val endDuration : Int,
 )
 
-
 @Serializable
-data class RentalAvailableHoursRequestDTO(
-        val cid: Id,
-        val crid: Id,
-        val date: Date,
-        val initDuration : Int,
-        val endDuration : Int,
+data class RentalOutput(
+    val id : Int
 )
 
 @Serializable
-data class RentalOutput(
-    val rid : Id,
+data class DurationDetails(
+    val initDuration : Int,
+    val endDuration : Int,
+    val hours : Int
+)
+
+@Serializable
+data class RentalDetails(
+    val id: Int,
+    val date: String,
+    val duration: DurationDetails,
+    val user : UserDetails,
+    val court : CourtDetails
 )

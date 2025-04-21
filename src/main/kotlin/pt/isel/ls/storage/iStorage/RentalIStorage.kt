@@ -3,12 +3,10 @@ package pt.isel.ls.storage.iStorage
 import pt.isel.ls.domain.*
 
 interface RentalIStorage {
-
-    fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token): Rental?
+    fun createRental(court: Court, date: Date, duration: Duration, user: User): Rental?
     fun getRentalById(rentalId: Id): Rental?
-    fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental>?
-    fun getRentalsOfCourt(crid: Id): List<Rental>?
-    fun getRentalsOfUser(uid: Id): List<Rental>?
-    fun getAvailableHours(cid: Id, crid: Id, date: Date, duration: Duration): List<Int>
-
+    fun getRentalsOfUser(user: User): List<Rental>?
+    fun getRentals(club: Club, court: Court, date: Date) : List<Rental>?
+    fun getRentalsOfCourt(court: Court): List<Rental>?
+    fun getAvailableHours(club: Club, court: Court, date: Date): List<Int>?
 }

@@ -6,66 +6,112 @@ import pt.isel.ls.storage.iStorage.CourtIStorage
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
+import javax.sql.DataSource
 
-class CourtDataPostgres (private val connection: Connection) : CourtIStorage{
-
-    private val clubData = ClubDataPostgres(connection)
-    private val userData = UserDataPostgres(connection)
-
-    override fun createCourt(name: Name, cid: Id, token: Token): Court? {
-
-        val club = clubData.getClubById(cid) ?: return null
-
-        if(club.owner.user.uid != userData.getUserByToken(token)?.uid) {
-            throw IllegalArgumentException("User is not authorized to create a court in this club.")
+class CourtDataPostgres (private val dataSource: DataSource) : CourtIStorage{
+    override fun createCourt(name: Name, club: Club): Court? {
+        val sql = """
+            INSERT INTO court(name, club) VALUES (?, ?)
+        """.trimIndent()
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+            stmt.setString(1, name.name)
+            stmt.setInt(2, club.id.id)
+            if (stmt.executeUpdate() == 0) {
+                throw SQLException("Error creating a Court")
+            }
+            val keys = stmt.generatedKeys
+            keys.next()
+            return Court(Id(keys.getInt(1)), name, club)
         }
-
-        val sql = "INSERT INTO court(name, club) VALUES (?, ?)"
-
-        val statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS).apply {
-            setString(1, name.name)
-            setInt(2, club.id.id)
-        }
-        if (statement.executeUpdate() == 0) {
-            throw SQLException("Error while creating a new court.")
-        }
-        val key = statement.generatedKeys
-        key.next()
-        return Court(
-            Id(key.getInt("crid")), name, club)
     }
 
-    override fun getCourtById(id: Id): Court? {
-        val sql = "SELECT * FROM court WHERE crid = ?"
-
-        connection.prepareStatement(sql).use { stmt ->
-            stmt.setInt(1, id.id)
-            stmt.executeQuery().use { result ->
-                if (result.next()) {
-                    val club = clubData.getClubById(id) ?: throw IllegalArgumentException("Club not found")
-                    return Court(
-                        Id(result.getInt("crid")),
-                        Name(result.getString("name")),
-                        Club(club.id,club.name,club.owner))
-                }
+    override fun getCourtById(crid: Id): Court? {
+        val sql = """
+            SELECT court.crid as cr_rid,
+            court.name as cr_name,
+            court.club as c_rid,
+            club.cid as c_id,
+            club.name as c_name,
+            club.owner as c_owner,
+            users.uid as u_id,
+            users.token as u_token,
+            users.name as u_name,
+            users.email as u_email
+            FROM court
+            INNER JOIN club ON court.club = club.cid
+            INNER JOIN users ON club.owner = users.uid
+            WHERE court.crid = ?
+        """.trimIndent()
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql)
+            stmt.setInt(1, crid.id)
+            val rs = stmt.executeQuery()
+            if (rs.next()) {
+                val club = Club(Id(rs.getInt("c_id")),
+                    Name(rs.getString("c_name")),
+                    Owner(
+                        User(
+                            Id(rs.getInt("u_id")),
+                            Name(rs.getString("u_name")),
+                            Email(rs.getString("u_email")),
+                            Token(rs.getString("u_token"))
+                        )
+                    )
+                )
+                return Court(
+                    Id(rs.getInt("cr_rid")),
+                    Name(rs.getString("cr_name")),
+                    club
+                )
             }
+
         }
         return null
     }
     override fun getCourtByClubId(cid: Id): List<Court> {
-        val sql = "SELECT * FROM court WHERE club = ?"
-        val courts = mutableListOf<Court>()
-        val club = clubData.getClubById(cid) ?: throw IllegalArgumentException("Club not found")
-        connection.prepareStatement(sql).use {stmt ->
-            stmt.setInt(1, club.id.id)
-            stmt.executeQuery().use { result ->
-                while(result.next()) {
-                    val crid = result.getInt("crid")
-                    val name = result.getString("name")
-                    courts.add(Court(Id(crid), Name(name), club))
-                }
+        val sql = """
+            SELECT court.crid as cr_rid,
+            court.name as cr_name,
+            court.club as c_rid,
+            club.cid as c_id,
+            club.name as c_name,
+            club.owner as c_owner,
+            users.uid as u_id,
+            users.token as u_token,
+            users.name as u_name,
+            users.email as u_email
+            FROM court
+            INNER JOIN club ON court.club = club.cid
+            INNER JOIN users ON club.owner = users.uid
+            WHERE court.club = ?
+        """.trimIndent()
+         val courts = mutableListOf<Court>()
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql)
+            stmt.setInt(1, cid.id)
+            val rs = stmt.executeQuery()
+            while (rs.next()) {
+                courts.add(
+                    Court (
+                        Id(rs.getInt("cr_rid")),
+                        Name(rs.getString("cr_name")),
+                        Club(
+                            Id(rs.getInt("c_id")),
+                            Name(rs.getString("c_name")),
+                            Owner(
+                                User(
+                                    Id(rs.getInt("u_id")),
+                                    Name(rs.getString("u_name")),
+                                    Email(rs.getString("u_email")),
+                                    Token(rs.getString("u_token"))
+                                )
+                            )
+                        )
+                    )
+                )
             }
-            return courts
         }
+        return courts
     }
 }

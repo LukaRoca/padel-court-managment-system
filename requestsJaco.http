@@ -1,4 +1,17 @@
-GET http://localhost:8080/users/1
+GET http://localhost:8080/users/2
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "Bernardoooo Jaco",
+  "email": "bjoacaao@gmail.com"
+}
+
+###
+GET http://localhost:8080/users
+Accept: application/json
 
 ###
 GET http://localhost:8080/clubs/1
@@ -10,26 +23,34 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/club
-Authorization: Bearer e8c7ee5d-9365-4754-8413-fe0961ce2cb0
+Authorization: Bearer 27bb3cd6-5736-4cb3-b9f0-4de3ed5d469c
 Content-Type: application/json
 
 {
-  "name": "Padeel N"
+  "name": "Padel U"
 }
 
 ###
-POST http://localhost:8080/users
+POST http://localhost:8080/courts
+Authorization: Bearer c6203619-b17c-464f-876f-ab6e492c004d
 Content-Type: application/json
 
 {
-    "name": "Bernardo Jaco",
-    "email": "bjaco@gmail.com"
+  "name": "Campo Na",
+  "cid": 2
 }
 
+###
+GET http://localhost:8080/courts/1
+Accept: application/json
+
+###
+GET http://localhost:8080/clubs/1/courts
+Accept: application/json
 
 ###
 POST http://localhost:8080/rental
-Authorization: Bearer 424b1b62-b3ab-418e-ab13-4188db9f4a0b
+Authorization: Bearer c6203619-b17c-464f-876f-ab6e492c004d
 Content-Type: application/json
 
 {
@@ -40,53 +61,23 @@ Content-Type: application/json
   "endDuration": 16
 }
 
-
 ###
-POST http://localhost:8080/rental
-Authorization: Bearer4007f4c6-08d2-4c39-af6a-1dbd5b4f2aff
+GET http://localhost:8080/rentals/available?cid=1&crid=1&date=2021-06-01
 Content-Type: application/json
 
-{
-  "cid": 2,
-  "crid": 2,
-  "date": "2021-06-01",
-  "initDuration": 12,
-  "endDuration": 16
-}
+###
+GET http://localhost:8080/rentals/2
+Accept: application/json
 
 ###
-GET http://localhost:8080/rentals
-Content-Type: application/json
-
-{
-  "cid": 1,
-  "crid": 1,
-  "date": "2021-06-01",
-  "initDuration": 0,
-  "endDuration": 16
-}
-
-
-###
-
-GET http://localhost:8080/rentals/available
-Content-Type: application/json
-
-{
-  "cid": 2,
-  "crid": 2,
-  "date": "2021-06-01",
-  "initDuration": 12,
-  "endDuration": 16
-}
-
-
-###
-
 GET http://localhost:8080/rentals/user/1
+Accept: application/json
+
+###
+GET http://localhost:8080/rentals?cid=1&crid=1&date=2021-06-01
 Content-Type: application/json
 
 ###
-
 GET http://localhost:8080/rentals/courts/1
-Content-Type: application/json
+Accept: application/json
+
