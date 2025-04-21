@@ -2,7 +2,6 @@ package pt.isel.ls.webServices
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.IStorage
-import pt.isel.ls.storage.iStorage.UserIStorage
 
 class UserServices (private val db : IStorage) {
 
@@ -11,7 +10,14 @@ class UserServices (private val db : IStorage) {
     }
 
     fun createUser(name: Name, email: Email): User {
-        return db.user.createUser(name,email)
+        val existingUsers = db.user.getAllUsers()
+        if (existingUsers.any { it.name.name == name.name }) {
+            throw IllegalArgumentException("A user with the same name already exists")
+        }
+        if (existingUsers.any { it.email == email }) {
+            throw IllegalArgumentException("A user with the same email already exists")
+        }
+        return db.user.createUser(name, email)
     }
 
     fun getUserByToken(token: Token): User? {
