@@ -18,3 +18,24 @@ fun checkIfTokenInDb(token: Token, db: UserIStorage): Boolean {
 fun isUserAuthorized(user: User, club: Club): Boolean {
     return user.uid == club.owner.user.uid
 }
+
+fun Int?.validateInt(defaultValue: Int? = null, function: (Int) -> Boolean): Int {
+    if (this == null) {
+        if (defaultValue != null) {
+            return defaultValue
+        }
+        throw IllegalArgumentException("Invalid argument id can't be null")
+    }
+    if (!function(this)) {
+        throw IllegalArgumentException("Invalid argument: Int is not valid\nInt=$this")
+    }
+    return this
+}
+
+fun Int.isNotNegative(): Boolean {
+    return this >= 0
+}
+
+const val DEFAULT_SKIP = 0
+const val DEFAULT_LIMIT = 30
+

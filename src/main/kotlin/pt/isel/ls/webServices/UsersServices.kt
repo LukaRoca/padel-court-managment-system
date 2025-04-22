@@ -1,8 +1,11 @@
 package pt.isel.ls.webServices
 
+import pt.isel.ls.PaginatedResult
 import pt.isel.ls.domain.*
+import pt.isel.ls.paginateWithInfo
 import pt.isel.ls.storage.iStorage.IStorage
 import pt.isel.ls.storage.iStorage.UserIStorage
+import pt.isel.ls.webApi.dto.UserDetails
 
 class UserServices (private val db : IStorage) {
 
@@ -18,8 +21,11 @@ class UserServices (private val db : IStorage) {
         return db.user.getUserByToken(token)
     }
 
-    fun getAllUsers(): List<User> {
-        return db.user.getAllUsers()
+    fun getAllUsers(limit : Int, skip : Int): PaginatedResult<UserDetails> {
+        val listUsers = db.user.getAllUsers().map {
+            UserDetails(it.uid.id, it.name.name, it.email.value, it.token.token)
+        }
+        return listUsers.paginateWithInfo(limit, skip)
     }
 
 }

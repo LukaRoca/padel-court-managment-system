@@ -1,4 +1,4 @@
-import {a, div, h1, p, span, h2} from "../utils/elements.js";
+import {a, div, h1, p, span, h2, button} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
 
 export const renderUserDetail = (mainContent, user) => {
@@ -66,7 +66,13 @@ export const renderUserDetail = (mainContent, user) => {
                         "Rentals"
                     )
                 )
-            )
+            ),
+
+            a({
+                href: `${API_BASE_URL}#user
+                `,
+                textContent : `Users`
+            })
         ),
 
         div(
@@ -90,3 +96,26 @@ export const renderUserDetail = (mainContent, user) => {
     mainContent.replaceChildren(content);
     console.log("User detail rendered successfully");
 };
+
+export const renderUsers = (mainContent, users, onNext, onPrevious, hasNext, hasPrevious) => {
+    const list = users.map(user =>
+        p({}, `User: ${user.name}`)
+    );
+
+    const buttons = div({className: "d-flex justify-content-between mt-3"},
+        hasPrevious ? button({className: "btn btn-outline-primary", onclick: onPrevious}, "Previous") : div({}),
+        hasNext ? button({className: "btn btn-outline-primary", onclick: onNext}, "Next") : div({})
+    );
+
+    if(!mainContent) {
+        console.error("mainContent is null or undefined");
+        return;
+    }
+
+    mainContent.replaceChildren(
+        div({className: "container py-5"},
+            ...list,
+            buttons
+        )
+    );
+}
