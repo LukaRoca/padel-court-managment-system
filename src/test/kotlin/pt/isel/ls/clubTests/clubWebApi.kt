@@ -9,6 +9,7 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import pt.isel.ls.domain.Club
 import pt.isel.ls.storage.dataMem.ClubDataMem
+import pt.isel.ls.storage.dataMem.UserDataMem
 import pt.isel.ls.webApi.dto.ClubInput
 import pt.isel.ls.webApi.dto.ClubOutput
 import pt.isel.ls.webApi.ClubWebApi
@@ -20,8 +21,8 @@ import kotlin.test.assertTrue
 class ClubWebApiTests {
 
     private val db = ClubDataMem
-
-    private val clubWebApi = ClubWebApi(ClubServices(db))
+    private val userDb = UserDataMem
+    private val clubWebApi = ClubWebApi(ClubServices(db, userDb = userDb))
 
     @Test
     fun `should create club successfully`() {

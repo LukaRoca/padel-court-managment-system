@@ -13,9 +13,10 @@ import pt.isel.ls.domain.Date
 import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Token
+import pt.isel.ls.mapRentalToDetails
+import pt.isel.ls.mapRentalsToDetailsList
 import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.RentalServices
-import kotlin.math.absoluteValue
 
 class RentalWebApi(private val rentalServices: RentalServices) : WebApiExceptions() {
     private fun handleError(e: Exception): Response = httpException(e)
@@ -38,132 +39,29 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         val rentalId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid rental ID")
         val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException()
-        Response(OK).json(RentalDetails(
-            rental.rid.id,
-            rental.date.value,
-            rental.duration.hours,
-            UserDetails(
-                rental.user.uid.id,
-                rental.user.name.name,
-                rental.user.email.value,
-                rental.user.token.token
-            ),
-            CourtDetails(
-                rental.court.id.id,
-                rental.court.name.name,
-                ClubDetails(
-                    rental.court.club.id.id,
-                    rental.court.club.name.name,
-                    UserDetails(
-                        rental.user.uid.id,
-                        rental.user.name.name,
-                        rental.user.email.value,
-                        rental.user.token.token
-                    )
-                )
-            )
-        ))
-
+        Response(OK).json(mapRentalToDetails(rental))
     }
 
     private fun getRentalsOfUser(request: Request): Response = useWithException {
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
         val rentals = rentalServices.getRentalsOfUser(Id(userId)) ?: throw NoSuchElementException()
-        Response(OK).json(rentals.map { rental ->
-            RentalDetails(
-                rental.rid.id,
-                rental.date.value,
-                rental.duration.hours,
-                UserDetails(
-                    rental.user.uid.id,
-                    rental.user.name.name,
-                    rental.user.email.value,
-                    rental.user.token.token
-                ),
-                CourtDetails(
-                    rental.court.id.id,
-                    rental.court.name.name,
-                    ClubDetails(
-                        rental.court.club.id.id,
-                        rental.court.club.name.name,
-                        UserDetails(
-                            rental.user.uid.id,
-                            rental.user.name.name,
-                            rental.user.email.value,
-                            rental.user.token.token
-                        )
-                    )
-                )
-            )
-        })
+        Response(OK).json(mapRentalsToDetailsList(rentals))
     }
 
-    private fun getRentals(request: Request) : Response = useWithException {
+    private fun getRentals(request: Request): Response = useWithException {
         val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
         val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
         val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
 
         val rentalList = rentalServices.getRentals(Id(cid), Id(crid), Date(date)) ?: throw NoSuchElementException()
-        Response(OK).json(rentalList.map { rental ->
-            RentalDetails(
-                rental.rid.id,
-                rental.date.value,
-                rental.duration.hours,
-                UserDetails(
-                    rental.user.uid.id,
-                    rental.user.name.name,
-                    rental.user.email.value,
-                    rental.user.token.token
-                ),
-                CourtDetails(
-                    rental.court.id.id,
-                    rental.court.name.name,
-                    ClubDetails(
-                        rental.court.club.id.id,
-                        rental.court.club.name.name,
-                        UserDetails(
-                            rental.user.uid.id,
-                            rental.user.name.name,
-                            rental.user.email.value,
-                            rental.user.token.token
-                        )
-                    )
-                )
-            )
-        })
+        Response(OK).json(mapRentalsToDetailsList(rentalList))
     }
 
     private fun getRentalsOfCourt(request: Request): Response = useWithException {
         val courtId = request.path("crid")?.toIntOrNull() ?: throw IllegalArgumentException()
         val rentals = rentalServices.getRentalsOfCourt(Id(courtId)) ?: throw NoSuchElementException()
-        Response(OK).json(rentals.map{ rental ->
-            RentalDetails(
-                rental.rid.id,
-                rental.date.value,
-                rental.duration.hours,
-                UserDetails(
-                    rental.user.uid.id,
-                    rental.user.name.name,
-                    rental.user.email.value,
-                    rental.user.token.token
-                ),
-                CourtDetails(
-                    rental.court.id.id,
-                    rental.court.name.name,
-                    ClubDetails(
-                        rental.court.club.id.id,
-                        rental.court.club.name.name,
-                        UserDetails(
-                            rental.user.uid.id,
-                            rental.user.name.name,
-                            rental.user.email.value,
-                            rental.user.token.token
-                        )
-                    )
-                )
-            )
-        })
+        Response(OK).json(mapRentalsToDetailsList(rentals))
     }
 
     private fun getAvailableHours(request: Request): Response = useWithException {

@@ -21,8 +21,6 @@ import pt.isel.ls.webApi.dto.UserOutput
 import pt.isel.ls.webApi.dto.UserInput
 
 class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
-    private fun handleError(e: Exception): Response = httpException(e)
-
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
     private fun logRequest(request: Request) {

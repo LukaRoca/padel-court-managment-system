@@ -2,7 +2,6 @@ package pt.isel.ls.webApi.dto
 
 import kotlinx.serialization.Serializable
 import pt.isel.ls.domain.Date
-import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
 
 @Serializable
@@ -20,10 +19,17 @@ data class RentalOutput(
 )
 
 @Serializable
+data class DurationDetails(
+    val initDuration : Int,
+    val endDuration : Int,
+    val hours : Int
+)
+
+@Serializable
 data class RentalDetails(
     val id: Int,
     val date: String,
-    val duration: Int,
+    val duration: DurationDetails,
     val user : UserDetails,
     val court : CourtDetails
 )
