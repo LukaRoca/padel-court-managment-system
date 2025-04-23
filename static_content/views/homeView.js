@@ -12,7 +12,7 @@ export const renderHome = (mainContent) => {
             div(
                 {className: "col-lg-6 mb-4 mb-lg-0"},
                 h1({className: "display-4 fw-bold text-primary mb-3"}, "Padel Court Finder"),
-                p({className: "lead mb-4"}, "Find and book the perfect tennis court in Chelas. Browse our selection of premium courts and start playing today."),
+                p({className: "lead mb-4"}, "Find and book the perfect padel court in Chelas. Browse our selection of premium courts and start playing today."),
                 div(
                     {className: "d-flex"},
                 )
