@@ -1,5 +1,6 @@
 import {API_BASE_URL} from "../utils/configs.js";
 
+
 export const fetchUserById = async (userId) => {
     try {
         const response = await fetch(`${API_BASE_URL}users/${userId}`);
@@ -9,3 +10,13 @@ export const fetchUserById = async (userId) => {
         throw error;
     }
 };
+
+export const fetchAllUsers = async (limit, skip) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}users?limit=${limit}&skip=${skip}`)
+        return await response.json()
+    } catch (error) {
+        console.error(`Erro ao encontrar Usuários`, error);
+        throw error;
+    }
+}

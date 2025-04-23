@@ -13,14 +13,14 @@ import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Email
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
+import pt.isel.ls.isNotNegative
+import pt.isel.ls.validateInt
 import pt.isel.ls.webApi.dto.UserDetails
 import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.webApi.dto.UserOutput
 import pt.isel.ls.webApi.dto.UserInput
 
 class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
-    private fun handleError(e: Exception): Response = httpException(e)
-
     private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
     private fun logRequest(request: Request) {
@@ -51,11 +51,12 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
 
     private fun getAllUsers(request: Request): Response = useWithException {
         logRequest(request)
-        val users = userServices.getAllUsers()
-        if (users.isEmpty()) throw NoSuchElementException("No users found")
-        Response(OK).json(users.map{ user ->
-            UserDetails(user.uid.id, user.name.name, user.email.value, user.token.token)
-        })
+        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
+        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
+
+        val paginatedResult = userServices.getAllUsers(limit, skip)
+
+        Response(OK).json(paginatedResult)
     }
 
 

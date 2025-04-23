@@ -26,7 +26,7 @@ class UserDataMemTest {
         val user = UserDataMem.createUser(Name("Jane Doe"), Email("jane.doe@example.com"))
         val retrievedUser = UserDataMem.getUserById(user.uid)
         assertNotNull(retrievedUser)
-        assertEquals(user.uid, retrievedUser?.uid)
+        assertEquals(user.uid, retrievedUser.uid)
     }
 
     @Test

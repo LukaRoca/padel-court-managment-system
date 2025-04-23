@@ -2,6 +2,7 @@ package pt.isel.ls.storage.dataPostgres
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.UserIStorage
+import pt.isel.ls.webApi.dto.UserDetails
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
