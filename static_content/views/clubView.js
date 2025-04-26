@@ -1,7 +1,7 @@
 import {API_BASE_URL} from "../utils/configs.js";
 import {a, div, h1, li, ul, p, span, h2} from "../utils/elements.js";
 
-export const renderClubs = (mainContent, clubs) => {
+export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, hasPrevious) => {
     console.log("renderClubs called with mainContent:", mainContent);
 
     if (!Array.isArray(clubs)) {

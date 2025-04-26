@@ -12,6 +12,8 @@ import org.http4k.routing.routes
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
+import pt.isel.ls.isNotNegative
+import pt.isel.ls.validateInt
 import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.CourtServices
 
@@ -48,7 +50,13 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
     private fun getCourtsByClub(request: Request): Response = useWithException {
         val clubId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
-        val courts = courtServices.getCourtsByClubId(Id(clubId)) ?: emptyList()
+        //val courts = courtServices.getCourtsByClubId(Id(clubId)) ?: emptyList()
+        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
+        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
+
+        val paginatedresult = courtServices.getCourtsByClubId(Id(clubId), limit, skip)
+        Response(OK).json(paginatedresult)
+         /*
         if (courts.isNotEmpty()) {
             Response(OK).json(courts.map { court ->
                 CourtDetails(
@@ -68,6 +76,8 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
         } else {
             throw NoSuchElementException()
         }
+
+          */
     }
 
 

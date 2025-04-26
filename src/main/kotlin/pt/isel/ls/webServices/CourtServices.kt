@@ -1,7 +1,12 @@
 package pt.isel.ls.webServices
 
+import pt.isel.ls.PaginatedResult
 import pt.isel.ls.domain.*
+import pt.isel.ls.paginateWithInfo
 import pt.isel.ls.storage.iStorage.IStorage
+import pt.isel.ls.webApi.dto.ClubDetails
+import pt.isel.ls.webApi.dto.CourtDetails
+import pt.isel.ls.webApi.dto.UserDetails
 
 open class CourtServices (private val db: IStorage) {
 
@@ -20,8 +25,28 @@ open class CourtServices (private val db: IStorage) {
     fun getCourtById(crid: Id ) : Court? {
         return db.court.getCourtById(crid)
     }
-    fun getCourtsByClubId(cid : Id) : List<Court>? {
-        return db.court.getCourtByClubId(cid)
+    fun getCourtsByClubId(cid : Id, limit : Int, skip : Int) : PaginatedResult<CourtDetails> {
+        val courts = db.court.getCourtByClubId(cid)?.map { courts ->
+            CourtDetails(
+                courts.id.id, courts.name.name, ClubDetails(
+                    courts.club.id.id,
+                    courts.club.name.name,
+                    UserDetails(
+                        courts.club.owner.user.uid.id,
+                        courts.club.owner.user.name.name,
+                        courts.club.owner.user.email.value,
+                        courts.club.owner.user.token.token
+                    )
+                )
+            )
+
+        }
+        if (courts != null) {
+            return courts.paginateWithInfo(limit, skip)
+        }
+        else {
+            throw IllegalArgumentException("No courts found for $cid")
+        }
     }
 
 

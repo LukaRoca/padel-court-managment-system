@@ -13,8 +13,10 @@ import pt.isel.ls.domain.Date
 import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Token
+import pt.isel.ls.isNotNegative
 import pt.isel.ls.mapRentalToDetails
 import pt.isel.ls.mapRentalsToDetailsList
+import pt.isel.ls.validateInt
 import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.RentalServices
 
@@ -43,10 +45,12 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
     }
 
     private fun getRentalsOfUser(request: Request): Response = useWithException {
+        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
+        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
-        val rentals = rentalServices.getRentalsOfUser(Id(userId)) ?: throw NoSuchElementException()
-        Response(OK).json(mapRentalsToDetailsList(rentals))
+        val rentals = rentalServices.getRentalsOfUser(Id(userId), limit, skip) ?: throw NoSuchElementException()
+        Response(OK).json(rentals)
     }
 
     private fun getRentals(request: Request): Response = useWithException {
@@ -59,9 +63,11 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
     }
 
     private fun getRentalsOfCourt(request: Request): Response = useWithException {
+        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
+        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
         val courtId = request.path("crid")?.toIntOrNull() ?: throw IllegalArgumentException()
-        val rentals = rentalServices.getRentalsOfCourt(Id(courtId)) ?: throw NoSuchElementException()
-        Response(OK).json(mapRentalsToDetailsList(rentals))
+        val rentals = rentalServices.getRentalsOfCourt(Id(courtId), limit, skip) ?: throw NoSuchElementException()
+        Response(OK).json(rentals)
     }
 
     private fun getAvailableHours(request: Request): Response = useWithException {

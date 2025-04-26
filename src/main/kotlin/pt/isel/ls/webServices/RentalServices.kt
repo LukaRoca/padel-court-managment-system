@@ -1,7 +1,10 @@
 package pt.isel.ls.webServices
 
+import pt.isel.ls.PaginatedResult
 import pt.isel.ls.domain.*
+import pt.isel.ls.paginateWithInfo
 import pt.isel.ls.storage.iStorage.IStorage
+import pt.isel.ls.webApi.dto.*
 import java.lang.IllegalStateException
 
 class RentalServices (private val db : IStorage) {
@@ -28,9 +31,45 @@ class RentalServices (private val db : IStorage) {
 
     }
 
-    fun getRentalsOfUser(uid: Id): List<Rental>? {
-        val user = db.user.getUserById(uid) ?: throw IllegalStateException("User not found with this id")
-        return db.rental.getRentalsOfUser(user)
+    fun getRentalsOfUser(uid: Id, limit : Int, skip : Int): PaginatedResult<RentalDetails> {
+        val users = db.user.getUserById(uid) ?: throw IllegalStateException("User not found with this id")
+        val rentals = db.rental.getRentalsOfUser(users)?.map { rental ->
+            RentalDetails(
+                rental.rid.id,
+                rental.date.value,
+                DurationDetails(
+                    rental.duration.initDuration,
+                    rental.duration.endDuration,
+                    rental.duration.hours
+                ),
+                UserDetails(
+                    rental.user.uid.id,
+                    rental.user.name.name,
+                    rental.user.email.value,
+                    rental.user.token.token
+                ),
+                CourtDetails(
+                    rental.court.id.id,
+                    rental.court.name.name,
+                    ClubDetails(
+                        rental.court.club.id.id,
+                        rental.court.club.name.name,
+                        UserDetails(
+                            rental.user.uid.id,
+                            rental.user.name.name,
+                            rental.user.email.value,
+                            rental.user.token.token
+                        )
+                    )
+                ),
+
+            )
+
+        }
+        if (rentals != null ) {
+            return rentals.paginateWithInfo(limit, skip)
+        }
+        else throw IllegalArgumentException("No rental found with this $uid")
     }
 
     fun getRentals(cid: Id, crid: Id, date: Date): List<Rental>? {
@@ -39,9 +78,44 @@ class RentalServices (private val db : IStorage) {
         return db.rental.getRentals(club, court, date)
     }
 
-    fun getRentalsOfCourt(crid: Id) : List<Rental>? {
+    fun getRentalsOfCourt(crid: Id, limit: Int, skip: Int) : PaginatedResult<RentalDetails> {
         val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
-        return db.rental.getRentalsOfCourt(court)
+        val rentals = db.rental.getRentalsOfCourt(court)?.map { rental ->
+            RentalDetails(
+                rental.rid.id,
+                rental.date.value,
+                DurationDetails(
+                    rental.duration.initDuration,
+                    rental.duration.endDuration,
+                    rental.duration.hours
+                ),
+                UserDetails(
+                    rental.user.uid.id,
+                    rental.user.name.name,
+                    rental.user.email.value,
+                    rental.user.token.token
+                ),
+                CourtDetails(
+                    rental.court.id.id,
+                    rental.court.name.name,
+                    ClubDetails(
+                        rental.court.club.id.id,
+                        rental.court.club.name.name,
+                        UserDetails(
+                            rental.user.uid.id,
+                            rental.user.name.name,
+                            rental.user.email.value,
+                            rental.user.token.token
+                        )
+                    )
+                ),
+
+                )
+        }
+        if (rentals != null) {
+            return rentals.paginateWithInfo(limit, skip)
+        }
+        else throw IllegalArgumentException("No rental found with this $crid")
     }
 
     fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int>? {

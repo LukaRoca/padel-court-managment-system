@@ -11,6 +11,7 @@ export const fetchUserById = async (userId) => {
     }
 };
 
+
 export const fetchAllUsers = async (limit, skip) => {
     try {
         const response = await fetch(`${API_BASE_URL}users?limit=${limit}&skip=${skip}`)

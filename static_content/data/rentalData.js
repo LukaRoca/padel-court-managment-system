@@ -1,8 +1,10 @@
 import {API_BASE_URL} from "../utils/configs.js";
 
-export const fetchRentalsByUid = async (userId) => {
+
+
+export const fetchRentalsByUid = async (userId, limit , skip) => {
     try {
-        const response = await fetch(`${API_BASE_URL}rentals/user/${userId}`);
+        const response = await fetch(`${API_BASE_URL}rentals/user/${userId}?limit=${limit}&skip=${skip}`);
         return await response.json();
     } catch (error) {
         console.error(`Erro ao encontrar rentals do User ${userId}:`, error);
@@ -10,9 +12,9 @@ export const fetchRentalsByUid = async (userId) => {
     }
 }
 
-export const fetchRentalsByCrid = async (courtId) => {
+export const fetchRentalsByCrid = async (courtId, limit, skip) => {
     try {
-        const response = await fetch(`${API_BASE_URL}rentals/courts/${courtId}`);
+        const response = await fetch(`${API_BASE_URL}rentals/courts/${courtId}?limit=${limit}&skip=${skip}`);
         return await response.json();
     } catch (error) {
         console.error(`Erro ao encontrar rentals do User ${courtId}:`, error);

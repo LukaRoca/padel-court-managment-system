@@ -14,7 +14,9 @@ export const getUserById = async (mainContent, params) => {
         }
 };
 
+
 let skip = 0
+
 
 export const getUsers = async (mainContent) => {
         try {
@@ -33,3 +35,4 @@ export const getUsers = async (mainContent) => {
                 renderException(mainContent)
         }
 }
+
