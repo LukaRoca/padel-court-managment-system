@@ -15,6 +15,12 @@ import pt.isel.ls.webApi.dto.UserDetails
 class ClubServices (private val db : IStorage) {
     fun createClub(name : Name, token : Token) : Club? {
         val user = db.user.getUserByToken(token) ?: throw IllegalArgumentException("Invalid token")
+        val existingClubs = db.club.getClubs()
+        for (club in existingClubs) {
+            if (club.name.name == name.name) {
+                throw IllegalArgumentException("Already exists one club with the same name: '${name.name}'")
+            }
+        }
         return db.club.createClub(name, user)
     }
 
