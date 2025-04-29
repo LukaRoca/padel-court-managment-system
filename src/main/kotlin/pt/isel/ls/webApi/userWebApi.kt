@@ -21,9 +21,9 @@ import pt.isel.ls.webApi.dto.UserOutput
 import pt.isel.ls.webApi.dto.UserInput
 
 class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
-    private val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
+    val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
 
-    private fun logRequest(request: Request) {
+    fun logRequest(request: Request) {
         logger.info(
             "incoming request: method={}, uri={}, content-type={} accept={}",
             request.method,
@@ -32,7 +32,7 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
             request.header("accept"),
         )
     }
-    private fun getUserById(request: Request): Response = useWithException {
+    fun getUserById(request: Request): Response = useWithException {
         logRequest(request)
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid user ID")
@@ -49,7 +49,7 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
     }
 
 
-    private fun getAllUsers(request: Request): Response = useWithException {
+    fun getAllUsers(request: Request): Response = useWithException {
         logRequest(request)
         val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
         val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
@@ -58,11 +58,4 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
 
         Response(OK).json(paginatedResult)
     }
-
-
-    val app = routes(
-        "users" bind Method.POST to ::createUser,
-        "users/{id}" bind Method.GET to ::getUserById,
-        "users" bind Method.GET to ::getAllUsers
-    )
 }

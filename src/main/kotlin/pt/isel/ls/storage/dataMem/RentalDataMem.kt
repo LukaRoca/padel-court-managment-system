@@ -1,5 +1,5 @@
 package pt.isel.ls.storage.dataMem
-/*
+
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.RentalIStorage
 import pt.isel.ls.storage.dataMem.ClubDataMem.getClubById
@@ -11,10 +11,7 @@ object RentalDataMem : RentalIStorage {
 
     private val rentals = mutableListOf<Rental>()
 
-    override fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token): Rental? {
-        val court = getCourtById(crid) ?: return null
-        val club = getClubById(cid) ?: return null
-        val user = club.owner.user
+    override fun createRental(court: Court, date: Date, duration: Duration, user: User): Rental? {
         val newRental = Rental(Id(rid), date, duration, user, court)
         rid++
         rentals.add(newRental)
@@ -25,20 +22,21 @@ object RentalDataMem : RentalIStorage {
         return rentals.find { it.rid == rentalId }
     }
 
-    override fun getRentalList(cid: Id, crid: Id, date: Date): List<Rental>? {
-        return rentals.filter { it.user.uid == cid && it.court.id == crid && it.date == date }
+    override fun getRentalsOfUser(user: User): List<Rental>? {
+        return rentals.filter { it.user == user }
     }
 
-    override fun getRentalsOfCourt(crid: Id): List<Rental>? {
-        return rentals.filter { it.court.id == crid }
+    override fun getRentalsOfCourt(court: Court): List<Rental>? {
+        return rentals.filter { it.court == court }
     }
 
-    override fun getRentalsOfUser(uid: Id): List<Rental>? {
-        return rentals.filter { it.user.uid == uid }
+    override fun getRentals(club: Club, court: Court, date: Date) : List<Rental>? {
+        return rentals.filter { it.court == court && it.date == date }
     }
 
-    override fun getAvailableHours(cid: Id, crid: Id, date: Date, duration: Duration): List<Int> {
-        val rentals = getRentalList(cid, crid, date)
+
+    override fun getAvailableHours(club: Club, court: Court, date: Date): List<Int> {
+        val rentals = getRentals(club, court, date)
         val availableHours = mutableListOf<Int>()
         val occupiedHours = mutableSetOf<Int>()
         rentals?.forEach { rental ->
@@ -55,6 +53,13 @@ object RentalDataMem : RentalIStorage {
         }
         return availableHours
     }
+
+    override fun updateRental(date: Date, duration: Duration, rental: Rental): Rental? {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteRental(rental: Rental): Boolean {
+        TODO("Not yet implemented")
+    }
 }
 
- */

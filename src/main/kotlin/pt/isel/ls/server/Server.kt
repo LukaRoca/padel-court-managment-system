@@ -6,6 +6,7 @@ import org.http4k.routing.singlePageApp
 import org.http4k.server.*
 import org.postgresql.ds.PGSimpleDataSource
 import org.slf4j.LoggerFactory
+import pt.isel.ls.Routes
 import pt.isel.ls.storage.dataPostgres.*
 import pt.isel.ls.webApi.*
 import pt.isel.ls.webServices.*
@@ -22,30 +23,13 @@ fun main(){
 
     val data = DataPostgres(dataSource)
     val services = IServices(data)
+    val webApi = WebApi(services)
 
-    val userWebApi = UserWebApi(services.user)
-    val clubWebApi = ClubWebApi(services.club)
-    val rentalWebApi = RentalWebApi(services.rental)
-    val courtWebApi = CourtWebApi(services.court)
-
-    val appRoutes = routes(
-        userWebApi.app,
-        clubWebApi.appClubs,
-        rentalWebApi.appRental,
-        courtWebApi.appCourts,
-        singlePageApp(ResourceLoader.Directory("static_content"))
-    )
-
-    //val jettyServerLuka = appRoutes.asServer(Jetty(8082)).start()
-     //val jettyServerAfonso = appRoutes.asServer(Jetty(8081)).start()
-
-    val jettyServer = appRoutes.asServer(Jetty(8080)).start()
+    val jettyServer = Routes(webApi).app.asServer(Jetty(8080)).start()
     logger.info("server started")
 
     readln()
     jettyServer.stop()
-    //jettyServerLuka.stop()
-    //jettyServerAfonso.stop()
     logger.info("server stopped")
 
 }

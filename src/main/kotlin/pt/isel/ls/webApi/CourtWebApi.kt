@@ -27,7 +27,7 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
         Response(CREATED).json(CourtOutput(court.id.id))
     }
 
-    private fun getCourtById(request: Request): Response = useWithException {
+    fun getCourtById(request: Request): Response = useWithException {
         val crid = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
         val court = courtServices.getCourtById(Id(crid)) ?: throw NoSuchElementException()
@@ -46,44 +46,14 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
             )))
     }
 
-
-    private fun getCourtsByClub(request: Request): Response = useWithException {
+    fun getCourtsByClub(request: Request): Response = useWithException {
         val clubId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
-        //val courts = courtServices.getCourtsByClubId(Id(clubId)) ?: emptyList()
         val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
         val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
 
         val paginatedresult = courtServices.getCourtsByClubId(Id(clubId), limit, skip)
         Response(OK).json(paginatedresult)
-         /*
-        if (courts.isNotEmpty()) {
-            Response(OK).json(courts.map { court ->
-                CourtDetails(
-                    court.id.id,
-                    court.name.name,
-                    ClubDetails(
-                        court.club.id.id,
-                        court.club.name.name,
-                        UserDetails(
-                            court.club.owner.user.uid.id,
-                            court.club.owner.user.name.name,
-                            court.club.owner.user.email.value,
-                            court.club.owner.user.token.token
-                        )
-                    ))
-            })
-        } else {
-            throw NoSuchElementException()
-        }
 
-          */
     }
-
-
-    val appCourts = routes(
-        "courts" bind Method.POST to ::createCourt,
-        "courts/{id}" bind Method.GET to ::getCourtById,
-        "clubs/{id}/courts" bind Method.GET to ::getCourtsByClub
-    )
 }

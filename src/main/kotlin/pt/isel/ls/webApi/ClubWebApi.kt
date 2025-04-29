@@ -23,7 +23,7 @@ import pt.isel.ls.webServices.ClubServices
 
 class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
 
-    private fun createClub(request: Request): Response = useWithException {
+    fun createClub(request: Request): Response = useWithException {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: throw IllegalArgumentException("Missing or invalid token")
         val clubDto = Json.decodeFromString<ClubInput>(request.bodyString())
@@ -42,7 +42,7 @@ class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
 
 
 
-    private fun getClubs(request: Request): Response = useWithException {
+    fun getClubs(request: Request): Response = useWithException {
         val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
         val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
 
@@ -50,14 +50,6 @@ class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
 
         Response(OK).json(paginatedResult)
     }
-
-
-
-    val appClubs = routes(
-        "club" bind Method.POST to ::createClub,
-        "clubs/{id}" bind Method.GET to ::getClubById,
-        "clubs" bind Method.GET to ::getClubs,
-        )
 }
 
 

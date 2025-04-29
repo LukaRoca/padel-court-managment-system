@@ -123,5 +123,43 @@ class RentalServices (private val db : IStorage) {
         val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
         return db.rental.getAvailableHours(club, court, date)
     }
+
+    fun deleteRental(rid : Id) : Boolean {
+        val rental = db.rental.getRentalById(rid) ?: throw IllegalStateException("Rental not found with this id $rid")
+        return db.rental.deleteRental(rental)
+    }
+
+    fun updateRental(date: Date, duration: Duration, rid: Id) : RentalDetails? {
+        val rental = db.rental.getRentalById(rid) ?: throw IllegalStateException("Rental not found with this id $rid")
+        val updatedRental = db.rental.updateRental(date,duration, rental) ?: throw IllegalStateException("Error during update")
+        return RentalDetails(updatedRental.rid.id,
+        updatedRental.date.value,
+            DurationDetails(
+                updatedRental.duration.initDuration,
+                updatedRental.duration.endDuration,
+                updatedRental.duration.hours
+            ),
+            UserDetails(
+                updatedRental.user.uid.id,
+                updatedRental.user.name.name,
+                updatedRental.user.email.value,
+                updatedRental.user.token.token
+            ),
+            CourtDetails(
+                updatedRental.court.id.id,
+                updatedRental.court.name.name,
+                ClubDetails(
+                    updatedRental.court.club.id.id,
+                    updatedRental.court.club.name.name,
+                    UserDetails(
+                        updatedRental.user.uid.id,
+                        updatedRental.user.name.name,
+                        updatedRental.user.email.value,
+                        updatedRental.user.token.token
+                    )
+                )
+            )
+        )
+    }
 }
 

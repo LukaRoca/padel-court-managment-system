@@ -1,7 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
 
-
-
 export const fetchRentalsByUid = async (userId, limit , skip) => {
     try {
         const response = await fetch(`${API_BASE_URL}rentals/user/${userId}?limit=${limit}&skip=${skip}`);

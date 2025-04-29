@@ -284,4 +284,44 @@
             }
             return availableHours
         }
+
+        override fun deleteRental(rental : Rental): Boolean {
+            val sql = """
+                DELETE FROM rental
+                WHERE rental.rid = ?
+            """.trimIndent()
+            dataSource.connection.use {
+                val stmt = it.prepareStatement(sql)
+                stmt.setInt(1, rental.rid.id)
+                val rs = stmt.executeUpdate()
+                if (rs > 0) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        override fun updateRental(date: Date, duration: Duration, rental: Rental): Rental? {
+            val sql = """
+                UPDATE rental
+                SET date = ?, initDuration = ?, endDuration = ?
+                WHERE rental.rid = ?
+            """.trimIndent()
+
+            dataSource.connection.use { conn ->
+                val stmt = conn.prepareStatement(sql)
+                stmt.setString(1, date.value)
+                stmt.setInt(2, duration.initDuration)
+                stmt.setInt(3, duration.endDuration)
+                stmt.setInt(4, rental.rid.id)
+
+                val rowsAffected = stmt.executeUpdate()
+                return if (rowsAffected > 0) {
+                    rental.copy(date = date, duration = duration)
+                } else {
+                    null
+                }
+            }
+        }
+
     }

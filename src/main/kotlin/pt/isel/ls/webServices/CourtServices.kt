@@ -26,7 +26,8 @@ open class CourtServices (private val db: IStorage) {
         return db.court.getCourtById(crid)
     }
     fun getCourtsByClubId(cid : Id, limit : Int, skip : Int) : PaginatedResult<CourtDetails> {
-        val courts = db.court.getCourtByClubId(cid)?.map { courts ->
+        val courts = db.court.getCourtByClubId(cid) ?: throw NullPointerException("Court with id ${cid} not found")
+        val newCourts = courts.map { courts ->
             CourtDetails(
                 courts.id.id, courts.name.name, ClubDetails(
                     courts.club.id.id,
@@ -42,7 +43,7 @@ open class CourtServices (private val db: IStorage) {
 
         }
         if (courts != null) {
-            return courts.paginateWithInfo(limit, skip)
+            return newCourts.paginateWithInfo(limit, skip)
         }
         else {
             throw IllegalArgumentException("No courts found for $cid")
