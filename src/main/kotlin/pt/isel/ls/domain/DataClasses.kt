@@ -1,4 +1,7 @@
 package pt.isel.ls.domain
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 data class Name (val name : String)
 
@@ -31,4 +34,13 @@ data class Duration (val initDuration : Int, val endDuration : Int) {
         require(endDuration > initDuration) { "End duration must be greater than initial duration" }
     }
 }
-data class Date( val value: String)
+data class Date( val value: String) {
+    init {
+        try {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            LocalDate.parse(value, formatter)
+        } catch (e: DateTimeParseException) {
+            throw IllegalArgumentException("Date must be in format YYYY-MM-DD and be a valid date")
+        }
+    }
+}
