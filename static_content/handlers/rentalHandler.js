@@ -6,7 +6,7 @@ export const getRentalsByUid = async (mainContent, params) => {
     try {
         const userId = params.uid;
         const rental = await fetchRentalsByUid(userId);
-        renderRentalsByAnyid(mainContent, rental);
+        renderRentalsByAnyid(mainContent, rental, userId);
     } catch (error) {
         console.error("Erro ao encontrar rentals:", error);
         renderException(mainContent, error);

@@ -121,13 +121,12 @@ export const renderRentalDetails = (mainContent, rental) => {
 
 
 
-export const renderRentalsByAnyid = (mainContent, rentals) => {
+export const renderRentalsByAnyid = (mainContent, rentals, uid) => {
     console.log("renderRentalsByAnyid called with mainContent:", mainContent);
 
     if (!Array.isArray(rentals)) {
         console.error("rentals is not an array:", rentals);
         rentals = [];
-        console.log(rentals);
     }
 
     const content = div(
@@ -142,67 +141,66 @@ export const renderRentalsByAnyid = (mainContent, rentals) => {
             )
         ),
 
-        div(
-            {className: "card shadow-sm mb-4"},
-            div(
-                {className: "card-header bg-primary bg-opacity-75 text-white py-3"},
-                h2({className: "h5 mb-0 fw-bold"}, "Rental List")
-            ),
-            div(
-                {className: "card-body p-0"},
+        rentals.length === 0
+            ? div(
+                {className: "text-center py-5"},
+                h2({className: "text-muted"}, "No rentals found.")
+            )
+            : div(
+                {className: "card shadow-sm mb-4"},
                 div(
-                    {className: "table-responsive"},
-                    table(
-                        {className: "table table-hover table-striped mb-0"},
-                        thead(
-                            {},
-                            tr(
-                                {className: "bg-light"},
-                                th({className: "px-3 py-3"}, "Rental ID"),
-                                th({className: "px-3 py-3"}, "Date"),
-                                th({className: "px-3 py-3"}, "User Id"),
-                                th({className: "px-3 py-3"}, "Court Id"),
-                                th({className: "px-3 py-3 text-center"}, "Actions")
-                            )
-                        ),
-                        tbody(
-                            {},
-                            ...rentals.map(rental =>
+                    {className: "card-header bg-primary bg-opacity-75 text-white py-3"},
+                    h2({className: "h5 mb-0 fw-bold"}, "Rental List")
+                ),
+                div(
+                    {className: "card-body p-0"},
+                    div(
+                        {className: "table-responsive"},
+                        table(
+                            {className: "table table-hover table-striped mb-0"},
+                            thead(
+                                {},
                                 tr(
-                                    {className: "align-middle"},
-                                    td({className: "px-3 py-3"}, rental.id),
-                                    td({className: "px-3 py-3"}, rental.date),
-                                    td({className: "px-3 py-3"}, rental.user.id),
-                                    td({className: "px-3 py-3"}, rental.court.id),
-                                    td(
-                                        {className: "px-3 py-3 text-center"},
-                                        a({
-                                            href: `${API_BASE_URL}#rental/${rental.id}`,
-                                            className: "btn btn-sm btn-primary"
-                                        }, "Details")
+                                    {className: "bg-light"},
+                                    th({className: "px-3 py-3"}, "Rental ID"),
+                                    th({className: "px-3 py-3"}, "Date"),
+                                    th({className: "px-3 py-3"}, "User Id"),
+                                    th({className: "px-3 py-3"}, "Court Id"),
+                                    th({className: "px-3 py-3 text-center"}, "Actions")
+                                )
+                            ),
+                            tbody(
+                                {},
+                                ...rentals.map(rental =>
+                                    tr(
+                                        {className: "align-middle"},
+                                        td({className: "px-3 py-3"}, rental.id),
+                                        td({className: "px-3 py-3"}, rental.date),
+                                        td({className: "px-3 py-3"}, rental.user.id),
+                                        td({className: "px-3 py-3"}, rental.court.id),
+                                        td(
+                                            {className: "px-3 py-3 text-center"},
+                                            a({
+                                                href: `${API_BASE_URL}#rental/${rental.id}`,
+                                                className: "btn btn-sm btn-primary"
+                                            }, "Details")
+                                        )
                                     )
                                 )
                             )
                         )
                     )
                 )
-            )
-        ),
+            ),
 
         div(
-            {className: "d-flex justify-content-between align-items-center mt-5 pt-4 border-top"},
+            {className: "text-center mt-4"},
             a({
-                    href: `${API_BASE_URL}#users/${rentals[0].user.id}`,
-                    className: "btn btn-outline-secondary d-inline-flex align-items-center gap-1"
-                },
-                span({className: "material-icons", style: "font-size: 1.1em;"}),
-                "Back to User Details"
-            ),
-            div({className: "d-flex gap-2"})
+                href: `${API_BASE_URL}#users/${uid}`,
+                className: "btn btn-primary"
+            }, "Back to Users")
         )
     );
-
-    console.log("content:", content);
 
     if (!mainContent) {
         console.error("mainContent is null or undefined");

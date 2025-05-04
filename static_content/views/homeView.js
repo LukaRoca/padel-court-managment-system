@@ -65,7 +65,7 @@ export const renderHome = (mainContent) => {
             {className: "row py-4 bg-light rounded-3 mb-5"},
             div(
                 {className: "col-12 text-center"},
-                p({className: "lead mb-4"}, "Ready to find your perfect tennis court?"),
+                p({className: "lead mb-4"}, "Ready to find your perfect padel court?"),
                 a(
                     {
                         href: `${API_BASE_URL}#clubs`,
