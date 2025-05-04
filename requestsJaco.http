@@ -5,8 +5,8 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "name": "Michael Jackson",
-  "email": "imbad@gmail.com"
+  "name": "Bernardo Jaco",
+  "email": "bjaco@gmail.com"
 }
 
 ###
@@ -23,20 +23,20 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/club
-Authorization: Bearer 27bb3cd6-5736-4cb3-b9f0-4de3ed5d469c
+Authorization: Bearer dc353bf9-7d3b-493a-847f-50c40fb4d34a
 Content-Type: application/json
 
 {
-  "name": "Padel U"
+  "name": "Padel Jaco2"
 }
 
 ###
 POST http://localhost:8080/courts
-Authorization: Bearer c6203619-b17c-464f-876f-ab6e492c004d
+Authorization: Bearer dc353bf9-7d3b-493a-847f-50c40fb4d34a
 Content-Type: application/json
 
 {
-  "name": "Campo Na",
+  "name": "Campo L",
   "cid": 2
 }
 
@@ -45,24 +45,24 @@ GET http://localhost:8080/courts/1
 Accept: application/json
 
 ###
-GET http://localhost:8080/clubs/1/courts
+GET http://localhost:8080/clubs/1/courts?limit=2&skip=0
 Accept: application/json
 
 ###
 POST http://localhost:8080/rental
-Authorization: Bearer c6203619-b17c-464f-876f-ab6e492c004d
+Authorization: Bearer dc353bf9-7d3b-493a-847f-50c40fb4d34a
 Content-Type: application/json
 
 {
   "cid": 1,
   "crid": 1,
-  "date": "2021-06-01",
-  "initDuration": 12,
-  "endDuration": 16
+  "date": "0",
+  "initDuration": 8,
+  "endDuration": 9
 }
 
 ###
-GET http://localhost:8080/rentals/available?cid=1&crid=1&date=2021-06-01
+GET http://localhost:8080/rentals/available?cid=1&crid=1&date=2025-04-30
 Content-Type: application/json
 
 ###
@@ -80,4 +80,13 @@ Content-Type: application/json
 ###
 GET http://localhost:8080/rentals/courts/1
 Accept: application/json
+
+###
+DELETE http://localhost:8080/rentalsd/1
+Accept: application/json
+
+###
+PUT http://localhost:8080/rentalsu/2?date=2025-05-01&initD=10&endD=11
+Authorization: Bearer dc353bf9-7d3b-493a-847f-50c40fb4d34a
+Content-Type: application/json
 

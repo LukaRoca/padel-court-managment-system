@@ -12,6 +12,8 @@ import org.http4k.routing.routes
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
+import pt.isel.ls.isNotNegative
+import pt.isel.ls.validateInt
 import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.CourtServices
 
@@ -25,7 +27,7 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
         Response(CREATED).json(CourtOutput(court.id.id))
     }
 
-    private fun getCourtById(request: Request): Response = useWithException {
+    fun getCourtById(request: Request): Response = useWithException {
         val crid = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
         val court = courtServices.getCourtById(Id(crid)) ?: throw NoSuchElementException()
@@ -44,36 +46,14 @@ class CourtWebApi(private val courtServices: CourtServices) : WebApiExceptions()
             )))
     }
 
-
-    private fun getCourtsByClub(request: Request): Response = useWithException {
+    fun getCourtsByClub(request: Request): Response = useWithException {
         val clubId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
-        val courts = courtServices.getCourtsByClubId(Id(clubId)) ?: emptyList()
-        if (courts.isNotEmpty()) {
-            Response(OK).json(courts.map { court ->
-                CourtDetails(
-                    court.id.id,
-                    court.name.name,
-                    ClubDetails(
-                        court.club.id.id,
-                        court.club.name.name,
-                        UserDetails(
-                            court.club.owner.user.uid.id,
-                            court.club.owner.user.name.name,
-                            court.club.owner.user.email.value,
-                            court.club.owner.user.token.token
-                        )
-                    ))
-            })
-        } else {
-            throw NoSuchElementException()
-        }
+        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
+        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
+
+        val paginatedresult = courtServices.getCourtsByClubId(Id(clubId), limit, skip)
+        Response(OK).json(paginatedresult)
+
     }
-
-
-    val appCourts = routes(
-        "courts" bind Method.POST to ::createCourt,
-        "courts/{id}" bind Method.GET to ::getCourtById,
-        "clubs/{id}/courts" bind Method.GET to ::getCourtsByClub
-    )
 }

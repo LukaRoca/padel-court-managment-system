@@ -1,15 +1,15 @@
 import {API_BASE_URL} from "../utils/configs.js";
 
-export const fetchClubs = async () => {
+export const fetchClubs = async (limit, skip) => {
     try {
-        const response = await fetch(`${API_BASE_URL}clubs`);
-        const data = await response.json();
-        return Array.isArray(data) ? data : [];
+        const response = await fetch(`${API_BASE_URL}clubs?limit=${limit}&skip=${skip}`);
+        return await response.json();
     } catch (error) {
         console.error("Erro ao buscar clubes:", error);
-        return [];
+        return { list: [], next: false, previous: false };
     }
 };
+
 
 export const fetchClubById = async (clubId) => {
     try {

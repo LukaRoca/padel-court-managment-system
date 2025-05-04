@@ -14,6 +14,10 @@ class UserServices (private val db : IStorage) {
     }
 
     fun createUser(name: Name, email: Email): User {
+        val existingEmail = db.user.getAllUsers().find { it.email == email }
+        if (existingEmail != null) {
+            throw IllegalArgumentException("Already exists a user with this email:  '${email.value}'")
+        }
         return db.user.createUser(name,email)
     }
 

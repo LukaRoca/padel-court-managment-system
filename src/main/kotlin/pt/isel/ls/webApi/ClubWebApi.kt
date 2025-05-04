@@ -12,6 +12,8 @@ import org.http4k.routing.routes
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
 import pt.isel.ls.domain.Token
+import pt.isel.ls.isNotNegative
+import pt.isel.ls.validateInt
 import pt.isel.ls.webApi.dto.ClubDetails
 import pt.isel.ls.webApi.dto.ClubInput
 import pt.isel.ls.webApi.dto.ClubOutput
@@ -21,7 +23,7 @@ import pt.isel.ls.webServices.ClubServices
 
 class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
 
-    private fun createClub(request: Request): Response = useWithException {
+    fun createClub(request: Request): Response = useWithException {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: throw IllegalArgumentException("Missing or invalid token")
         val clubDto = Json.decodeFromString<ClubInput>(request.bodyString())
@@ -40,24 +42,14 @@ class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
 
 
 
-    private fun getClubs(request: Request): Response = useWithException {
-        val clubs = clubServices.getClubs()
-        if (clubs.isEmpty()) throw NoSuchElementException()
-        Response(OK).json(clubs.map { club ->
-            ClubDetails(club.id.id, club.name.name, UserDetails(club.owner.user.uid.id,
-                club.owner.user.name.name,
-                club.owner.user.email.value,
-                club.owner.user.token.token))
-        })
+    fun getClubs(request: Request): Response = useWithException {
+        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
+        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
+
+        val paginatedResult = clubServices.getClubs(limit, skip)
+
+        Response(OK).json(paginatedResult)
     }
-
-
-
-    val appClubs = routes(
-        "club" bind Method.POST to ::createClub,
-        "clubs/{id}" bind Method.GET to ::getClubById,
-        "clubs" bind Method.GET to ::getClubs,
-        )
 }
 
 

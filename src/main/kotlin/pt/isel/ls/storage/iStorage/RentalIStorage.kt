@@ -9,4 +9,6 @@ interface RentalIStorage {
     fun getRentals(club: Club, court: Court, date: Date) : List<Rental>?
     fun getRentalsOfCourt(court: Court): List<Rental>?
     fun getAvailableHours(club: Club, court: Court, date: Date): List<Int>?
+    fun deleteRental(rental: Rental): Boolean
+    fun updateRental(date: Date, duration: Duration, rental: Rental): Rental?
 }

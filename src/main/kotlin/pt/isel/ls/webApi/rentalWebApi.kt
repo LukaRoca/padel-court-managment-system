@@ -5,6 +5,7 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.bind
 import org.http4k.routing.path
@@ -13,14 +14,14 @@ import pt.isel.ls.domain.Date
 import pt.isel.ls.domain.Duration
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Token
+import pt.isel.ls.isNotNegative
 import pt.isel.ls.mapRentalToDetails
 import pt.isel.ls.mapRentalsToDetailsList
+import pt.isel.ls.validateInt
 import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.RentalServices
 
 class RentalWebApi(private val rentalServices: RentalServices) : WebApiExceptions() {
-    private fun handleError(e: Exception): Response = httpException(e)
-
     fun createRental(request: Request): Response = useWithException {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
             ?: throw AuthorizationException("Missing or invalid token")
@@ -35,21 +36,23 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         Response(CREATED).json(RentalOutput(rental.rid.id))
     }
 
-    private fun getRentalById(request: Request): Response = useWithException {
+    fun getRentalById(request: Request): Response = useWithException {
         val rentalId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException("Invalid rental ID")
         val rental = rentalServices.getRentalById(Id(rentalId)) ?: throw NoSuchElementException()
         Response(OK).json(mapRentalToDetails(rental))
     }
 
-    private fun getRentalsOfUser(request: Request): Response = useWithException {
+    fun getRentalsOfUser(request: Request): Response = useWithException {
+        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
+        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
         val userId = request.path("id")?.toIntOrNull()
             ?: throw IllegalArgumentException()
-        val rentals = rentalServices.getRentalsOfUser(Id(userId)) ?: throw NoSuchElementException()
-        Response(OK).json(mapRentalsToDetailsList(rentals))
+        val rentals = rentalServices.getRentalsOfUser(Id(userId), limit, skip) ?: throw NoSuchElementException()
+        Response(OK).json(rentals)
     }
 
-    private fun getRentals(request: Request): Response = useWithException {
+    fun getRentals(request: Request): Response = useWithException {
         val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
         val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
         val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
@@ -58,13 +61,15 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         Response(OK).json(mapRentalsToDetailsList(rentalList))
     }
 
-    private fun getRentalsOfCourt(request: Request): Response = useWithException {
+    fun getRentalsOfCourt(request: Request): Response = useWithException {
+        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
+        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
         val courtId = request.path("crid")?.toIntOrNull() ?: throw IllegalArgumentException()
-        val rentals = rentalServices.getRentalsOfCourt(Id(courtId)) ?: throw NoSuchElementException()
-        Response(OK).json(mapRentalsToDetailsList(rentals))
+        val rentals = rentalServices.getRentalsOfCourt(Id(courtId), limit, skip) ?: throw NoSuchElementException()
+        Response(OK).json(rentals)
     }
 
-    private fun getAvailableHours(request: Request): Response = useWithException {
+    fun getAvailableHours(request: Request): Response = useWithException {
         val cid = request.query("cid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'cid'")
         val crid = request.query("crid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'crid'")
         val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
@@ -77,12 +82,25 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         Response(OK).json(availableHours)
     }
 
-    val appRental = routes(
-        "rental" bind Method.POST to ::createRental,
-        "rentals/available" bind Method.GET to ::getAvailableHours,
-        "rentals/{id}" bind Method.GET to ::getRentalById,
-        "rentals/user/{id}" bind Method.GET to ::getRentalsOfUser,
-        "rentals" bind Method.GET to ::getRentals,
-        "rentals/courts/{crid}" bind Method.GET to ::getRentalsOfCourt
-    )
+    fun deleteRental(request: Request): Response = useWithException {
+        val rid = request.path("id")?.toIntOrNull()
+            ?: throw IllegalArgumentException("Invalid rental ID")
+        val deleted = rentalServices.deleteRental(Id(rid))
+        if (deleted) {
+            Response(OK).json("Rental deleted sucessfuly")
+        } else {
+            Response(NOT_FOUND).json("Rental not found")
+        }
+    }
+
+    fun updateRental(request: Request): Response = useWithException {
+        val rid = request.path("id")?.toIntOrNull()
+            ?: throw IllegalArgumentException("Invalid rental ID")
+        val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
+        val initDuration = request.query("initD") ?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'initDuration'")
+        val endDuration = request.query("endD") ?.toIntOrNull() ?: throw IllegalArgumentException("Invalid or missing 'endDuration'")
+        val rental = rentalServices.getRentalById(Id(rid)) ?: throw IllegalArgumentException("Invalid rental ID")
+        val updatedRental = rentalServices.updateRental(Date(date),Duration(initDuration, endDuration), rental.rid)
+        Response(OK).json(updatedRental)
+    }
 }
