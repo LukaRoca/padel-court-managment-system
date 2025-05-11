@@ -43,4 +43,8 @@ class ClubServices (private val db : IStorage) {
         }
         return clubs.paginateWithInfo(limit, skip)
     }
+
+    fun getClubByName(name: Name): Club? {
+        return db.club.getClubByName(name)
+    }
 }

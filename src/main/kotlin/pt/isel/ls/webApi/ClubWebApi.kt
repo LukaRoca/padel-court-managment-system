@@ -40,8 +40,6 @@ class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
             club.owner.user.token.token)))
     }
 
-
-
     fun getClubs(request: Request): Response = useWithException {
         val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
         val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
@@ -50,6 +48,16 @@ class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
 
         Response(OK).json(paginatedResult)
     }
+
+    fun getClubByName(request: Request): Response = useWithException {
+        val clubName = request.path("name")?.let { Name(it) } ?: throw IllegalArgumentException()
+        val club = clubServices.getClubByName(clubName) ?: throw NoSuchElementException()
+        Response(OK).json(ClubDetails(club.id.id, club.name.name, UserDetails(club.owner.user.uid.id,
+            club.owner.user.name.name,
+            club.owner.user.email.value,
+            club.owner.user.token.token)))
+    }
+
 }
 
 

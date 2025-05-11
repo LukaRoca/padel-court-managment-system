@@ -29,6 +29,10 @@ object ClubDataMem : ClubIStorage {
         return club
     }
 
+    override fun getClubByName(name: Name): Club? {
+        return club.find { it.name == name }
+    }
+
 
 }
 

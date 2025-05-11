@@ -54,7 +54,7 @@ class ClubWebApiTests {
     fun `get club by ID returns the club`() {
         val api = WebApi(IServices(db = storage))
         val app = Routes(api).app
-        val clubId = 1 // Assuming this ID exists in the database
+        val clubId = 1
         val request = Request(Method.GET, "clubs/$clubId")
         val response = app(request)
         assertEquals(Status.OK, response.status)
@@ -80,5 +80,18 @@ class ClubWebApiTests {
             .body(Json.encodeToString(clubDto))
         val response = clubWebApi.createClub(request)
         assertEquals(BAD_REQUEST, response.status)
+    }
+
+    @Test
+    fun `get club by name`(){
+        val api = WebApi(IServices(db = storage))
+        val app = Routes(api).app
+        val clubName = "Padel Luka1"
+        val request = Request(Method.GET, "clubs/name/$clubName")
+        val response = app(request)
+        assertEquals(Status.OK, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        val responseBody = response.bodyString()
+        assertTrue(responseBody.contains(clubName), "Response body should contain the club name")
     }
 }

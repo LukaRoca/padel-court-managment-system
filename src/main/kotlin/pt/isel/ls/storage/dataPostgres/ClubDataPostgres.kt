@@ -88,4 +88,39 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubIStorage {
         }
         return clubs
     }
+
+    override fun getClubByName(name: Name): Club? {
+        val sql = """
+        SELECT club.cid as c_id,
+               club.name as c_name,
+               club.owner as o_id,
+               users.uid as u_id,
+               users.name as u_name,
+               users.email as u_email,
+               users.token as u_token
+        FROM club
+        INNER JOIN users ON club.owner = users.uid
+        WHERE club.name = ?
+    """.trimIndent()
+
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql)
+            stmt.setString(1, name.name)
+            val rs = stmt.executeQuery()
+            if (rs.next()) {
+                val owner = User(
+                    Id(rs.getInt("u_id")),
+                    Name(rs.getString("u_name")),
+                    Email(rs.getString("u_email")),
+                    Token(rs.getString("u_token"))
+                )
+                return Club(
+                    Id(rs.getInt("c_id")),
+                    Name(rs.getString("c_name")),
+                    Owner(owner)
+                )
+            }
+        }
+        return null
+    }
 }
