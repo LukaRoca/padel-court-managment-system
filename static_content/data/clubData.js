@@ -20,3 +20,13 @@ export const fetchClubById = async (clubId) => {
         throw error;
     }
 };
+
+export const fetchClubsByName = async (clubName) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}clubs?name=${clubName}`);
+        return await response.json();
+    } catch (error) {
+        console.error(`Erro ao buscar clube com nome ${clubName}:`, error);
+        throw error;
+    }
+};

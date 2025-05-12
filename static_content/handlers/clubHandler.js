@@ -1,25 +1,18 @@
-import {fetchClubById, fetchClubs} from "../data/clubData.js";
-import {renderClubDetail, renderClubs} from "../views/clubView.js";
+import {fetchClubById, fetchClubs, fetchClubsByName} from "../data/clubData.js";
+import {renderClubDetail} from "../views/clubView.js";
 import {renderException} from "../views/Exeptions.js";
-import {LIMIT} from "../utils/configs.js";
+import {fetchAndRenderClubs} from "../utils/utils.js";
 
-let skip = 0
+let skip = 0;
 
 export const getClubs = async (mainContent) => {
-    try {
-        const clubs = await fetchClubs(LIMIT, skip);
-        renderClubs(
-            mainContent,
-            clubs.list,
-            () => { skip += LIMIT; getClubs(mainContent)},
-            () => { skip = Math.max(0, skip-LIMIT); getClubs(mainContent)},
-            clubs.next,
-            clubs.previous
-        )
-    } catch (error) {
-        console.error("Erro ao buscar clubes:", error);
-        renderException(mainContent, error);
-    }
+    skip = 0;
+    await fetchAndRenderClubs(mainContent, fetchClubs);
+};
+
+export const getClubsByName = async (mainContent, params) => {
+    skip = 0;
+    await fetchAndRenderClubs(mainContent, fetchClubsByName, params);
 };
 
 export const getClubById = async (mainContent, params) => {
@@ -32,7 +25,5 @@ export const getClubById = async (mainContent, params) => {
         renderException(mainContent, error);
     }
 };
-
-
 
 
