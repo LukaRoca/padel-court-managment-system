@@ -3,15 +3,11 @@ import {renderClubDetail} from "../views/clubView.js";
 import {renderException} from "../views/Exeptions.js";
 import {fetchAndRenderClubs} from "../utils/utils.js";
 
-let skip = 0;
-
 export const getClubs = async (mainContent) => {
-    skip = 0;
     await fetchAndRenderClubs(mainContent, fetchClubs);
 };
 
 export const getClubsByName = async (mainContent, params) => {
-    skip = 0;
     await fetchAndRenderClubs(mainContent, fetchClubsByName, params);
 };
 
