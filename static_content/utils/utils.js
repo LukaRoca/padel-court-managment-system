@@ -6,21 +6,24 @@ import {LIMIT} from "./configs.js";
 
 let skip = 0;
 
-const handlePagination = (mainContent, fetchFunction, params) => {
-    return async (direction) => {
-        skip = Math.max(0, skip + (direction === 'next' ? LIMIT : -LIMIT));
-        await fetchAndRenderClubs(mainContent, fetchFunction, params);
-    };
-};
-
 export const fetchAndRenderClubs = async (mainContent, fetchFunction, params = {}) => {
     try {
-        const clubs = await fetchFunction(params.name || LIMIT, params.name ? undefined : skip);
+        const clubs = await fetchFunction(
+            params.name || LIMIT,
+            params.name ? undefined : skip
+        );
+
         renderClubs(
             mainContent,
             clubs.list,
-            handlePagination(mainContent, fetchFunction, params, 'next'),
-            handlePagination(mainContent, fetchFunction, params, 'previous'),
+            () => {
+                skip += LIMIT;
+                fetchAndRenderClubs(mainContent, fetchFunction, params);
+            },
+            () => {
+                skip = Math.max(0, skip - LIMIT);
+                fetchAndRenderClubs(mainContent, fetchFunction, params);
+            },
             clubs.next,
             clubs.previous,
             async (searchTerm) => {

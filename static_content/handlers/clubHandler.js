@@ -2,6 +2,7 @@ import {fetchClubById, fetchClubs, fetchClubsByName} from "../data/clubData.js";
 import {renderClubDetail} from "../views/clubView.js";
 import {renderException} from "../views/Exeptions.js";
 import {fetchAndRenderClubs} from "../utils/utils.js";
+
 export const getClubs = async (mainContent) => {
     await fetchAndRenderClubs(mainContent, fetchClubs);
 };

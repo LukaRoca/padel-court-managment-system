@@ -1,5 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
-import {a, div, h1, li, ul, p, span, h2, button, input} from "../utils/elements.js";
+import {a, div, h1, p, span, h2, button, input} from "../utils/elements.js";
 
 export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, hasPrevious, onSearch) => {
     console.log("renderClubs called with mainContent:", mainContent);
@@ -70,7 +70,7 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
         {className: "d-flex justify-content-between align-items-center mt-5 pt-4 border-top"},
         hasPrevious ? button({className: "btn btn-outline-primary", onclick: onPrevious}, "Previous") : div({}),
         a({
-                href: `${API_BASE_URL}#`,
+                href: `${API_BASE_URL}#home`,
                 className: "btn btn-outline-secondary d-inline-flex align-items-center gap-1"
             },
             span({className: "material-icons", style: "font-size: 1.1em;"}),
@@ -147,7 +147,6 @@ export const renderClubDetail = (mainContent, club) => {
     const content = div(
         {className: "container py-5"},
 
-        // Header section
         div(
             {className: "row mb-5 pb-4 border-bottom"},
             div(
