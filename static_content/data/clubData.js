@@ -5,18 +5,27 @@ export const fetchClubs = async (limit, skip) => {
         const response = await fetch(`${API_BASE_URL}clubs?limit=${limit}&skip=${skip}`);
         return await response.json();
     } catch (error) {
-        console.error("Erro ao buscar clubes:", error);
+        console.error("Error fetching clubs:", error);
         return { list: [], next: false, previous: false };
     }
 };
-
 
 export const fetchClubById = async (clubId) => {
     try {
         const response = await fetch(`${API_BASE_URL}clubs/${clubId}`);
         return await response.json();
     } catch (error) {
-        console.error(`Erro ao buscar clube com ID ${clubId}:`, error);
+        console.error(`Error fetching club with ID ${clubId}:`, error);
+        throw error;
+    }
+};
+
+export const fetchClubsByName = async (clubName) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}clubs?name=${clubName}`);
+        return await response.json();
+    } catch (error) {
+        console.error(`Error fetching club with name ${clubName}:`, error);
         throw error;
     }
 };

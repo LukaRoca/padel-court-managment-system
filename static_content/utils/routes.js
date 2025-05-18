@@ -1,4 +1,4 @@
-import {getClubById, getClubs} from "../handlers/clubHandler.js";
+import {getClubById, getClubs, getClubsByName} from "../handlers/clubHandler.js";
 import {getHome} from "../handlers/homeHandler.js";
 import {getCourtById, getCourtsList} from "../handlers/courtHandler.js";
 import {getUserById, getUsers} from "../handlers/userHandler.js";
@@ -7,6 +7,7 @@ import {getRentalByCrid, getRentalDetail, getRentalsByUid} from "../handlers/ren
 export default function setupRoutes(router) {
     router.addRouteHandler("home", getHome)
     router.addRouteHandler("clubs", getClubs)
+    router.addRouteHandler("clubs/:name", getClubsByName)
     router.addRouteHandler("club/:id", getClubById)
     router.addRouteHandler("courts/:cid", getCourtsList)
     router.addRouteHandler("court/:crid", getCourtById)
