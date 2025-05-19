@@ -30,11 +30,12 @@ export const fetchClubsByName = async (clubName) => {
     }
 };
 
-export const fetchCreateClubs = async (clubData) => {
+export const fetchCreateClubs = async (clubData, token) => {
     try {
-        const response = await fetch(`${API_BASE_URL}clubs`, {
+        const response = await fetch(`${API_BASE_URL}club`, {
             method: "POST",
             headers: {
+                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(clubData)

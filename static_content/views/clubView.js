@@ -1,6 +1,6 @@
 import {API_BASE_URL} from "../utils/configs.js";
-import {a, div, h1, p, span, h2, button, input} from "../utils/elements.js";
-import {fetchCreateClubs} from "../data/clubData";
+import {a, div, h1, p, span, h2, button, input, form} from "../utils/elements.js";
+import {fetchCreateClubs} from "../data/clubData.js";
 
 export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, hasPrevious, onSearch) => {
     console.log("renderClubs called with mainContent:", mainContent);
@@ -95,7 +95,14 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
                         className: "form-control",
                         placeholder: "Search clubs by name...",
                         oninput: (event) => filterClubs(event.target.value)
-                    })
+                    }),
+                    a(
+                        {
+                            href: `${API_BASE_URL}#clubc/create`,
+                            className: "btn btn-success d-inline-flex align-items-center gap-2"
+                        },
+                        "Novo Clube"
+                    )
                 )
             )
         ),
@@ -130,6 +137,7 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
                 )
             )
         )),
+
         pagination
     );
 
@@ -247,8 +255,8 @@ export const renderCreateClub = (mainContent) => {
             <input type="text" name="name" class="form-control" required>
         </div>
         <div class="mb-3">
-            <label class="form-label">ID do Proprietário</label>
-            <input type="text" name="ownerId" class="form-control" required>
+            <label class="form-label">Token do User</label>
+            <input type="text" name="token" class="form-control" required>
         </div>
         <button type="submit" class="btn btn-primary">Criar</button>
     `;
@@ -256,9 +264,17 @@ export const renderCreateClub = (mainContent) => {
         e.preventDefault();
         const data = {
             name: form.name.value,
-            ownerId: form.ownerId.value
         };
-        await fetchCreateClubs(data);
+        const token = form.token.value;
+        try {
+            await fetchCreateClubs(data, token);
+            alert("Clube criado com sucesso!");
+            window.location.hash = "#clubs";
+
+        } catch (error) {
+            alert("Erro ao criar clube : " + (err.message || err));
+        }
+
     };
     mainContent.replaceChildren(form);
 }
