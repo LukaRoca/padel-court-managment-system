@@ -40,3 +40,4 @@ export const fetchAndRenderClubs = async (mainContent, fetchFunction, params = {
         renderException(mainContent, error);
     }
 };
+

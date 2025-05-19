@@ -50,15 +50,15 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/rental
-Authorization: Bearer dc353bf9-7d3b-493a-847f-50c40fb4d34a
+Authorization: Bearer 46fc162a-309d-4609-8307-3bf81bb55b52
 Content-Type: application/json
 
 {
   "cid": 1,
   "crid": 1,
-  "date": "0",
-  "initDuration": 8,
-  "endDuration": 9
+  "date": "2021-06-02",
+  "initDuration": 2,
+  "endDuration": 10
 }
 
 ###

@@ -29,3 +29,19 @@ export const fetchClubsByName = async (clubName) => {
         throw error;
     }
 };
+
+export const fetchCreateClubs = async (clubData) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}clubs`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(clubData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error(`Error creating club with name ${clubData.name}:`, error);
+        throw error;
+    }
+}

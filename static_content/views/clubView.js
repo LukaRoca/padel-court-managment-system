@@ -1,5 +1,6 @@
 import {API_BASE_URL} from "../utils/configs.js";
 import {a, div, h1, p, span, h2, button, input} from "../utils/elements.js";
+import {fetchCreateClubs} from "../data/clubData";
 
 export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, hasPrevious, onSearch) => {
     console.log("renderClubs called with mainContent:", mainContent);
@@ -235,3 +236,29 @@ export const renderClubDetail = (mainContent, club) => {
     mainContent.replaceChildren(content);
     console.log("Club detail rendered successfully");
 };
+
+export const renderCreateClub = (mainContent) => {
+    const form = document.createElement("form");
+    form.className = "p-4 border rounded";
+    form.innerHTML = `
+        <h2 class="mb-3">Criar Novo Clube</h2>
+        <div class="mb-3">
+            <label class="form-label">Nome do Clube</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ID do Proprietário</label>
+            <input type="text" name="ownerId" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Criar</button>
+    `;
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            name: form.name.value,
+            ownerId: form.ownerId.value
+        };
+        await fetchCreateClubs(data);
+    };
+    mainContent.replaceChildren(form);
+}

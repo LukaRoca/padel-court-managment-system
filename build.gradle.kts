@@ -1,7 +1,12 @@
 plugins {
     kotlin("jvm") version "2.1.0"
     kotlin("plugin.serialization") version "1.8.0"
+    application
 
+}
+
+application {
+    mainClass.set("pt.isel.ls.server.ServerKt")
 }
 
 repositories {
@@ -24,3 +29,5 @@ tasks.register<Copy>("copyRuntimeDependencies") {
     into("build/libs")
     from(configurations.runtimeClasspath)
 }
+
+
