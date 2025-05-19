@@ -1,5 +1,6 @@
-import {a, div, h1, h2, span, p, ul, li, button} from "../utils/elements.js";
+import {a, div, h1, h2, span, p, ul, li, button, form, label, input} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
+import {fetchCreateCourt,fetchCourtById} from "../data/courtData.js";
 
 export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNext, hasPrevious) => {
     console.log("renderCourtsList called with:", courts);
@@ -67,7 +68,17 @@ export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNex
             div(
                 {className: "col-12 text-center"},
                 h1({className: "display-4 fw-bold text-primary mb-3"}, "Courts"),
-                p({className: "lead text-muted"}, "Browse available courts and check their details")
+                p({className: "lead text-muted"}, "Browse available courts and check their details"),
+                div(
+                    {className: "d-flex justify-content-between align-items-center"},
+                    a(
+                        {
+                            href: `${API_BASE_URL}#court/create`,
+                            className: "btn btn-primary d-inline-flex align-items-center gap-2"
+                        },
+                        "Create Court"
+                    )
+                )
             )
         ),
         div({className: "row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"}, ...courtCards),
@@ -79,7 +90,7 @@ export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNex
 };
 
 
-export const renderCourtDetail = (mainContent, court) => {
+export const renderCourtDetail = (mainContent, court,selectedDate, availableHours, onDateChange, onHourSelect) => {
 
     console.log("renderCourtDetail called with:", court);
 
@@ -90,7 +101,6 @@ export const renderCourtDetail = (mainContent, court) => {
 
     const content = div(
         {className: "container py-5"},
-
         div(
             {className: "row mb-5 pb-4 border-bottom"},
             div(
@@ -129,7 +139,15 @@ export const renderCourtDetail = (mainContent, court) => {
                         p(
                             {className: "small text-muted mt-3"},
                             `ID: ${court?.id || 'Unknown ID'}`
+                        ),
+                        a({
+                                href: `${API_BASE_URL}#court/rentals/${court?.id || ''}`,
+                                className: "btn btn-primary d-inline-flex align-items-center justify-content-center gap-2 mt-3"
+                            },
+                            span({className: "material-icons"}),
+                            "Rentals"
                         )
+
                     ),
 
                 )
@@ -168,3 +186,44 @@ export const renderCourtDetail = (mainContent, court) => {
 
     mainContent.replaceChildren(content);
 }
+
+export const renderCreateCourt = (mainContent) => {
+    const form = document.createElement("form");
+    form.className = "p-4 border rounded";
+    form.innerHTML = `
+        <h2 class="mb-3">Criar Novo Court</h2>
+        <div class="mb-3">
+            <label class="form-label">Nome do Court</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ID do Clube</label>
+            <input type="text" name="clubId" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Token do User</label>
+            <input type="text" name="token" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Criar</button>
+    `;
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            name: form.name.value,
+            cid: Number(form.clubId.value)
+        };
+        const token = form.token.value;
+        try {
+            const created = await fetchCreateCourt(data, token);
+            if (!created || !created.id) {
+                throw new Error("Court criado não retornou ID.");
+            }
+            const court = await fetchCourtById(created.id);
+            alert("Court criado com sucesso!");
+            window.location.hash = `#court/${created.id}`;
+        } catch (err) {
+            alert("Erro ao criar court : " + (err.message || err));
+        }
+    };
+    mainContent.replaceChildren(form);
+};
