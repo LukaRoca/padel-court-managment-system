@@ -2,7 +2,13 @@ import {createClub, getClubById, getClubs, getClubsByName} from "../handlers/clu
 import {getHome} from "../handlers/homeHandler.js";
 import {getCourtById, getCourtsList, createCourtCreateCourt} from "../handlers/courtHandler.js";
 import {getUserById, getUsers} from "../handlers/userHandler.js";
-import {createRental, getRentalByCrid, getRentalDetail, getRentalsByUid} from "../handlers/rentalHandler.js";
+import {
+    createRental,
+    deleteRental,
+    getRentalByCrid,
+    getRentalDetail,
+    getRentalsByUid
+} from "../handlers/rentalHandler.js";
 
 export default function setupRoutes(router) {
     router.addRouteHandler("home", getHome)
@@ -15,6 +21,7 @@ export default function setupRoutes(router) {
     router.addRouteHandler("court/:crid", getCourtById)
     router.addRouteHandler("users/:uid", getUserById)
     router.addRouteHandler("user", getUsers)
+    router.addRouteHandler("rentalsd/:rid", deleteRental)
     router.addRouteHandler("rentals/:uid", getRentalsByUid)
     router.addRouteHandler("rental/create", createRental)
     router.addRouteHandler("rental/:rid", getRentalDetail)

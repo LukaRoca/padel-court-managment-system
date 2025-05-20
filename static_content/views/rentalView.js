@@ -19,6 +19,7 @@ import {
 } from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
 import {fetchCreateRental, fetchRentalById} from "../data/rentalData.js";
+import {deleteRental} from "../handlers/rentalHandler.js";
 
 export const renderRentalDetails = (mainContent, rental) => {
     console.log("renderRentalDetails called with mainContent:", mainContent);
@@ -156,7 +157,11 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
                 a({
                     href: `${API_BASE_URL}#rental/${rental.id}`,
                     className: "btn btn-sm btn-primary"
-                }, "Details")
+                }, "Details"),
+                a({
+                    href: `${API_BASE_URL}#rentalsd/${rental.id}`,
+                    className: "btn btn-sm btn-primary"
+                }, "Delete")
             )
         )
     );
@@ -253,7 +258,11 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
                 a({
                     href: `${API_BASE_URL}#rental/${rental.id}`,
                     className: "btn btn-sm btn-primary"
-                }, "Details")
+                }, "Details"),
+                a({
+                    href: `${API_BASE_URL}#rentalsd/${rental.id}`,
+                    className: "btn btn-sm btn-primary"
+                }, "Delete")
             )
         )
     );
