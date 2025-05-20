@@ -1,5 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
-import {a, div, h1, p, span, h2, button, input, form} from "../utils/elements.js";
+import {a, div, h1, p, span, h2, button, input, form, label} from "../utils/elements.js";
 import {fetchCreateClubs} from "../data/clubData.js";
 
 export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, hasPrevious, onSearch) => {
@@ -246,35 +246,49 @@ export const renderClubDetail = (mainContent, club) => {
 };
 
 export const renderCreateClub = (mainContent) => {
-    const form = document.createElement("form");
-    form.className = "p-4 border rounded";
-    form.innerHTML = `
-        <h2 class="mb-3">Criar Novo Clube</h2>
-        <div class="mb-3">
-            <label class="form-label">Nome do Clube</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Token do User</label>
-            <input type="text" name="token" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Criar</button>
-    `;
-    form.onsubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        const form = e.target;
         const data = {
             name: form.name.value,
         };
         const token = form.token.value;
         try {
             await fetchCreateClubs(data, token);
-            alert("Clube criado com sucesso!");
+            alert("Club created with success!");
             window.location.hash = "#clubs";
-
         } catch (error) {
-            alert("Erro ao criar clube : " + (err.message || err));
+            alert("Error creating the club : " + (error.message || error));
         }
-
     };
-    mainContent.replaceChildren(form);
-}
+
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Create new club"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "name"}, "Club Name"),
+                            input({type: "text", name: "name", className: "form-control", required: true, id: "name"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "token"}, "User Token"),
+                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
+                        ),
+                        button({type: "submit", className: "btn btn-primary"}, "Create")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+};
