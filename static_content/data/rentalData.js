@@ -46,3 +46,19 @@ export const fetchCreateRental = async (rentalData, token) => {
         throw error;
     }
 }
+
+export const fetchDeleteRental = async (rentalId) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}rentalsd/${rentalId}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+        return await response.json()
+    } catch (error) {
+        console.error(`Error deleting a rental`, error);
+        throw error;
+    }
+}
+

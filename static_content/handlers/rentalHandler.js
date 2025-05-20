@@ -1,5 +1,5 @@
 import {renderException} from "../views/Exeptions.js";
-import {fetchRentalById, fetchRentalsByCrid, fetchRentalsByUid} from "../data/rentalData.js";
+import {fetchDeleteRental, fetchRentalById, fetchRentalsByCrid, fetchRentalsByUid} from "../data/rentalData.js";
 import {
     renderCreateRental,
     renderRentalDetails,
@@ -60,3 +60,15 @@ export const getRentalDetail = async (mainContent, params) => {
 export const createRental = (mainContent) => {
     renderCreateRental(mainContent);
 };
+
+export const deleteRental = async (mainContent, params) => {
+    try {
+        const rentalId = params.rid;
+        await fetchDeleteRental(rentalId);
+        alert("Rental eliminado com sucesso!");
+        window.location.hash = `#home`
+    } catch (error) {
+        console.error("Erro ao eliminar rental:", error);
+        renderException(mainContent, error);
+    }
+}
