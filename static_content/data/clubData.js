@@ -46,3 +46,19 @@ export const fetchCreateClubs = async (clubData, token) => {
         throw error;
     }
 }
+
+
+export const fetchDeleteClub = async (clubId) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}clubd/${clubId}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+        return await response.json()
+    } catch (error) {
+        console.error(`Error deleting a club`, error);
+        throw error;
+    }
+}

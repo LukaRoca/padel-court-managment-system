@@ -1,6 +1,6 @@
 import {API_BASE_URL} from "../utils/configs.js";
 import {a, div, h1, p, span, h2, button, input, form, label} from "../utils/elements.js";
-import {fetchCreateClubs} from "../data/clubData.js";
+import {fetchCreateClubs, fetchDeleteClub} from "../data/clubData.js";
 import {setupDropdown} from "../utils/utils.js";
 
 export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, hasPrevious, onSearch) => {
@@ -131,9 +131,8 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
                                 "Update Club "
                             ),
                             a({
-                                    href: "#",
-                                    className: "dropdown-item d-flex align-items-center gap-2 disabled",
-                                    style: "color: #6c757d; pointer-events: none;"
+                                    href: `${API_BASE_URL}#clubd/delete`,
+                                    className: "dropdown-item d-flex align-items-center gap-2",
                                 },
                                 span({className: "material-icons text-danger"}, "delete"),
                                 "Delete Club"
@@ -326,6 +325,50 @@ export const renderCreateClub = (mainContent) => {
                             input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
                         ),
                         button({type: "submit", className: "btn btn-primary"}, "Create")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+};
+
+export const renderDeleteClub = (mainContent) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const cid = form.cid.value.trim();
+        if (!cid) {
+            alert("Please insert the club ID.");
+            return;
+        }
+        try {
+            await fetchDeleteClub(cid);
+            alert("Club deleted with success!");
+            window.location.hash = "#clubs";
+        } catch (error) {
+            alert("Error deleting the club: " + (error.message || error));
+        }
+    };
+
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Delete Club"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "cid"}, "Club ID"),
+                            input({type: "text", name: "cid", className: "form-control", required: true, id: "cid"})
+                        ),
+                        button({type: "submit", className: "btn btn-danger"}, "Delete Club")
                     )
                 )
             )

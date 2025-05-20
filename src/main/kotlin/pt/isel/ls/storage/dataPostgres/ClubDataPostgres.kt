@@ -123,4 +123,17 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubIStorage {
         }
         return null
     }
+
+    override fun deleteClub(club: Club): Boolean {
+        val sql = """
+            DELETE FROM club WHERE club.cid = ?
+        """.trimIndent()
+
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(sql)
+            stmt.setInt(1, club.id.id)
+            val rs = stmt.executeUpdate()
+            return rs > 0
+        }
+    }
 }

@@ -1,4 +1,4 @@
-import {createClub, getClubById, getClubs, getClubsByName} from "../handlers/clubHandler.js";
+import {createClub, deleteClub, getClubById, getClubs, getClubsByName} from "../handlers/clubHandler.js";
 import {getHome} from "../handlers/homeHandler.js";
 import {getCourtById, getCourtsList, createCourtCreateCourt} from "../handlers/courtHandler.js";
 import {getUserById, getUsers} from "../handlers/userHandler.js";
@@ -16,6 +16,7 @@ export default function setupRoutes(router) {
     router.addRouteHandler("clubs/:name", getClubsByName)
     router.addRouteHandler("club/:id", getClubById)
     router.addRouteHandler("clubc/create", createClub)
+    router.addRouteHandler("clubd/:cid", deleteClub)
     router.addRouteHandler("courts/:cid", getCourtsList)
     router.addRouteHandler("court/create", createCourtCreateCourt);
     router.addRouteHandler("court/:crid", getCourtById)

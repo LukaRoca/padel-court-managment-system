@@ -33,6 +33,10 @@ object ClubDataMem : ClubIStorage {
         return club.find { it.name == name }
     }
 
+    override fun deleteClub(club: Club): Boolean {
+        TODO()
+    }
+
 
 }
 
