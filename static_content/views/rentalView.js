@@ -1,4 +1,22 @@
-import {a, button, div, h1, h2, h3, p, span, table, tbody, td, th, thead, tr, form} from "../utils/elements.js";
+import {
+    a,
+    button,
+    div,
+    h1,
+    h2,
+    h3,
+    p,
+    span,
+    table,
+    tbody,
+    td,
+    th,
+    thead,
+    tr,
+    form,
+    input,
+    label
+} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
 import {fetchCreateRental, fetchRentalById} from "../data/rentalData.js";
 
@@ -19,17 +37,6 @@ export const renderRentalDetails = (mainContent, rental) => {
                 {className: "col-12 text-center"},
                 h1({className: "display-4 fw-bold text-primary mb-3"}, "Rental Details"),
                 p({className: "lead text-muted"}, `Details for rental #${rental.id}`)
-            )
-        ),
-
-        div(
-            {className: "mt-4"},
-            a(
-                {
-                    href: `${API_BASE_URL}#rental/create`,
-                    className: "btn btn-success d-inline-flex align-items-center gap-2"
-                },
-                "Novo Rental"
             )
         ),
 
@@ -85,7 +92,6 @@ export const renderRentalDetails = (mainContent, rental) => {
                                         span({className: "fs-5"}, `${rental.duration.endDuration}h`)
                                     )
                                 ),
-
                             )
                         ),
                         div(
@@ -119,7 +125,6 @@ export const renderRentalDetails = (mainContent, rental) => {
                 )
             )
         ),
-
     );
 
     if(!mainContent) {
@@ -188,6 +193,16 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
             div(
                 {className: "card-body p-0"},
                 div(
+                    {className: "mb-3"},
+                    a(
+                        {
+                            href: `${API_BASE_URL}#rental/create`,
+                            className: "btn btn-success d-inline-flex align-items-center gap-2"
+                        },
+                        "New Rental"
+                    )
+                ),
+                div(
                     {className: "table-responsive"},
                     table(
                         {className: "table table-hover table-striped mb-0"},
@@ -217,9 +232,6 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
     mainContent.replaceChildren(content);
     console.log("Rentals list rendered successfully");
 };
-
-
-
 
 export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, hasNext, hasPrevious) => {
     console.log("renderRentalsByUid called with mainContent:", mainContent);
@@ -278,6 +290,16 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
             div(
                 {className: "card-body p-0"},
                 div(
+                    {className: "mb-3"},
+                    a(
+                        {
+                            href: `${API_BASE_URL}#rental/create`,
+                            className: "btn btn-success d-inline-flex align-items-center gap-2"
+                        },
+                        "New Rental"
+                    )
+                ),
+                div(
                     {className: "table-responsive"},
                     table(
                         {className: "table table-hover table-striped mb-0"},
@@ -309,38 +331,9 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
 };
 
 export const renderCreateRental = (mainContent) => {
-    const form = document.createElement("form");
-    form.className = "p-4 border rounded";
-    form.innerHTML = `
-        <h2 class="mb-3">Criar Novo Rental</h2>
-        <div class="mb-3">
-            <label class="form-label">ID do Clube</label>
-            <input type="number" name="cid" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">ID do Court</label>
-            <input type="number" name="crid" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Data do Rental</label>
-            <input type="text" name="date" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Hora do Começo</label>
-            <input type="number" name="initDuration" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Hora do Fim</label>
-            <input type="number" name="endDuration" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Token do User</label>
-            <input type="text" name="token" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Criar</button>
-    `;
-    form.onsubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        const form = e.target;
         const data = {
             cid: form.cid.value,
             crid: form.crid.value,
@@ -351,15 +344,61 @@ export const renderCreateRental = (mainContent) => {
         const token = form.token.value;
         try {
             const created = await fetchCreateRental(data, token);
-            alert("Rental criado com sucesso!");
-            console.log(created)
-            const rental = await fetchRentalById(created.id)
-            console.log(rental)
+            alert("Rental created with success!");
+            const rental = await fetchRentalById(created.id);
             window.location.hash = `#rental/${rental.id}`;
         } catch (error) {
-            alert("Erro ao criar rental : " + (err.message || err));
+            alert("Error creating rental : " + (error.message || error));
         }
-
     };
-    mainContent.replaceChildren(form);
-}
+
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Create new Rental"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "cid"}, "Club ID"),
+                            input({type: "number", name: "cid", className: "form-control", required: true, id: "cid"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "crid"}, "Court ID"),
+                            input({type: "number", name: "crid", className: "form-control", required: true, id: "crid"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "date"}, "Rental Date"),
+                            input({type: "text", name: "date", className: "form-control", required: true, id: "date"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "initDuration"}, "Start Time"),
+                            input({type: "number", name: "initDuration", className: "form-control", required: true, id: "initDuration"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "endDuration"}, "End Time"),
+                            input({type: "number", name: "endDuration", className: "form-control", required: true, id: "endDuration"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "token"}, "User Token"),
+                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
+                        ),
+                        button({type: "submit", className: "btn btn-primary"}, "Create")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+};
