@@ -1,5 +1,6 @@
-import {a, button, div, h1, h2, h3, p, span, table, tbody, td, th, thead, tr} from "../utils/elements.js";
+import {a, button, div, h1, h2, h3, p, span, table, tbody, td, th, thead, tr, form} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
+import {fetchCreateRental, fetchRentalById} from "../data/rentalData.js";
 
 export const renderRentalDetails = (mainContent, rental) => {
     console.log("renderRentalDetails called with mainContent:", mainContent);
@@ -18,6 +19,17 @@ export const renderRentalDetails = (mainContent, rental) => {
                 {className: "col-12 text-center"},
                 h1({className: "display-4 fw-bold text-primary mb-3"}, "Rental Details"),
                 p({className: "lead text-muted"}, `Details for rental #${rental.id}`)
+            )
+        ),
+
+        div(
+            {className: "mt-4"},
+            a(
+                {
+                    href: `${API_BASE_URL}#rental/create`,
+                    className: "btn btn-success d-inline-flex align-items-center gap-2"
+                },
+                "Novo Rental"
             )
         ),
 
@@ -295,3 +307,59 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
     mainContent.replaceChildren(content);
     console.log("Rentals list rendered successfully");
 };
+
+export const renderCreateRental = (mainContent) => {
+    const form = document.createElement("form");
+    form.className = "p-4 border rounded";
+    form.innerHTML = `
+        <h2 class="mb-3">Criar Novo Rental</h2>
+        <div class="mb-3">
+            <label class="form-label">ID do Clube</label>
+            <input type="number" name="cid" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">ID do Court</label>
+            <input type="number" name="crid" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Data do Rental</label>
+            <input type="text" name="date" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Hora do Começo</label>
+            <input type="number" name="initDuration" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Hora do Fim</label>
+            <input type="number" name="endDuration" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Token do User</label>
+            <input type="text" name="token" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Criar</button>
+    `;
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            cid: form.cid.value,
+            crid: form.crid.value,
+            date: form.date.value,
+            initDuration: form.initDuration.value,
+            endDuration: form.endDuration.value
+        };
+        const token = form.token.value;
+        try {
+            const created = await fetchCreateRental(data, token);
+            alert("Rental criado com sucesso!");
+            console.log(created)
+            const rental = await fetchRentalById(created.id)
+            console.log(rental)
+            window.location.hash = `#rental/${rental.id}`;
+        } catch (error) {
+            alert("Erro ao criar rental : " + (err.message || err));
+        }
+
+    };
+    mainContent.replaceChildren(form);
+}

@@ -1,6 +1,7 @@
 import {renderException} from "../views/Exeptions.js";
 import {fetchRentalById, fetchRentalsByCrid, fetchRentalsByUid} from "../data/rentalData.js";
 import {
+    renderCreateRental,
     renderRentalDetails,
     renderRentalsByCrid,
     renderRentalsByUid
@@ -55,3 +56,7 @@ export const getRentalDetail = async (mainContent, params) => {
         renderException(mainContent, error);
     }
 }
+
+export const createRental = (mainContent) => {
+    renderCreateRental(mainContent);
+};

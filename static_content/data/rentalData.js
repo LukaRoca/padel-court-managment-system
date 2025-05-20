@@ -29,3 +29,20 @@ export const fetchRentalById = async (rentalId) => {
         throw error;
     }
 }
+
+export const fetchCreateRental = async (rentalData, token) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}rental`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(rentalData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error(`Error creating rental`, error);
+        throw error;
+    }
+}
