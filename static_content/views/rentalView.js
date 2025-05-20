@@ -1,24 +1,6 @@
-import {
-    a,
-    button,
-    div,
-    h1,
-    h2,
-    h3,
-    p,
-    span,
-    table,
-    tbody,
-    td,
-    th,
-    thead,
-    tr,
-    form,
-    input,
-    label
-} from "../utils/elements.js";
+import {a, button, div, h1, h2, h3, p, span, table, tbody, td, th, thead, tr, form, input, label} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
-import {fetchCreateRental, fetchRentalById} from "../data/rentalData.js";
+import {fetchCreateRental, fetchRentalById, fetchUpdateRental} from "../data/rentalData.js";
 import {deleteRental} from "../handlers/rentalHandler.js";
 
 export const renderRentalDetails = (mainContent, rental) => {
@@ -161,7 +143,11 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
                 a({
                     href: `${API_BASE_URL}#rentalsd/${rental.id}`,
                     className: "btn btn-sm btn-primary"
-                }, "Delete")
+                }, "Delete"),
+                a({
+                        href: `${API_BASE_URL}#rentalsu/${rental.id}`,
+                    className: "btn btn-sm btn-primary"
+                },"Update")
             )
         )
     );
@@ -262,7 +248,11 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
                 a({
                     href: `${API_BASE_URL}#rentalsd/${rental.id}`,
                     className: "btn btn-sm btn-primary"
-                }, "Delete")
+                }, "Delete"),
+                a({
+                    href: `${API_BASE_URL}#rentalsu/${rental.id}`,
+                    className: "btn btn-sm btn-primary"
+                },"Update")
             )
         )
     );
@@ -411,3 +401,60 @@ export const renderCreateRental = (mainContent) => {
 
     mainContent.replaceChildren(content);
 };
+
+export const renderUpdateRental = (mainContent, rentalId) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const data = `date=${form.date.value}&initD=${form.initDuration.value}&endD=${form.endDuration.value}`
+        const token = form.token.value;
+        try {
+            const update = await fetchUpdateRental(rentalId, data, token);
+            alert("Rental updated with sucess")
+            const rental = await fetchRentalById(update.id)
+            window.location.hash = `#rental/${rental.id}`;
+        } catch (error) {
+            alert("Error creating rental : " + (error.message || error));
+        }
+    };
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Update a Rental"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "date"}, "Rental Date"),
+                            input({type: "text", name: "date", className: "form-control", required: true, id: "date"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "initDuration"}, "Start Time"),
+                            input({type: "number", name: "initDuration", className: "form-control", required: true, id: "initDuration"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "endDuration"}, "End Time"),
+                            input({type: "number", name: "endDuration", className: "form-control", required: true, id: "endDuration"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "token"}, "User Token"),
+                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
+                        ),
+                        button({type: "submit", className: "btn btn-primary"}, "Update")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+
+}

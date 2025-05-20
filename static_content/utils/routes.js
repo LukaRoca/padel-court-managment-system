@@ -7,7 +7,7 @@ import {
     deleteRental,
     getRentalByCrid,
     getRentalDetail,
-    getRentalsByUid
+    getRentalsByUid, updateRental
 } from "../handlers/rentalHandler.js";
 
 export default function setupRoutes(router) {
@@ -23,6 +23,7 @@ export default function setupRoutes(router) {
     router.addRouteHandler("users/:uid", getUserById)
     router.addRouteHandler("user", getUsers)
     router.addRouteHandler("rentalsd/:rid", deleteRental)
+    router.addRouteHandler("rentalsu/:rid", updateRental)
     router.addRouteHandler("rentals/:uid", getRentalsByUid)
     router.addRouteHandler("rental/create", createRental)
     router.addRouteHandler("rental/:rid", getRentalDetail)

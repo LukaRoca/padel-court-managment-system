@@ -1,10 +1,16 @@
 import {renderException} from "../views/Exeptions.js";
-import {fetchDeleteRental, fetchRentalById, fetchRentalsByCrid, fetchRentalsByUid} from "../data/rentalData.js";
+import {
+    fetchDeleteRental,
+    fetchRentalById,
+    fetchRentalsByCrid,
+    fetchRentalsByUid,
+    fetchUpdateRental
+} from "../data/rentalData.js";
 import {
     renderCreateRental,
     renderRentalDetails,
     renderRentalsByCrid,
-    renderRentalsByUid
+    renderRentalsByUid, renderUpdateRental
 } from "../views/rentalView.js";
 import {LIMIT} from "../utils/configs.js";
 
@@ -69,6 +75,16 @@ export const deleteRental = async (mainContent, params) => {
         window.location.hash = `#home`
     } catch (error) {
         console.error("Erro ao eliminar rental:", error);
+        renderException(mainContent, error);
+    }
+}
+
+export const updateRental = async (mainContent, params) => {
+    try {
+        const rentalId = params.rid;
+        renderUpdateRental(mainContent, rentalId);
+    } catch (error) {
+        console.error("Erro ao atualizar rental:", error);
         renderException(mainContent, error);
     }
 }

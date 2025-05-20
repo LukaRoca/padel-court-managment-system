@@ -62,3 +62,19 @@ export const fetchDeleteRental = async (rentalId) => {
     }
 }
 
+export const fetchUpdateRental = async (rentalId, rentalData, token) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}rentalsu/${rentalId}?${rentalData}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+        return await response.json()
+    } catch (error) {
+        console.error(`Error Updating a rental`, error)
+        throw error;
+    }
+}
+
