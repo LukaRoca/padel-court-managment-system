@@ -18,8 +18,8 @@ fun main(){
 
     val dataSource = PGSimpleDataSource()
     val jdbcDatabaseURL = System.getenv("JDBC_DATABASE_URL")
-    //dataSource.setURL(jdbcDatabaseURL)
-    dataSource.setURL("jdbc:postgresql://localhost/ls?user=postgres&password=tubarao")
+    dataSource.setURL(jdbcDatabaseURL)
+    //dataSource.setURL("jdbc:postgresql://localhost/ls?user=postgres&password=tubarao")
     //dataSource.setURL("jdbc:postgresql://localhost/postgres?user=postgres&password=tubarao")
 
     val data = DataPostgres(dataSource)
