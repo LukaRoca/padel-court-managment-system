@@ -73,5 +73,5 @@ export const updateRental = async (mainContent, params) => {
         console.error("Erro ao dar Update ao rental: ", error);
         renderException(mainContent, error);
     }
-
 }
+

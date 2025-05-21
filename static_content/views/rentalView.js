@@ -153,6 +153,7 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
                             await fetchDeleteRental(rental.id);
                             console.log(rental.user.id)
                             window.location.hash = `#rentals/${rental.user.id}`;
+                            window.location.reload(); // força o refresh da página
                         }
                     }
                 }, "Delete")
@@ -283,6 +284,7 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
                             await fetchDeleteRental(rental.id);
                             console.log(rental.court.id)
                             window.location.hash = `#court/rentals/${rental.court.id}`;
+                            window.location.reload(); // força o refresh da página
                         }
                     }
                 }, "Delete")
