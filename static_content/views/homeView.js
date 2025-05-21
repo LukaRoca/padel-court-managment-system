@@ -21,7 +21,7 @@ export const renderHome = (mainContent) => {
                 {className: "col-lg-6 text-center"},
                 div(
                     {className: "bg-light rounded-3 p-5 d-flex align-items-center justify-content-center"},
-                    span({className: "material-icons display-1 text-primary"}, "Chelas Padel")
+                    span({className: "material-icons display-1 text-primary"})
                 )
             )
         ),

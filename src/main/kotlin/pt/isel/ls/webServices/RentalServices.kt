@@ -6,6 +6,7 @@ import pt.isel.ls.paginateWithInfo
 import pt.isel.ls.storage.iStorage.IStorage
 import pt.isel.ls.webApi.dto.*
 import java.lang.IllegalStateException
+import kotlin.time.Duration.Companion.hours
 
 class RentalServices (private val db : IStorage) {
 
@@ -13,15 +14,10 @@ class RentalServices (private val db : IStorage) {
         val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
         val user = db.user.getUserByToken(token) ?: throw IllegalStateException("User not found with this token")
         val club = db.club.getClubById(cid) ?: throw IllegalStateException("Club not found with this id $cid")
-        val existingRentals = db.rental.getRentals(club,court,date) ?: emptyList()
-        for (rental in existingRentals) {
-            val existingStart = rental.duration.initDuration
-            val existingEnd = rental.duration.endDuration
-            val newStart = duration.initDuration
-            val newEnd = duration.endDuration
-            if (newStart < existingEnd && newEnd > existingStart) {
-                throw IllegalArgumentException("The selected time slot is already occupied")
-            }
+        val availableHours = db.rental.getAvailableHours(club, court, date) ?: throw IllegalStateException("No available hours for this club and court")
+        val hoursofNewRental = duration.initDuration..duration.endDuration
+        if (!(hoursofNewRental.all { it in hoursofNewRental })) {
+            throw IllegalArgumentException("The selected time slot is already occupied")
         }
         return db.rental.createRental(court, date, duration, user)
     }

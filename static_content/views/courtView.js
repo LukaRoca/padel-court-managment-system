@@ -265,26 +265,9 @@ export const renderCourtAvailableHours = (mainContent, court, selectedDate, avai
 };
 
 export const renderCreateCourt = (mainContent) => {
-    const form = document.createElement("form");
-    form.className = "p-4 border rounded";
-    form.innerHTML = `
-        <h2 class="mb-3">Criar Novo Court</h2>
-        <div class="mb-3">
-            <label class="form-label">Nome do Court</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">ID do Clube</label>
-            <input type="text" name="clubId" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Token do User</label>
-            <input type="text" name="token" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Criar</button>
-    `;
-    form.onsubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        const form = e.target;
         const data = {
             name: form.name.value,
             cid: Number(form.clubId.value)
@@ -293,14 +276,48 @@ export const renderCreateCourt = (mainContent) => {
         try {
             const created = await fetchCreateCourt(data, token);
             if (!created || !created.id) {
-                throw new Error("Court criado não retornou ID.");
+                throw new Error("The Court created did not return an ID");
             }
-            const court = await fetchCourtById(created.id);
-            alert("Court criado com sucesso!");
+            await fetchCourtById(created.id);
+            alert("Court created successfully");
             window.location.hash = `#court/${created.id}`;
         } catch (err) {
-            alert("Erro ao criar court : " + (err.message || err));
+            alert("Error creating the court : " + (err.message || err));
         }
     };
-    mainContent.replaceChildren(form);
+
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    form(
+                        {onsubmit: handleSubmit},
+                        h2({className: "mb-3"}, "Create new Court"),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "name"}, "Court Name"),
+                            input({type: "text", name: "name", className: "form-control", required: true, id: "name"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "clubId"}, "Club ID"),
+                            input({type: "text", name: "clubId", className: "form-control", required: true, id: "clubId"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "token"}, "User Token"),
+                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
+                        ),
+                        button({type: "submit", className: "btn btn-primary"}, "Create"),
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
 };

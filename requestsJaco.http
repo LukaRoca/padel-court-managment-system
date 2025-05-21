@@ -56,7 +56,7 @@ Content-Type: application/json
 {
   "cid": 1,
   "crid": 1,
-  "date": "2021-06-02",
+  "date": "2021-06-03",
   "initDuration": 2,
   "endDuration": 10
 }
@@ -86,7 +86,7 @@ DELETE http://localhost:8080/rentalsd/1
 Accept: application/json
 
 ###
-PUT http://localhost:8080/rentalsu/2?date=2025-05-01&initD=10&endD=11
+PUT http://localhost:8080/rentalsu/3?date=2025-05-01&initD=10&endD=11
 Authorization: Bearer dc353bf9-7d3b-493a-847f-50c40fb4d34a
 Content-Type: application/json
 

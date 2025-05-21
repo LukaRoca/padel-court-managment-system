@@ -18,7 +18,8 @@ class Routes (api: WebApi) {
         "club" bind Method.POST to api.club::createClub,
         "clubs/{id}" bind Method.GET to api.club::getClubById,
         "clubs" bind Method.GET to api.club::getClubs,
-        "clubs/name/{name}" bind Method.GET to api.club::getClubByName
+        "clubs/name/{name}" bind Method.GET to api.club::getClubByName,
+        "clubd/{id}" bind Method.DELETE to api.club::deleteClub,
     )
     private val courtRoutes = routes(
         "courts" bind Method.POST to api.court::createCourt,

@@ -58,7 +58,18 @@ class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
             club.owner.user.token.token)))
     }
 
-}
+    fun deleteClub(request: Request): Response = useWithException {
+        val clubId = request.path("id")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid club ID")
+        val deleted = clubServices.deleteClub(Id(clubId))
+        if (deleted) {
+            Response(OK).json("Club with ID $clubId deleted successfully")
+        } else {
+            Response(OK).json("Failed to delete club with ID $clubId")
+        }
+    }
+
+    }
+
 
 
 

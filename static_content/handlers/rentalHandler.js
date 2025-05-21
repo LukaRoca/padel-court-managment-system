@@ -1,9 +1,14 @@
 import {renderException} from "../views/Exeptions.js";
-import {fetchRentalById, fetchRentalsByCrid, fetchRentalsByUid} from "../data/rentalData.js";
 import {
+    fetchRentalById,
+    fetchRentalsByCrid,
+    fetchRentalsByUid,
+} from "../data/rentalData.js";
+import {
+    renderCreateRental, renderDeleteRental,
     renderRentalDetails,
     renderRentalsByCrid,
-    renderRentalsByUid
+    renderRentalsByUid, renderUpdateRental
 } from "../views/rentalView.js";
 import {LIMIT} from "../utils/configs.js";
 
@@ -56,3 +61,18 @@ export const getRentalDetail = async (mainContent, params) => {
         renderException(mainContent, error);
     }
 }
+
+export const createRental = (mainContent) => {
+    renderCreateRental(mainContent);
+};
+
+export const updateRental = async (mainContent, params) => {
+    try {
+        const rentalId = params.rid;
+        renderUpdateRental(mainContent, rentalId)
+    } catch (error) {
+        console.error("Erro ao dar Update ao rental: ", error);
+        renderException(mainContent, error);
+    }
+}
+

@@ -47,4 +47,9 @@ class ClubServices (private val db : IStorage) {
     fun getClubByName(name: Name): Club? {
         return db.club.getClubByName(name)
     }
+
+    fun deleteClub(clubId: Id): Boolean {
+       val club = db.club.getClubById(clubId) ?: throw IllegalStateException("Club not found with this id $clubId")
+        return db.club.deleteClub(club)
+    }
 }

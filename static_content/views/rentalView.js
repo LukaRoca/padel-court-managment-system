@@ -1,5 +1,8 @@
-import {a, button, div, h1, h2, h3, p, span, table, tbody, td, th, thead, tr} from "../utils/elements.js";
+import {a, button, div, h1, h2, h3, p, span, table, tbody, td, th, thead, tr, form, input, label} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
+import {fetchCreateRental, fetchDeleteRental, fetchRentalById, fetchUpdateRental} from "../data/rentalData.js";
+import {setupDropdown} from "../utils/utils.js";
+import {getHashParams} from "../utils/utils.js";
 
 export const renderRentalDetails = (mainContent, rental) => {
     console.log("renderRentalDetails called with mainContent:", mainContent);
@@ -73,7 +76,6 @@ export const renderRentalDetails = (mainContent, rental) => {
                                         span({className: "fs-5"}, `${rental.duration.endDuration}h`)
                                     )
                                 ),
-
                             )
                         ),
                         div(
@@ -107,7 +109,6 @@ export const renderRentalDetails = (mainContent, rental) => {
                 )
             )
         ),
-
     );
 
     if(!mainContent) {
@@ -139,7 +140,23 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
                 a({
                     href: `${API_BASE_URL}#rental/${rental.id}`,
                     className: "btn btn-sm btn-primary"
-                }, "Details")
+                }, "Details"),
+                a({
+                    href: `${API_BASE_URL}#rental/update/${rental.id}`,
+                    className: "btn btn-sm btn-success ms-2"
+                }, "Update"),
+                button({
+                    className: "btn btn-sm btn-danger ms-2",
+                    onclick: async (e) => {
+                        e.preventDefault();
+                        if (confirm("Tens a certeza que queres eliminar este rental?")) {
+                            await fetchDeleteRental(rental.id);
+                            console.log(rental.user.id)
+                            window.location.hash = `#rentals/${rental.user.id}`;
+                            window.location.reload(); // força o refresh da página
+                        }
+                    }
+                }, "Delete")
             )
         )
     );
@@ -170,8 +187,31 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
         div(
             {className: "card shadow-sm mb-4"},
             div(
-                {className: "card-header bg-primary bg-opacity-75 text-white py-3"},
-                h2({className: "h5 mb-0 fw-bold"}, "Rental List")
+                {className: "card-header bg-primary bg-opacity-75 text-white py-3 d-flex justify-content-between align-items-center"},
+                h2({className: "h5 mb-0 fw-bold"}, "Rental List"),
+                div(
+                    {className: "dropdown"},
+                    button({
+                        id: "clubActionsDropdown",
+                        className: "btn btn-primary rounded-circle d-flex justify-content-center align-items-center",
+                        style: "width: 40px; height: 40px;",
+                        type: "button",
+                        "data-bs-toggle": "dropdown",
+                        "aria-expanded": "false"
+                    }, span({className: "material-icons"}, "more_vert")),
+                    div({
+                            className: "dropdown-menu shadow",
+                            "aria-labelledby": "clubActionsDropdown"
+                        },
+                        a({
+                                href: `${API_BASE_URL}#rental/create`,
+                                className: "dropdown-item d-flex align-items-center gap-2"
+                            },
+                            span({className: "material-icons text-success"}, "add"),
+                            "Create Rental"
+                        )
+                    )
+                ),
             ),
             div(
                 {className: "card-body p-0"},
@@ -193,7 +233,7 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
                         tbody({}, ...tableRows)
                     )
                 )
-            )
+            ),
         ),
         pagination
     );
@@ -204,10 +244,12 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
     }
     mainContent.replaceChildren(content);
     console.log("Rentals list rendered successfully");
+
+    // Setup dropdown functionality after rendering
+    setTimeout(() => {
+        setupDropdown();
+    }, 0);
 };
-
-
-
 
 export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, hasNext, hasPrevious) => {
     console.log("renderRentalsByUid called with mainContent:", mainContent);
@@ -229,7 +271,23 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
                 a({
                     href: `${API_BASE_URL}#rental/${rental.id}`,
                     className: "btn btn-sm btn-primary"
-                }, "Details")
+                }, "Details"),
+                a({
+                    href: `${API_BASE_URL}#rental/update/${rental.id}`,
+                    className: "btn btn-sm btn-success ms-2"
+                }, "Update"),
+                button({
+                    className: "btn btn-sm btn-danger ms-2",
+                    onclick: async (e) => {
+                        e.preventDefault();
+                        if (confirm("Tens a certeza que queres eliminar este rental?")) {
+                            await fetchDeleteRental(rental.id);
+                            console.log(rental.court.id)
+                            window.location.hash = `#court/rentals/${rental.court.id}`;
+                            window.location.reload(); // força o refresh da página
+                        }
+                    }
+                }, "Delete")
             )
         )
     );
@@ -260,8 +318,31 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
         div(
             {className: "card shadow-sm mb-4"},
             div(
-                {className: "card-header bg-primary bg-opacity-75 text-white py-3"},
-                h2({className: "h5 mb-0 fw-bold"}, "Rental List")
+                {className: "card-header bg-primary bg-opacity-75 text-white py-3 d-flex justify-content-between align-items-center"},
+                h2({className: "h5 mb-0 fw-bold"}, "Rental List"),
+                div(
+                    {className: "dropdown"},
+                    button({
+                        id: "clubActionsDropdown",
+                        className: "btn btn-primary rounded-circle d-flex justify-content-center align-items-center",
+                        style: "width: 40px; height: 40px;",
+                        type: "button",
+                        "data-bs-toggle": "dropdown",
+                        "aria-expanded": "false"
+                    }, span({className: "material-icons"}, "more_vert")),
+                    div({
+                            className: "dropdown-menu shadow",
+                            "aria-labelledby": "clubActionsDropdown"
+                        },
+                        a({
+                                href: `${API_BASE_URL}#rental/create`,
+                                className: "dropdown-item d-flex align-items-center gap-2"
+                            },
+                            span({className: "material-icons text-success"}, "add"),
+                            "Create Rental"
+                        )
+                    )
+                ),
             ),
             div(
                 {className: "card-body p-0"},
@@ -294,4 +375,180 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
     }
     mainContent.replaceChildren(content);
     console.log("Rentals list rendered successfully");
+
+    // Setup dropdown functionality after rendering
+    setTimeout(() => {
+        setupDropdown();
+    }, 0);
 };
+
+export const renderCreateRental = (mainContent) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+            cid: form.cid.value,
+            crid: form.crid.value,
+            date: form.date.value,
+            initDuration: form.initDuration.value,
+            endDuration: form.endDuration.value
+        };
+        const token = form.token.value;
+        try {
+            const created = await fetchCreateRental(data, token);
+            alert("Rental created with success!");
+            const rental = await fetchRentalById(created.id);
+            window.location.hash = `#rental/${rental.id}`;
+        } catch (error) {
+            alert("Error creating rental : " + (error.message || error));
+        }
+    };
+
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Create new Rental"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "cid"}, "Club ID"),
+                            input({type: "number", name: "cid", className: "form-control", required: true, id: "cid"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "crid"}, "Court ID"),
+                            input({type: "number", name: "crid", className: "form-control", required: true, id: "crid"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "date"}, "Rental Date"),
+                            input({type: "text", name: "date", className: "form-control", required: true, id: "date"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "initDuration"}, "Start Time"),
+                            input({type: "number", name: "initDuration", className: "form-control", required: true, id: "initDuration"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "endDuration"}, "End Time"),
+                            input({type: "number", name: "endDuration", className: "form-control", required: true, id: "endDuration"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "token"}, "User Token"),
+                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
+                        ),
+                        button({type: "submit", className: "btn btn-primary"}, "Create")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+};
+
+export const renderUpdateRental = (mainContent, rentalId) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const data = `date=${form.date.value}&initD=${form.initDuration.value}&endD=${form.endDuration.value}`
+        const token = form.token.value;
+        const context = getHashParams().context
+        try {
+            const update = await fetchUpdateRental(rentalId, data, token);
+            alert("Rental updated with sucess")
+            const rental = await fetchRentalById(update.id)
+            if (context == "user") {
+                window.location.hash = `rentals/${rental.user.id}`
+            } else window.location.hash = `court/rentals/${rental.court.id}`
+        } catch (error) {
+            alert("Error creating rental : " + (error.message || error));
+        }
+    };
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Update a Rental"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "date"}, "Rental Date"),
+                            input({type: "text", name: "date", className: "form-control", required: true, id: "date"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "initDuration"}, "Start Time"),
+                            input({type: "number", name: "initDuration", className: "form-control", required: true, id: "initDuration"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "endDuration"}, "End Time"),
+                            input({type: "number", name: "endDuration", className: "form-control", required: true, id: "endDuration"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "token"}, "User Token"),
+                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
+                        ),
+                        button({type: "submit", className: "btn btn-primary"}, "Update")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+}
+
+export const renderDeleteRental = (mainContent, setter) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const rentalId = form.rid.value
+        try {
+            await fetchDeleteRental(rentalId);
+            alert("Rental updated with sucess")
+            window.location.hash = `#rentals/${rentalId}`;
+        } catch (error) {
+            alert("Error deleting rental : " + (error.message || error));
+        }
+    };
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Update a Rental"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "cid"}, "Rental ID"),
+                            input({type: "number", name: "rid", className: "form-control", required: true, id: "cid"})
+                        ),
+                        button({type: "submit", className: "btn btn-primary"}, "Delete")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+}

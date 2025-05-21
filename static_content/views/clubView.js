@@ -1,6 +1,7 @@
 import {API_BASE_URL} from "../utils/configs.js";
-import {a, div, h1, p, span, h2, button, input, form} from "../utils/elements.js";
-import {fetchCreateClubs} from "../data/clubData.js";
+import {a, div, h1, p, span, h2, button, input, form, label} from "../utils/elements.js";
+import {fetchCreateClubs, fetchDeleteClub} from "../data/clubData.js";
+import {setupDropdown} from "../utils/utils.js";
 
 export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, hasPrevious, onSearch) => {
     console.log("renderClubs called with mainContent:", mainContent);
@@ -89,19 +90,54 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
                 h1({className: "display-4 fw-bold text-primary mb-3"}, "Padel Clubs"),
                 p({className: "lead text-muted"}, "Browse our partner padel clubs and discover their available courts"),
                 div(
-                    {className: "mt-4"},
-                    input({
-                        type: "text",
-                        className: "form-control",
-                        placeholder: "Search clubs by name...",
-                        oninput: (event) => filterClubs(event.target.value)
-                    }),
-                    a(
-                        {
-                            href: `${API_BASE_URL}#clubc/create`,
-                            className: "btn btn-success d-inline-flex align-items-center gap-2"
-                        },
-                        "Novo Clube"
+                    {className: "mt-4 d-flex justify-content-center align-items-center gap-3"},
+                    div(
+                        {className: "flex-grow-1", style: "max-width: 500px;"},
+                        input({
+                            type: "text",
+                            className: "form-control",
+                            placeholder: "Search clubs by name...",
+                            oninput: (event) => filterClubs(event.target.value)
+                        })
+                    ),
+                    div(
+                        {className: "dropdown"},
+                        button({
+                            id: "clubActionsDropdown",
+                            className: "btn btn-primary rounded-circle d-flex justify-content-center align-items-center",
+                            style: "width: 40px; height: 40px;",
+                            type: "button",
+                            "data-bs-toggle": "dropdown",
+                            "aria-expanded": "false"
+                        }, span({className: "material-icons"}, "more_vert")),
+                        div({
+                                className: "dropdown-menu shadow",
+                                "aria-labelledby": "clubActionsDropdown"
+                            },
+                            a({
+                                    href: `${API_BASE_URL}#clubc/create`,
+                                    className: "dropdown-item d-flex align-items-center gap-2"
+                                },
+                                span({className: "material-icons text-success"}, "add"),
+                                "Create Club"
+                            ),
+                            // Placeholders for future functionality
+                            a({
+                                    href: "#",
+                                    className: "dropdown-item d-flex align-items-center gap-2 disabled",
+                                    style: "color: #6c757d; pointer-events: none;"
+                                },
+                                span({className: "material-icons text-primary"}, "edit"),
+                                "Update Club "
+                            ),
+                            a({
+                                    href: `${API_BASE_URL}#clubd/delete`,
+                                    className: "dropdown-item d-flex align-items-center gap-2",
+                                },
+                                span({className: "material-icons text-danger"}, "delete"),
+                                "Delete Club"
+                            )
+                        )
                     )
                 )
             )
@@ -117,7 +153,7 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
                     ),
                     div(
                         {className: "text-center py-5 bg-light border-top border-bottom"},
-                        span({className: "material-icons display-1 text-muted"}, "Image")
+                        span({className: "material-icons display-1 text-muted"}, "image")
                     ),
                     div(
                         {className: "card-body py-3 px-3"},
@@ -130,7 +166,7 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
                                 href: `${API_BASE_URL}#club/${club.id}`,
                                 className: "btn btn-primary w-100 d-inline-flex align-items-center justify-content-center gap-2"
                             },
-                            span({className: "material-icons"}),
+                            span({className: "material-icons"}, "sports_tennis"),
                             "Club Details"
                         )
                     )
@@ -148,6 +184,11 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
 
     mainContent.replaceChildren(content);
     console.log("Clubs rendered successfully");
+
+    // Setup dropdown functionality after rendering
+    setTimeout(() => {
+        setupDropdown();
+    }, 0);
 };
 
 export const renderClubDetail = (mainContent, club) => {
@@ -216,7 +257,7 @@ export const renderClubDetail = (mainContent, club) => {
                             href: `${API_BASE_URL}#courts/${club.id || ''}`,
                             className: "btn btn-primary d-inline-flex align-items-center justify-content-center gap-2"
                         },
-                        span({className: "material-icons"}),
+                        span({className: "material-icons"}, "sports_tennis"),
                         "Club Courts"
                     )
                 )
@@ -246,35 +287,93 @@ export const renderClubDetail = (mainContent, club) => {
 };
 
 export const renderCreateClub = (mainContent) => {
-    const form = document.createElement("form");
-    form.className = "p-4 border rounded";
-    form.innerHTML = `
-        <h2 class="mb-3">Criar Novo Clube</h2>
-        <div class="mb-3">
-            <label class="form-label">Nome do Clube</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Token do User</label>
-            <input type="text" name="token" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Criar</button>
-    `;
-    form.onsubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        const form = e.target;
         const data = {
             name: form.name.value,
         };
         const token = form.token.value;
         try {
             await fetchCreateClubs(data, token);
-            alert("Clube criado com sucesso!");
+            alert("Club created with success!");
             window.location.hash = "#clubs";
-
         } catch (error) {
-            alert("Erro ao criar clube : " + (err.message || err));
+            alert("Error creating the club : " + (error.message || error));
         }
-
     };
-    mainContent.replaceChildren(form);
-}
+
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Create new club"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "name"}, "Club Name"),
+                            input({type: "text", name: "name", className: "form-control", required: true, id: "name"})
+                        ),
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "token"}, "User Token"),
+                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
+                        ),
+                        button({type: "submit", className: "btn btn-primary"}, "Create")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+};
+
+export const renderDeleteClub = (mainContent) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const cid = form.cid.value.trim();
+        if (!cid) {
+            alert("Please insert the club ID.");
+            return;
+        }
+        try {
+            await fetchDeleteClub(cid);
+            alert("Club deleted with success!");
+            window.location.hash = "#clubs";
+        } catch (error) {
+            alert("Error deleting the club: " + (error.message || error));
+        }
+    };
+
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row justify-content-center"},
+            div(
+                {className: "col-md-6"},
+                div(
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-3"}, "Delete Club"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "mb-3"},
+                            label({className: "form-label", for: "cid"}, "Club ID"),
+                            input({type: "text", name: "cid", className: "form-control", required: true, id: "cid"})
+                        ),
+                        button({type: "submit", className: "btn btn-danger"}, "Delete Club")
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+};
