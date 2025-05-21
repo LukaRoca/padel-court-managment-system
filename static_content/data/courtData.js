@@ -20,6 +20,19 @@ export const fetchCourtById = async (courtId) => {
     }
 };
 
+export const fetchCourtAvailableHours = async (courtId, date) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/courts/${courtId}/available-hours?date=${encodeURIComponent(date)}`);
+        if (!response.ok) {
+            throw new Error("Erro ao obter horas disponíveis");
+        }
+        return await response.json();
+    } catch (err) {
+        console.error("Erro no fetchCourtAvailableHours:", err);
+        throw err;
+    }
+}
+
 export const fetchCreateCourt = async (courtData, token) => {
     try {
         console.log("Enviando courtData:", courtData);

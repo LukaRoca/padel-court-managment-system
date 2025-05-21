@@ -1,4 +1,4 @@
-import {a, div, h1, h2, span, p, ul, li, button, form, label, input} from "../utils/elements.js";
+import {a, div, h1, h2, span, p, button, form, input} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
 import {fetchCreateCourt,fetchCourtById} from "../data/courtData.js";
 
@@ -90,7 +90,7 @@ export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNex
 };
 
 
-export const renderCourtDetail = (mainContent, court,selectedDate, availableHours, onDateChange, onHourSelect) => {
+export const renderCourtDetail = (mainContent, court) => {
 
     console.log("renderCourtDetail called with:", court);
 
@@ -186,6 +186,83 @@ export const renderCourtDetail = (mainContent, court,selectedDate, availableHour
 
     mainContent.replaceChildren(content);
 }
+
+export const renderCourtAvailableHours = (mainContent, court, selectedDate, availableHours, onDateChange, onHourSelect) => {
+    if (!mainContent) {
+        console.error("mainContent is null or undefined. Cannot render available hours.");
+        return;
+    }
+
+    const hourButtons = availableHours && availableHours.length > 0
+        ? availableHours.map(hour =>
+            button(
+                {
+                    className: "btn btn-outline-primary m-2",
+                    onclick: () => onHourSelect(hour)
+                },
+                hour
+            )
+        )
+        : p({className: "text-muted"}, "Sem horários disponíveis para esta data.");
+
+    const content = div(
+        {className: "container py-5"},
+        div(
+            {className: "row mb-5 pb-4 border-bottom"},
+            div(
+                {className: "col-12 text-center"},
+                h1({className: "display-4 fw-bold text-primary mb-3"}, `Court ${court?.id || 'Desconhecido'}`),
+                p({className: "lead text-muted"}, "Escolha uma data e veja os horários disponíveis")
+            )
+        ),
+        div(
+            {className: "row mb-4"},
+            div(
+                {className: "col-md-6 mx-auto"},
+                div(
+                    {className: "input-group mb-3"},
+                    span({className: "input-group-text"}, "Data"),a
+                    (() => {
+                        const input = document.createElement("input");
+                        input.type = "date";
+                        input.className = "form-control";
+                        input.value = selectedDate;
+                        input.onchange = e => onDateChange(e.target.value);
+                        return input;
+                    })()
+                )
+            )
+        ),
+        div(
+            {className: "row"},
+            div(
+                {className: "col-12 text-center"},
+                h2({className: "h5 mb-3"}, "Horários Disponíveis"),
+                div({className: "d-flex flex-wrap justify-content-center"}, ...hourButtons)
+            )
+        ),
+        div(
+            {className: "d-flex justify-content-between align-items-center mt-5 pt-4 border-top"},
+            a({
+                    href: `${API_BASE_URL}#court/${court?.id || ''}`,
+                    className: "btn btn-outline-secondary d-inline-flex align-items-center gap-1"
+                },
+                span({className: "material-icons", style: "font-size: 1.1em;"}),
+                "Voltar ao Detalhe"
+            ),
+            a({
+                    href: `${API_BASE_URL}#clubs`,
+                    className: "btn btn-outline-secondary d-inline-flex align-items-center gap-1"
+                },
+                span({className: "material-icons", style: "font-size: 1.1em;"}),
+                "Clubes"
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
+    console.log("Court available hours rendered successfully.");
+};
 
 export const renderCreateCourt = (mainContent) => {
     const form = document.createElement("form");

@@ -1,6 +1,6 @@
 import {renderException} from "../views/Exeptions.js";
-import {renderCourtDetail,renderCourtsList, renderCreateCourt} from "../views/courtView.js";
-import {fetchCourtById, fetchCourts} from "../data/courtData.js";
+import {renderCourtAvailableHours, renderCourtDetail, renderCourtsList, renderCreateCourt} from "../views/courtView.js";
+import {fetchCourtAvailableHours, fetchCourtById, fetchCourts} from "../data/courtData.js";
 import {LIMIT} from "../utils/configs.js";
 
 let skip = 0;
@@ -19,7 +19,7 @@ export const getCourtsList = async (mainContent, params) => {
         );
     } catch (error) {
         console.error("Erro ao buscar quadras:", error);
-        renderException(mainContent, error);
+        renderException(mainContent, error);d
     }
 };
 
@@ -34,7 +34,17 @@ export const getCourtById = async (mainContent, params) => {
     }
 };
 
-export const createCourtCreateCourt = (mainContent) => {
+export const createCourt = (mainContent) => {
     renderCreateCourt(mainContent);
 };
 
+export const getCourtAvailableHoursSpecificDate = async (mainContent, params) => {
+    try {
+        const courtId = params.crid;
+        const date = params.date;
+        const avaiableHours = await fetchCourtAvailableHours(courtId, date);
+        renderCourtAvailableHours(mainContent, courtId, date, avaiableHours);
+    } catch (error) {
+        renderException(mainContent, error);
+    }
+}

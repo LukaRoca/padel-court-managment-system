@@ -7,6 +7,7 @@ import {
 } from "../views/rentalView.js";
 import {LIMIT} from "../utils/configs.js";
 
+
 let skipu = 0
 let skipC = 0
 
