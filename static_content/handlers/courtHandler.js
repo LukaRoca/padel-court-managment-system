@@ -40,11 +40,23 @@ export const createCourt = (mainContent) => {
 
 export const getCourtAvailableHoursSpecificDate = async (mainContent, params) => {
     try {
-        const courtId = params.crid;
-        const date = params.date;
-        const avaiableHours = await fetchCourtAvailableHours(courtId, date);
-        renderCourtAvailableHours(mainContent, courtId, date, avaiableHours);
+        const { crid, date } = params;
+        const court = await fetchCourtById(crid);
+        if (!court) {
+            throw new Error("Court não encontrado");
+        }
+        if (date) {
+            try {
+                const availableHours = await fetchCourtAvailableHours(court.id, date, court.club.id);
+                renderCourtAvailableHours(mainContent, court, availableHours);
+            } catch (error) {
+                renderCourtAvailableHours(mainContent, court, null);
+            }
+        } else {
+            renderCourtAvailableHours(mainContent, court);
+        }
     } catch (error) {
+        console.error("Erro no handler:", error);
         renderException(mainContent, error);
     }
-}
+};
