@@ -4,10 +4,9 @@ import {getCourtById, getCourtsList, createCourtCreateCourt} from "../handlers/c
 import {getUserById, getUsers} from "../handlers/userHandler.js";
 import {
     createRental,
-    deleteRental,
     getRentalByCrid,
     getRentalDetail,
-    getRentalsByUid
+    getRentalsByUid, updateRental
 } from "../handlers/rentalHandler.js";
 
 export default function setupRoutes(router) {
@@ -22,7 +21,7 @@ export default function setupRoutes(router) {
     router.addRouteHandler("court/:crid", getCourtById)
     router.addRouteHandler("users/:uid", getUserById)
     router.addRouteHandler("user", getUsers)
-    router.addRouteHandler("rentalsd/:rid", deleteRental)
+    router.addRouteHandler("rental/update/:rid", updateRental)
     router.addRouteHandler("rentals/:uid", getRentalsByUid)
     router.addRouteHandler("rental/create", createRental)
     router.addRouteHandler("rental/:rid", getRentalDetail)

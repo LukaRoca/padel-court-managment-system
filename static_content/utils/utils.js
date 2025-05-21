@@ -62,3 +62,9 @@ export const fetchAndRenderClubs = async (mainContent, fetchFunction, params = {
     }
 };
 
+// Função utilitária para ler parâmetros da hash
+export function getHashParams() {
+    const hash = window.location.hash.split('?')[1];
+    if (!hash) return {};
+    return Object.fromEntries(new URLSearchParams(hash));
+}
