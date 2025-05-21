@@ -103,4 +103,11 @@ class RentalWebApi(private val rentalServices: RentalServices) : WebApiException
         val updatedRental = rentalServices.updateRental(Date(date),Duration(initDuration, endDuration), rental.rid)
         Response(OK).json(updatedRental)
     }
+
+    fun getRentalsWithDate(request: Request): Response = useWithException {
+
+        val date = request.query("date") ?: throw IllegalArgumentException("Invalid or missing 'date'")
+        val rentals = rentalServices.getRentalsWithDate(Date(date)) ?: throw NoSuchElementException()
+        Response(OK).json(rentals)
+    }
 }

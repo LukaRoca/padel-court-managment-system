@@ -324,4 +324,68 @@
             }
         }
 
+        override fun getRentalsWithDate(date: Date): List<Rental> {
+            val rentals = mutableListOf<Rental>()
+            val sql = """
+        SELECT rental.rid as r_id,
+               rental.date as r_date,
+               rental.initDuration as r_initd,
+               rental.endDuration as r_end,
+               rental.usr as r_usr,
+               rental.court as r_court,
+               court.crid as cr_rid,
+               court.name as cr_name,
+               court.club as c_rid,
+               club.cid as c_id,
+               club.name as c_name,
+               club.owner as c_owner,
+               users.uid as u_id,
+               users.token as u_token,
+               users.name as u_name,
+               users.email as u_email
+        FROM rental
+        INNER JOIN court ON rental.court = court.crid
+        INNER JOIN club ON court.club = club.cid
+        INNER JOIN users ON rental.usr = users.uid
+        WHERE rental.date = ?
+    """.trimIndent()
+            dataSource.connection.use {
+                val stmt = it.prepareStatement(sql)
+                stmt.setString(1, date.value)
+                val rs = stmt.executeQuery()
+                while (rs.next()) {
+                    rentals.add(
+                        Rental(
+                            Id(rs.getInt("r_id")),
+                            Date(rs.getString("r_date")),
+                            Duration(rs.getInt("r_initd"), rs.getInt("r_end")),
+                            User(
+                                Id(rs.getInt("u_id")),
+                                Name(rs.getString("u_name")),
+                                Email(rs.getString("u_email")),
+                                Token(rs.getString("u_token"))
+                            ),
+                            Court(
+                                Id(rs.getInt("cr_rid")),
+                                Name(rs.getString("cr_name")),
+                                Club(
+                                    Id(rs.getInt("c_id")),
+                                    Name(rs.getString("c_name")),
+                                    Owner(
+                                        User(
+                                            Id(rs.getInt("u_id")),
+                                            Name(rs.getString("u_name")),
+                                            Email(rs.getString("u_email")),
+                                            Token(rs.getString("u_token"))
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                }
+            }
+            return rentals
+        }
+
     }

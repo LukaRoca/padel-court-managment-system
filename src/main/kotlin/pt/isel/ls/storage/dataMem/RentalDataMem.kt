@@ -61,5 +61,9 @@ object RentalDataMem : RentalIStorage {
     override fun deleteRental(rental: Rental): Boolean {
         TODO("Not yet implemented")
     }
+
+    override fun getRentalsWithDate(date: Date): List<Rental> {
+        TODO("Not yet implemented")
+    }
 }
 

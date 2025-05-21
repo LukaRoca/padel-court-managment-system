@@ -157,5 +157,18 @@ class RentalServices (private val db : IStorage) {
             )
         )
     }
+
+    fun getRentalsWithDate(date: Date): List<Rental>? {
+        return db.rental.getRentalsWithDate(date)?.map { rental ->
+            Rental(
+                rental.rid,
+                rental.date,
+                rental.duration,
+                rental.user,
+                rental.court
+            )
+        }
+    }
+
 }
 
