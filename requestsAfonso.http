@@ -79,6 +79,6 @@ DELETE http://localhost:8080/clubd/1
 content-type: application/json
 
 ###
-GET http://localhost:8080/rentals/date?date=2021-06-01
+GET http://localhost:8080/rental/date?date=2020-06-01
 content-type: application/json
 

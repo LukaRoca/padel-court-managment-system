@@ -552,3 +552,12 @@ export const renderDeleteRental = (mainContent, setter) => {
 
     mainContent.replaceChildren(content);
 }
+
+
+export const renderRentalsByDate = (mainContent, rentals) => {
+    const content = div(
+        h2("Rentals by Date"),
+    )
+
+    mainContent.replaceChildren(content)
+};

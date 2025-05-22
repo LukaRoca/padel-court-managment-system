@@ -1,13 +1,13 @@
 import {renderException} from "../views/Exeptions.js";
 import {
     fetchRentalById,
-    fetchRentalsByCrid,
+    fetchRentalsByCrid, fetchRentalsByDate,
     fetchRentalsByUid,
 } from "../data/rentalData.js";
 import {
     renderCreateRental, renderDeleteRental,
     renderRentalDetails,
-    renderRentalsByCrid,
+    renderRentalsByCrid, renderRentalsByDate,
     renderRentalsByUid, renderUpdateRental
 } from "../views/rentalView.js";
 import {LIMIT} from "../utils/configs.js";
@@ -71,6 +71,18 @@ export const updateRental = async (mainContent, params) => {
         renderUpdateRental(mainContent, rentalId)
     } catch (error) {
         console.error("Erro ao dar Update ao rental: ", error);
+        renderException(mainContent, error);
+    }
+}
+
+export const searchRentalsByDate = async (mainContent, params) => {
+    try{
+        const date = params.date;
+        const rentals = await fetchRentalsByDate(date);
+        renderRentalsByDate(mainContent, rentals.list)
+    }
+    catch (error) {
+        console.error("Erro ao encontrar rentals:", error);
         renderException(mainContent, error);
     }
 }

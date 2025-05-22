@@ -107,6 +107,16 @@ export const renderCourtDetail = (mainContent, court,selectedDate, availableHour
                 {className: "col-12 text-center"},
                 h1({className: "display-4 fw-bold text-primary mb-3"}, `Court ${court?.id || 'Unknown'}`),
                 p({className: "lead text-muted"}, "View court details and available rentals")
+            ),
+            div(
+                {className: "d-flex justify-content-between align-items-center"},
+                a(
+                    {
+                        href: `${API_BASE_URL}#rentals/court/date`,
+                        className: "btn btn-primary d-inline-flex align-items-center gap-2"
+                    },
+                    "Search"
+                )
             )
         ),
 

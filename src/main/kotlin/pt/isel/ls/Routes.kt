@@ -36,7 +36,7 @@ class Routes (api: WebApi) {
         "rentals/courts/{crid}" bind Method.GET to api.rental::getRentalsOfCourt,
         "rentalsd/{id}" bind Method.DELETE to api.rental::deleteRental,
         "rentalsu/{id}" bind Method.PUT to api.rental::updateRental,
-        "rentals/date" bind Method.GET to api.rental::getRentalsWithDate
+        "rental/date" bind Method.GET to api.rental::getRentalsWithDate
     )
 
     val app =
