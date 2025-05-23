@@ -18,7 +18,7 @@ GET http://localhost:8080/clubs/1
 Accept: application/json
 
 ###
-GET http://localhost:8080/clubs
+GET http://localhost:8080/clubs?limit=10&skip=0
 Accept: application/json
 
 ###

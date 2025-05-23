@@ -1,4 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
+import {getToken} from "../utils/token_utilis.js";
 
 export const fetchClubs = async (limit, skip) => {
     try {
@@ -30,8 +31,9 @@ export const fetchClubsByName = async (clubName) => {
     }
 };
 
-export const fetchCreateClubs = async (clubData, token) => {
+export const fetchCreateClubs = async (clubData) => {
     try {
+        const token = getToken()
         const response = await fetch(`${API_BASE_URL}club`, {
             method: "POST",
             headers: {

@@ -1,4 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
+import {getToken} from "../utils/token_utilis.js";
 
 export const fetchCourts = async (clubId, limit, skip) => {
     try {
@@ -20,10 +21,9 @@ export const fetchCourtById = async (courtId) => {
     }
 };
 
-export const fetchCreateCourt = async (courtData, token) => {
+export const fetchCreateCourt = async (courtData) => {
     try {
-        console.log("Enviando courtData:", courtData);
-
+        const token = getToken()
         const response = await fetch(`${API_BASE_URL}courts`, {
             method: "POST",
             headers: {

@@ -5,7 +5,7 @@ import {
     fetchRentalsByUid,
 } from "../data/rentalData.js";
 import {
-    renderCreateRental, renderDeleteRental,
+    renderCreateRental,
     renderRentalDetails,
     renderRentalsByCrid,
     renderRentalsByUid, renderUpdateRental
@@ -62,7 +62,12 @@ export const getRentalDetail = async (mainContent, params) => {
 }
 
 export const createRental = (mainContent) => {
-    renderCreateRental(mainContent);
+    try {
+        renderCreateRental(mainContent);
+    } catch (error) {
+        console.error("Erro a renderizar os clubs existentes", error);
+        renderException(mainContent, error);
+    }
 };
 
 export const updateRental = async (mainContent, params) => {

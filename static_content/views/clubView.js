@@ -293,9 +293,8 @@ export const renderCreateClub = (mainContent) => {
         const data = {
             name: form.name.value,
         };
-        const token = form.token.value;
         try {
-            await fetchCreateClubs(data, token);
+            await fetchCreateClubs(data);
             alert("Club created with success!");
             window.location.hash = "#clubs";
         } catch (error) {
@@ -318,11 +317,6 @@ export const renderCreateClub = (mainContent) => {
                             {className: "mb-3"},
                             label({className: "form-label", for: "name"}, "Club Name"),
                             input({type: "text", name: "name", className: "form-control", required: true, id: "name"})
-                        ),
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "token"}, "User Token"),
-                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
                         ),
                         button({type: "submit", className: "btn btn-primary"}, "Create")
                     )

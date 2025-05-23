@@ -34,7 +34,14 @@ export const getCourtById = async (mainContent, params) => {
     }
 };
 
-export const createCourtCreateCourt = (mainContent) => {
-    renderCreateCourt(mainContent);
+export const createCourtCreateCourt = (mainContent, params) => {
+    try {
+        const clubId = params.cid
+        renderCreateCourt(mainContent, clubId);
+    } catch (error) {
+        console.error(`Erro ao criar o court`, error)
+        renderException(mainContent,error)
+    }
+
 };
 

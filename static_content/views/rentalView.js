@@ -1,8 +1,30 @@
-import {a, button, div, h1, h2, h3, p, span, table, tbody, td, th, thead, tr, form, input, label} from "../utils/elements.js";
+import {
+    a,
+    button,
+    div,
+    h1,
+    h2,
+    h3,
+    p,
+    span,
+    table,
+    tbody,
+    td,
+    th,
+    thead,
+    tr,
+    form,
+    input,
+    label,
+    select,
+    option, main
+} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
 import {fetchCreateRental, fetchDeleteRental, fetchRentalById, fetchUpdateRental} from "../data/rentalData.js";
 import {setupDropdown} from "../utils/utils.js";
 import {getHashParams} from "../utils/utils.js";
+import {fetchCourts} from "../data/courtData.js";
+import {fetchClubs} from "../data/clubData.js";
 
 export const renderRentalDetails = (mainContent, rental) => {
     console.log("renderRentalDetails called with mainContent:", mainContent);
@@ -382,20 +404,131 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
     }, 0);
 };
 
-export const renderCreateRental = (mainContent) => {
+export const renderSelectClub = async (mainContent) => {
+    const clubs = await fetchClubs(10, 0) // Valores provisórios depois mudar
+
+    return select(
+        { className: "form-select", id: "clubSelect", name: "cid", required: true },
+        option({ value: "" }, "Escolha o clube"),
+        ...(clubs.list || []).map(club =>
+            option({ value: club.id }, club.name)
+        )
+    );
+
+    /*
+    clubSelect.addEventListener("change", (e) => {
+        const selectedClubId = e.target.value;
+        clubSelect.disabled = true;
+        //renderSelectCourt(mainContent, selectedClubId)
+    });
+
+     */
+
+
+};
+
+export const renderSelectCourt = async (mainContent, clubID) => {
+    const courts = await fetchCourts(clubID, 10, 0);
+
+    return select(
+        { className: "form-select", id: "courtSelect", name: "crid", required: true },
+        option({ value: "" }, "Escolha o court"),
+        ...(courts.list || []).map(court =>
+            option({ value: court.id }, court.name)
+        )
+    );
+}
+
+
+export const renderCreateRental = async (mainContent) => {
+
+    // Cria divs para cada etapa
+    const clubDiv = div({});
+    const courtDiv = div({});
+    const formDiv = div({});
+
+    const selectClub = await renderSelectClub(mainContent)
+    clubDiv.appendChild(selectClub)
+
+    // Renderiza tudo no mainContent
+    mainContent.replaceChildren(
+        div(
+            { className: "container py-5" },
+            h2({ className: "mb-4" }, "Criar novo Rental"),
+            clubDiv,
+            courtDiv,
+            formDiv
+        )
+    );
+
+    selectClub.addEventListener("change", async (e) => {
+        const selectedClubId = e.target.value;
+        clubSelect.disabled = true;
+
+        const selectCourt = await renderSelectCourt(mainContent, selectedClubId)
+        courtDiv.replaceChildren(selectCourt);
+
+        selectCourt.addEventListener("change", (e) => {
+            const selectedCourtId = e.target.value;
+            courtSelect.disabled = true;
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const data = {
+                    cid: selectedClubId,
+                    crid: selectedCourtId,
+                    date: form.date.value,
+                    initDuration: form.initDuration.value,
+                    endDuration: form.endDuration.value
+                };
+                try {
+                    const created = await fetchCreateRental(data);
+                    alert("Rental created with success!");
+                    const rental = await fetchRentalById(created.id);
+                    window.location.hash = `#rental/${rental.id}`;
+                } catch (error) {
+                    alert("Error creating rental : " + (error.message || error));
+                }
+            };
+
+            formDiv.replaceChildren(
+                form(
+                    { onsubmit: handleSubmit },
+                    div(
+                        { className: "mb-3" },
+                        label({ className: "form-label", for: "date" }, "Data do Rental"),
+                        input({ type: "text", name: "date", className: "form-control", required: true, id: "date" })
+                    ),
+                    div(
+                        { className: "mb-3" },
+                        label({ className: "form-label", for: "initDuration" }, "Hora de Início"),
+                        input({ type: "number", name: "initDuration", className: "form-control", required: true, id: "initDuration" })
+                    ),
+                    div(
+                        { className: "mb-3" },
+                        label({ className: "form-label", for: "endDuration" }, "Hora de Fim"),
+                        input({ type: "number", name: "endDuration", className: "form-control", required: true, id: "endDuration" })
+                    ),
+                    button({ type: "submit", className: "btn btn-primary" }, "Criar")
+                )
+            );
+        });
+    });
+
+    /*
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
         const data = {
-            cid: form.cid.value,
-            crid: form.crid.value,
+            cid: clubId,
+            crid: courtId,
             date: form.date.value,
             initDuration: form.initDuration.value,
             endDuration: form.endDuration.value
         };
-        const token = form.token.value;
         try {
-            const created = await fetchCreateRental(data, token);
+            const created = await fetchCreateRental(data);
             alert("Rental created with success!");
             const rental = await fetchRentalById(created.id);
             window.location.hash = `#rental/${rental.id}`;
@@ -417,16 +550,6 @@ export const renderCreateRental = (mainContent) => {
                         {onsubmit: handleSubmit},
                         div(
                             {className: "mb-3"},
-                            label({className: "form-label", for: "cid"}, "Club ID"),
-                            input({type: "number", name: "cid", className: "form-control", required: true, id: "cid"})
-                        ),
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "crid"}, "Court ID"),
-                            input({type: "number", name: "crid", className: "form-control", required: true, id: "crid"})
-                        ),
-                        div(
-                            {className: "mb-3"},
                             label({className: "form-label", for: "date"}, "Rental Date"),
                             input({type: "text", name: "date", className: "form-control", required: true, id: "date"})
                         ),
@@ -440,11 +563,6 @@ export const renderCreateRental = (mainContent) => {
                             label({className: "form-label", for: "endDuration"}, "End Time"),
                             input({type: "number", name: "endDuration", className: "form-control", required: true, id: "endDuration"})
                         ),
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "token"}, "User Token"),
-                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
-                        ),
                         button({type: "submit", className: "btn btn-primary"}, "Create")
                     )
                 )
@@ -452,21 +570,23 @@ export const renderCreateRental = (mainContent) => {
         )
     );
 
+     */
+
     mainContent.replaceChildren(content);
 };
+
 
 export const renderUpdateRental = (mainContent, rentalId) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
         const data = `date=${form.date.value}&initD=${form.initDuration.value}&endD=${form.endDuration.value}`
-        const token = form.token.value;
         const context = getHashParams().context
         try {
-            const update = await fetchUpdateRental(rentalId, data, token);
+            const update = await fetchUpdateRental(rentalId, data);
             alert("Rental updated with sucess")
             const rental = await fetchRentalById(update.id)
-            if (context == "user") {
+            if (context === "user") {
                 window.location.hash = `rentals/${rental.user.id}`
             } else window.location.hash = `court/rentals/${rental.court.id}`
         } catch (error) {
@@ -498,11 +618,6 @@ export const renderUpdateRental = (mainContent, rentalId) => {
                             {className: "mb-3"},
                             label({className: "form-label", for: "endDuration"}, "End Time"),
                             input({type: "number", name: "endDuration", className: "form-control", required: true, id: "endDuration"})
-                        ),
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "token"}, "User Token"),
-                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
                         ),
                         button({type: "submit", className: "btn btn-primary"}, "Update")
                     )
