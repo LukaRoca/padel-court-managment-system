@@ -19,7 +19,7 @@ export default function setupRoutes(router) {
     router.addRouteHandler("courts/:cid", getCourtsList)
     router.addRouteHandler("court/hours/:crid/:date", getCourtAvailableHoursSpecificDate);
     router.addRouteHandler("court/hours/:crid", getCourtAvailableHoursSpecificDate);
-    router.addRouteHandler("court/create", createCourt);
+    router.addRouteHandler("court/create/:cid", createCourt);
     router.addRouteHandler("court/:crid", getCourtById)
     router.addRouteHandler("users/:uid", getUserById)
     router.addRouteHandler("user", getUsers)

@@ -483,6 +483,7 @@ export const renderCreateRental = async (mainContent) => {
                     endDuration: form.endDuration.value
                 };
                 try {
+                    console.log(data)
                     const created = await fetchCreateRental(data);
                     alert("Rental created with success!");
                     const rental = await fetchRentalById(created.id);
@@ -515,64 +516,6 @@ export const renderCreateRental = async (mainContent) => {
             );
         });
     });
-
-    /*
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const form = e.target;
-        const data = {
-            cid: clubId,
-            crid: courtId,
-            date: form.date.value,
-            initDuration: form.initDuration.value,
-            endDuration: form.endDuration.value
-        };
-        try {
-            const created = await fetchCreateRental(data);
-            alert("Rental created with success!");
-            const rental = await fetchRentalById(created.id);
-            window.location.hash = `#rental/${rental.id}`;
-        } catch (error) {
-            alert("Error creating rental : " + (error.message || error));
-        }
-    };
-
-    const content = div(
-        {className: "container py-5"},
-        div(
-            {className: "row justify-content-center"},
-            div(
-                {className: "col-md-6"},
-                div(
-                    {className: "card p-4 border rounded shadow-sm"},
-                    h2({className: "mb-3"}, "Create new Rental"),
-                    form(
-                        {onsubmit: handleSubmit},
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "date"}, "Rental Date"),
-                            input({type: "text", name: "date", className: "form-control", required: true, id: "date"})
-                        ),
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "initDuration"}, "Start Time"),
-                            input({type: "number", name: "initDuration", className: "form-control", required: true, id: "initDuration"})
-                        ),
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "endDuration"}, "End Time"),
-                            input({type: "number", name: "endDuration", className: "form-control", required: true, id: "endDuration"})
-                        ),
-                        button({type: "submit", className: "btn btn-primary"}, "Create")
-                    )
-                )
-            )
-        )
-    );
-
-     */
-
-    mainContent.replaceChildren(content);
 };
 
 

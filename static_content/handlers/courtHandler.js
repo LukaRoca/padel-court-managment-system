@@ -34,8 +34,14 @@ export const getCourtById = async (mainContent, params) => {
     }
 };
 
-export const createCourt = (mainContent) => {
-    renderCreateCourt(mainContent);
+export const createCourt = (mainContent, params) => {
+    try {
+        const cid = params.cid
+        renderCreateCourt(mainContent, cid);
+    } catch (error) {
+        console.error("Erro na criação do campo", error);
+        renderException(mainContent, error);
+    }
 };
 
 export const getCourtAvailableHoursSpecificDate = async (mainContent, params) => {

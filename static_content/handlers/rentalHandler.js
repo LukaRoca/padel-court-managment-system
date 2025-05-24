@@ -66,7 +66,7 @@ export const createRental = (mainContent) => {
     try {
         renderCreateRental(mainContent);
     } catch (error) {
-        console.error("Erro a renderizar os clubs existentes", error);
+        console.error("Erro na criação do aluguer", error);
         renderException(mainContent, error);
     }
 };

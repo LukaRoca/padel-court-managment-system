@@ -2,6 +2,7 @@ import {a, div, h1, h2, h3, span, p, button, form, input, label, ul, li} from ".
 import {API_BASE_URL} from "../utils/configs.js";
 import {fetchCreateCourt, fetchCourtById, fetchCourtAvailableHours} from "../data/courtData.js";
 import {renderException} from "./Exeptions.js";
+import {setupDropdown} from "../utils/utils.js";
 
 export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNext, hasPrevious) => {
     console.log("renderCourtsList called with:", courts);
@@ -68,18 +69,34 @@ export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNex
             {className: "row mb-5 pb-4 border-bottom"},
             div(
                 {className: "col-12 text-center"},
-                h1({className: "display-4 fw-bold text-primary mb-3"}, "Courts"),
-                p({className: "lead text-muted"}, "Browse available courts and check their details"),
                 div(
-                    {className: "d-flex justify-content-between align-items-center"},
-                    a(
-                        {
-                            href: `${API_BASE_URL}#court/create`,
-                            className: "btn btn-primary d-inline-flex align-items-center gap-2"
-                        },
-                        "Create Court"
+                    {className: "d-flex align-items-center justify-content-center gap-2 mb-3"},
+                    h1({className: "display-4 fw-bold text-primary mb-0"}, "Courts"),
+                    div(
+                        {className: "dropdown mt-2"},
+                        button({
+                            id: "clubActionsDropdown",
+                            className: "btn btn-primary rounded-circle d-flex justify-content-center align-items-center",
+                            style: "width: 40px; height: 40px;",
+                            type: "button",
+                            "data-bs-toggle": "dropdown",
+                            "aria-expanded": "false"
+                        }, span({className: "material-icons"}, "more_vert")),
+                        div({
+                                className: "dropdown-menu shadow",
+                                "aria-labelledby": "clubActionsDropdown"
+                            },
+                            a({
+                                    href: `${API_BASE_URL}#court/create/${courts[0].club.id}`,
+                                    className: "dropdown-item d-flex align-items-center gap-2"
+                                },
+                                span({className: "material-icons text-success"}, "add"),
+                                "Create Court"
+                            )
+                        )
                     )
-                )
+                ),
+                p({className: "lead text-muted"}, "Browse available courts and check their details"),
             )
         ),
         div({className: "row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"}, ...courtCards),
@@ -88,6 +105,11 @@ export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNex
 
     mainContent.replaceChildren(content);
     console.log("Courts list rendered successfully with pagination.");
+
+    // Setup dropdown functionality after rendering
+    setTimeout(() => {
+        setupDropdown();
+    }, 0);
 };
 
 
@@ -187,7 +209,7 @@ export const renderCourtDetail = (mainContent, court) => {
         div(
             {className: "d-flex justify-content-between align-items-center mt-5 pt-4 border-top"},
             a({
-                href: `${API_BASE_URL}#clubs`,
+                href: `${API_BASE_URL}#club/${court.club.id}`,
                 className: "btn btn-outline-secondary d-inline-flex align-items-center gap-1",
             },
                 span({ className: "material-icons", style: "font-size: 1.1em;" }),
@@ -263,17 +285,16 @@ export const renderCourtAvailableHours = (mainContent, court, availableHours = n
 };
 
 
-export const renderCreateCourt = (mainContent) => {
+export const renderCreateCourt = (mainContent, cid) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
         const data = {
             name: form.name.value,
-            cid: Number(form.clubId.value)
+            cid: cid
         };
-        const token = form.token.value;
         try {
-            const created = await fetchCreateCourt(data, token);
+            const created = await fetchCreateCourt(data);
             if (!created || !created.id) {
                 throw new Error("The Court created did not return an ID");
             }
@@ -300,16 +321,6 @@ export const renderCreateCourt = (mainContent) => {
                             {className: "mb-3"},
                             label({className: "form-label", for: "name"}, "Court Name"),
                             input({type: "text", name: "name", className: "form-control", required: true, id: "name"})
-                        ),
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "clubId"}, "Club ID"),
-                            input({type: "text", name: "clubId", className: "form-control", required: true, id: "clubId"})
-                        ),
-                        div(
-                            {className: "mb-3"},
-                            label({className: "form-label", for: "token"}, "User Token"),
-                            input({type: "text", name: "token", className: "form-control", required: true, id: "token"})
                         ),
                         button({type: "submit", className: "btn btn-primary"}, "Create"),
                     )
