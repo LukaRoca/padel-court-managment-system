@@ -5,12 +5,13 @@ import {
     fetchRentalsByUid,
 } from "../data/rentalData.js";
 import {
-    renderCreateRental, renderDeleteRental,
+    renderCreateRental,
     renderRentalDetails,
     renderRentalsByCrid, renderRentalsByDate,
     renderRentalsByUid, renderUpdateRental
 } from "../views/rentalView.js";
 import {LIMIT} from "../utils/configs.js";
+
 
 let skipu = 0
 let skipC = 0
@@ -62,7 +63,12 @@ export const getRentalDetail = async (mainContent, params) => {
 }
 
 export const createRental = (mainContent) => {
-    renderCreateRental(mainContent);
+    try {
+        renderCreateRental(mainContent);
+    } catch (error) {
+        console.error("Erro na criação do aluguer", error);
+        renderException(mainContent, error);
+    }
 };
 
 export const updateRental = async (mainContent, params) => {

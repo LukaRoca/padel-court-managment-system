@@ -1,4 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
+import {getToken} from "../utils/token_utilis.js";
 
 export const fetchRentalsByUid = async (userId, limit , skip) => {
     try {
@@ -30,8 +31,9 @@ export const fetchRentalById = async (rentalId) => {
     }
 }
 
-export const fetchCreateRental = async (rentalData, token) => {
+export const fetchCreateRental = async (rentalData) => {
     try {
+        const token = getToken()
         const response = await fetch(`${API_BASE_URL}rental`, {
             method: "POST",
             headers: {
@@ -62,8 +64,9 @@ export const fetchDeleteRental = async (rentalId) => {
     }
 }
 
-export const fetchUpdateRental = async (rentalId, rentalData, token) => {
+export const fetchUpdateRental = async (rentalId, rentalData) => {
     try {
+        const token = getToken()
         const response = await fetch(`${API_BASE_URL}rentalsu/${rentalId}?${rentalData}`, {
             method: "PUT",
             headers: {

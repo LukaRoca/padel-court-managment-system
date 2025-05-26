@@ -1,4 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
+import {getToken} from "../utils/token_utilis.js";
 
 export const fetchCourts = async (clubId, limit, skip) => {
     try {
@@ -20,10 +21,28 @@ export const fetchCourtById = async (courtId) => {
     }
 };
 
-export const fetchCreateCourt = async (courtData, token) => {
+export const fetchCourtAvailableHours = async (courtId, date, clubId) => {
     try {
-        console.log("Enviando courtData:", courtData);
+        if (!courtId || !date || !clubId) {
+            throw new Error('courtId, clubId e date são obrigatórios');
+        }
+        const formattedDate = new Date(date).toISOString().split('T')[0];
+        const url = `http://localhost:8080/rentals/available?date=${formattedDate}&crid=${courtId}&cid=${clubId}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            const responseText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        throw new Error('Erro ao obter horários disponíveis');
+    }
+};
 
+export const fetchCreateCourt = async (courtData) => {
+    try {
+        const token = getToken()
         const response = await fetch(`${API_BASE_URL}courts`, {
             method: "POST",
             headers: {
@@ -32,13 +51,11 @@ export const fetchCreateCourt = async (courtData, token) => {
             },
             body: JSON.stringify(courtData)
         });
-
         if (!response.ok) {
             const errorData = await response.json();
             console.error("Erro ao criar court:", errorData);
             throw new Error(`Erro ${response.status}: ${errorData.message || 'Bad Request'}`);
         }
-
         return await response.json();
     } catch (error) {
         console.error("Erro ao criar court:", error);
