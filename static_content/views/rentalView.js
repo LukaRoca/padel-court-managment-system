@@ -613,9 +613,64 @@ export const renderDeleteRental = (mainContent, setter) => {
 
 
 export const renderRentalsByDate = (mainContent, rentals) => {
-    const content = div(
-        h2("Rentals by Date"),
-    )
+    if (!Array.isArray(rentals) || rentals.length === 0) {
+        mainContent.replaceChildren(
+            div(
+                { className: "container py-5" },
+                h2({ className: "mb-4" }, "Rentals por Data"),
+                p({ className: "text-muted" }, "Não existem alugueres para esta data.")
+            )
+        );
+        return;
+    }
 
-    mainContent.replaceChildren(content)
+    const tableRows = rentals.map(rental =>
+        tr(
+            { className: "align-middle" },
+            td({ className: "px-3 py-3" }, rental.id),
+            td({ className: "px-3 py-3" }, rental.date),
+            td({ className: "px-3 py-3" }, rental.user?.id ?? "-"),
+            td({ className: "px-3 py-3" }, rental.court?.id ?? "-"),
+            td({ className: "px-3 py-3" }, `${rental.duration?.hours ?? "-"}h`),
+            td(
+                { className: "px-3 py-3 text-center" },
+                a({
+                    href: `${API_BASE_URL}#rental/${rental.id}`,
+                    className: "btn btn-sm btn-primary"
+                }, "Detalhes")
+            )
+        )
+    );
+
+    const content = div(
+        { className: "container py-5" },
+        h2({ className: "mb-4" }, "Rentals por Data"),
+        div(
+            { className: "card shadow-sm mb-4" },
+            div(
+                { className: "card-body p-0" },
+                div(
+                    { className: "table-responsive" },
+                    table(
+                        { className: "table table-hover table-striped mb-0" },
+                        thead(
+                            {},
+                            tr(
+                                { className: "bg-light" },
+                                th({ className: "px-3 py-3" }, "ID"),
+                                th({ className: "px-3 py-3" }, "Data"),
+                                th({ className: "px-3 py-3" }, "Utilizador"),
+                                th({ className: "px-3 py-3" }, "Court"),
+                                th({ className: "px-3 py-3" }, "Duração"),
+                                th({ className: "px-3 py-3 text-center" }, "Ações")
+                            )
+                        ),
+                        tbody({}, ...tableRows)
+                    )
+                )
+            )
+        )
+    );
+
+    mainContent.replaceChildren(content);
 };

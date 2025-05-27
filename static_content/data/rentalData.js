@@ -84,6 +84,7 @@ export const fetchUpdateRental = async (rentalId, rentalData) => {
     export const fetchRentalsByDate = async (date) => {
         try{
             const response = await fetch(`${API_BASE_URL}rental/date`);
+            console.log(`Response from fetchRentalsByDate:`, response);
             return await response.json();
         } catch (error) {
             console.error(`Erro searching rentals with this date ${date}:`, error);
