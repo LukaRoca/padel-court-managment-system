@@ -30,7 +30,7 @@ export const renderUserDetail = (mainContent, user) => {
                         {className: "card-body p-4"},
                         div(
                             {className: "text-center py-4 mb-4 bg-light rounded-3 border-bottom"},
-                            span({className: "material-icons display-1 text-primary"}, "Image")
+                            span({className: "material-icons display-1 text-primary"}, "image")
                         ),
                         div(
                             {className: "row mb-3 pb-3 border-bottom"},
@@ -67,12 +67,6 @@ export const renderUserDetail = (mainContent, user) => {
                     )
                 )
             ),
-
-            a({
-                href: `${API_BASE_URL}#user
-                `,
-                textContent : `Users`
-            })
         ),
 
         div(

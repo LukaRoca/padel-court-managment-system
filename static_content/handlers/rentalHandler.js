@@ -81,13 +81,21 @@ export const updateRental = async (mainContent, params) => {
     }
 }
 
-export const searchRentalsByDate = async (mainContent, params) => {
-    try{
-        const date = params.date;
+export const searchRentalsByDate = async (mainContent, params = {}) => {
+    try {
+        const { date } = params;
         const rentals = await fetchRentalsByDate(date);
-        renderRentalsByDate(mainContent, rentals.list)
+        renderRentalsByDate(mainContent, rentals);
+    } catch (error) {
+        console.error("Erro ao encontrar rentals por data:", error);
+        renderException(mainContent, error);
     }
-    catch (error) {
+};
+
+export const goToRentalByDate = (mainContent, params) => {
+    try{
+        renderRentalsByDate(mainContent);
+    }catch (error) {
         console.error("Erro ao encontrar rentals:", error);
         renderException(mainContent, error);
     }

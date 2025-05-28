@@ -17,14 +17,21 @@ import {
     input,
     label,
     select,
-    option, main
+    option, main, strong, h5
 } from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
-import {fetchCreateRental, fetchDeleteRental, fetchRentalById, fetchUpdateRental} from "../data/rentalData.js";
+import {
+    fetchCreateRental,
+    fetchDeleteRental,
+    fetchRentalById,
+    fetchRentalsByDate,
+    fetchUpdateRental
+} from "../data/rentalData.js";
 import {setupDropdown} from "../utils/utils.js";
 import {getHashParams} from "../utils/utils.js";
 import {fetchCourts} from "../data/courtData.js";
 import {fetchClubs} from "../data/clubData.js";
+import {searchRentalsByDate} from "../handlers/rentalHandler.js";
 
 export const renderRentalDetails = (mainContent, rental) => {
     console.log("renderRentalDetails called with mainContent:", mainContent);
@@ -612,61 +619,86 @@ export const renderDeleteRental = (mainContent, setter) => {
 }
 
 
-export const renderRentalsByDate = (mainContent, rentals) => {
-    if (!Array.isArray(rentals) || rentals.length === 0) {
-        mainContent.replaceChildren(
+export const renderRentalsByDate = (mainContent, rentals = null) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const date = form.date.value;
+        try {
+            await searchRentalsByDate(mainContent, { date });
+        } catch (error) {
+            alert("Error searching rentals: " + (error.message || error));
+        }
+    };
+
+    const renderRentalsList = (rentals) => {
+        if (!rentals || rentals.length === 0) {
+            return div(
+                {className: "alert alert-warning text-center mt-4"},
+                "No rentals found for the selected date."
+            );
+        }
+
+        return div(
+            {className: "mt-4"},
+            h3({className: "mb-3 text-success"}, `Found ${rentals.length} rental${rentals.length === 1 ? '' : 's'}`),
             div(
-                { className: "container py-5" },
-                h2({ className: "mb-4" }, "Rentals por Data"),
-                p({ className: "text-muted" }, "Não existem alugueres para esta data.")
+                {className: "row"},
+                ...rentals.map(rental =>
+                    div(
+                        {className: "col-md-6 col-lg-4 mb-3"},
+                        div(
+                            {className: "card h-100 shadow-sm"},
+                            div(
+                                {className: "card-body"},
+                                rental.rid && h5({className: "card-title"}, `Rental #${rental.rid}`),
+                                rental.user ?
+                                    p({className: "card-text"}, strong({}, "User: "), rental.user.name || rental.user.username || `User ${rental.user.id || rental.user.uid}`) : null,
+                                rental.court ?
+                                    p({className: "card-text"}, strong({}, "Court: "), rental.court.name || rental.court.location || `Court ${rental.court.id || rental.court.cid}`) : null,
+                                rental.date ?
+                                    p({className: "card-text"}, strong({}, "Date: "), new Date(rental.date).toLocaleDateString()) : null,
+                                rental.duration ?
+                                    p({className: "card-text"}, strong({}, "Duration: "), `${rental.duration.hours || 0}h `) : null,
+                            )
+                        )
+                    )
+                )
             )
         );
-        return;
-    }
-
-    const tableRows = rentals.map(rental =>
-        tr(
-            { className: "align-middle" },
-            td({ className: "px-3 py-3" }, rental.id),
-            td({ className: "px-3 py-3" }, rental.date),
-            td({ className: "px-3 py-3" }, rental.user?.id ?? "-"),
-            td({ className: "px-3 py-3" }, rental.court?.id ?? "-"),
-            td({ className: "px-3 py-3" }, `${rental.duration?.hours ?? "-"}h`),
-            td(
-                { className: "px-3 py-3 text-center" },
-                a({
-                    href: `${API_BASE_URL}#rental/${rental.id}`,
-                    className: "btn btn-sm btn-primary"
-                }, "Detalhes")
-            )
-        )
-    );
+    };
 
     const content = div(
-        { className: "container py-5" },
-        h2({ className: "mb-4" }, "Rentals por Data"),
+        {className: "container py-5"},
         div(
-            { className: "card shadow-sm mb-4" },
+            {className: "row justify-content-center"},
             div(
-                { className: "card-body p-0" },
+                {className: "col-md-8"},
                 div(
-                    { className: "table-responsive" },
-                    table(
-                        { className: "table table-hover table-striped mb-0" },
-                        thead(
-                            {},
-                            tr(
-                                { className: "bg-light" },
-                                th({ className: "px-3 py-3" }, "ID"),
-                                th({ className: "px-3 py-3" }, "Data"),
-                                th({ className: "px-3 py-3" }, "Utilizador"),
-                                th({ className: "px-3 py-3" }, "Court"),
-                                th({ className: "px-3 py-3" }, "Duração"),
-                                th({ className: "px-3 py-3 text-center" }, "Ações")
+                    {className: "card p-4 border rounded shadow-sm"},
+                    h2({className: "mb-4 text-center"}, "Search Rentals by Date"),
+                    form(
+                        {onsubmit: handleSubmit},
+                        div(
+                            {className: "row g-3 align-items-end"},
+                            div(
+                                {className: "col-md-8"},
+                                label({className: "form-label", for: "date"}, "Select Date"),
+                                input({
+                                    type: "date",
+                                    name: "date",
+                                    className: "form-control",
+                                    required: true,
+                                    id: "date"
+                                })
+                            ),
+                            div(
+                                {className: "col-md-4"},
+                                button({type: "submit", className: "btn btn-primary w-100"}, "Search")
                             )
-                        ),
-                        tbody({}, ...tableRows)
-                    )
+                        )
+                    ),
+                    rentals !== null ? renderRentalsList(rentals) : null
                 )
             )
         )
