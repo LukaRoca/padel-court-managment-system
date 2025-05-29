@@ -2,32 +2,32 @@ package pt.isel.ls.storage.dataPostgres
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.UserIStorage
-import pt.isel.ls.webApi.dto.UserDetails
-import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import java.util.*
 import javax.sql.DataSource
 
 class UserDataPostgres (private val dataSource : DataSource) : UserIStorage {
-    override fun createUser(name: Name, email: Email) : User {
+    override fun createUser(name: Name, email: Email, password: Password) : User {
         val token = UUID.randomUUID()
-        val sql = "INSERT INTO users(token, name, email) VALUES (?, ?,?)"
+        val hash = password.hash()
+        val sql = "INSERT INTO users(token, name, email, password) VALUES (?, ?,?,?)"
         dataSource.connection.use {
             val stmt = it.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
             stmt.setObject(1, token)
             stmt.setString(2, name.name)
             stmt.setString(3, email.value)
+            stmt.setString(4, hash)
             if (stmt.executeUpdate() == 0) {
                 throw SQLException("Error while creating a new user.")
             }
             val keys = stmt.generatedKeys
             keys.next()
-            return User(Id(keys.getInt(1)), name, email, Token(token.toString()))
+            return User(Id(keys.getInt(1)), name, email, Token(token.toString()), password)
         }
     }
     override fun getUserById(userId: Id): User? {
-        val sql = "SELECT uid, name, email, token FROM users WHERE uid = ?"
+        val sql = "SELECT uid, name, email, token, password FROM users WHERE uid = ?"
         dataSource.connection.use {
             val stmt = it.prepareStatement(sql)
             stmt.setInt(1, userId.id)
@@ -37,7 +37,8 @@ class UserDataPostgres (private val dataSource : DataSource) : UserIStorage {
                     Id(rs.getInt("uid")),
                     Name(rs.getString("name")),
                     Email(rs.getString("email")),
-                    Token(rs.getString("token"))
+                    Token(rs.getString("token")),
+                    Password(rs.getString("password"))
                 )
             }
         }
@@ -55,7 +56,8 @@ class UserDataPostgres (private val dataSource : DataSource) : UserIStorage {
                     Id(rs.getInt("uid")),
                     Name(rs.getString("name")),
                     Email(rs.getString("email")),
-                    Token(rs.getString("token"))
+                    Token(rs.getString("token")),
+                    Password(rs.getString("password"))
                 )
             }
         }
@@ -63,7 +65,8 @@ class UserDataPostgres (private val dataSource : DataSource) : UserIStorage {
     }
 
     override fun getAllUsers(): List<User> {
-        val sql = "SELECT * FROM users"
+        val sql = "SELECT uid, name, email, token, password FROM users"
+
         val users = mutableListOf<User>()
         dataSource.connection.use {
             val stmt = it.prepareStatement(sql)
@@ -74,7 +77,8 @@ class UserDataPostgres (private val dataSource : DataSource) : UserIStorage {
                         Id(rs.getInt("uid")),
                         Name(rs.getString("name")),
                         Email(rs.getString("email")),
-                        Token(rs.getString("token"))
+                        Token(rs.getString("token")),
+                        Password(rs.getString("password"))
                     )
                 )
             }

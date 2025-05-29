@@ -2,7 +2,6 @@
 
     import pt.isel.ls.domain.*
     import pt.isel.ls.storage.iStorage.RentalIStorage
-    import java.sql.Connection
     import java.sql.SQLException
     import java.sql.Statement
     import javax.sql.DataSource
@@ -23,7 +22,8 @@
                 users.uid as u_id,
                 users.token as u_token,
                 users.name as u_name,
-                users.email as u_email
+                users.email as u_email,
+                users.password as u_password
                 FROM court
                 INNER JOIN court ON rental.court = court.crid
                 INNER JOIN club ON court.club = club.cid
@@ -48,7 +48,8 @@
                 users.uid as u_id,
                 users.token as u_token,
                 users.name as u_name,
-                users.email as u_email
+                users.email as u_email,
+                users.password as u_password
                 FROM rental
                 INNER JOIN court ON rental.court = court.crid
                 INNER JOIN club ON court.club = club.cid
@@ -67,7 +68,8 @@
                             Id(rs.getInt("u_id")),
                             Name(rs.getString("u_name")),
                             Email(rs.getString("u_email")),
-                            Token(rs.getString("u_token"))
+                            Token(rs.getString("u_token")),
+                            Password(rs.getString("u_password"))
                         ),
                         Court(
                             Id(rs.getInt("cr_rid")),
@@ -79,7 +81,8 @@
                                     Id(rs.getInt("u_id")),
                                     Name(rs.getString("u_name")),
                                     Email(rs.getString("u_email")),
-                                    Token(rs.getString("u_token"))
+                                    Token(rs.getString("u_token")),
+                                    Password(rs.getString("u_password"))
                                 ))
                             )
                         )
@@ -126,7 +129,8 @@
                 users.uid as u_id,
                 users.token as u_token,
                 users.name as u_name,
-                users.email as u_email
+                users.email as u_email,
+                users.password as u_password
                 FROM rental
                 INNER JOIN court ON rental.court = court.crid
                 INNER JOIN club ON court.club = club.cid
@@ -146,7 +150,8 @@
                                 Id(rs.getInt("u_id")),
                                 Name(rs.getString("u_name")),
                                 Email(rs.getString("u_email")),
-                                Token(rs.getString("u_token"))
+                                Token(rs.getString("u_token")),
+                                Password(rs.getString("u_password"))
                             ),
                             Court(
                                 Id(rs.getInt("cr_rid")),
@@ -158,7 +163,8 @@
                                         Id(rs.getInt("u_id")),
                                         Name(rs.getString("u_name")),
                                         Email(rs.getString("u_email")),
-                                        Token(rs.getString("u_token"))
+                                        Token(rs.getString("u_token")),
+                                        Password(rs.getString("u_password"))
                                     ))
                                 )
                             )
@@ -187,7 +193,8 @@
             users.uid as u_id,
             users.token as u_token,
             users.name as u_name,
-            users.email as u_email
+            users.email as u_email,
+            users.password as u_password
             FROM rental
             INNER JOIN court ON rental.court = court.crid
             INNER JOIN club ON court.club = club.cid
@@ -208,7 +215,8 @@
                                 Id(rs.getInt("u_id")),
                                 Name(rs.getString("u_name")),
                                 Email(rs.getString("u_email")),
-                                Token(rs.getString("u_token"))
+                                Token(rs.getString("u_token")),
+                                Password(rs.getString("u_password"))
                             ),
                             court
                         )
@@ -234,7 +242,8 @@
             users.uid as u_id,
             users.token as u_token,
             users.name as u_name,
-            users.email as u_email
+            users.email as u_email,
+            users.password as u_password
             FROM rental
             INNER JOIN court ON rental.court = court.crid
             INNER JOIN club ON court.club = club.cid
@@ -255,7 +264,8 @@
                                 Id(rs.getInt("u_id")),
                                 Name(rs.getString("u_name")),
                                 Email(rs.getString("u_email")),
-                                Token(rs.getString("u_token"))
+                                Token(rs.getString("u_token")),
+                                Password(rs.getString("u_password"))
                             ),
                             court
                         )
@@ -266,18 +276,19 @@
         }
 
         override fun getAvailableHours(club: Club, court: Court, date: Date): List<Int>? {
-            val rentals = getRentals(club, court, date)
+            val rentals = getRentalsWithDate(date)
+                .filter { it.court.id == court.id && it.court.club.id == club.id }
             val availableHours = mutableListOf<Int>()
             val occupiedHours = mutableSetOf<Int>()
 
-            rentals?.forEach { rental ->
+            rentals.forEach { rental ->
                 val startHour = rental.duration.initDuration
                 val endHour = rental.duration.endDuration
                 for (hour in startHour until endHour) {
                     occupiedHours.add(hour)
                 }
             }
-            for (hour in 0..24) {
+            for (hour in 0 until 24) {
                 if (hour !in occupiedHours) {
                     availableHours.add(hour)
                 }
@@ -342,7 +353,8 @@
                users.uid as u_id,
                users.token as u_token,
                users.name as u_name,
-               users.email as u_email
+               users.email as u_email,
+               users.password as u_password
         FROM rental
         INNER JOIN court ON rental.court = court.crid
         INNER JOIN club ON court.club = club.cid
@@ -363,7 +375,8 @@
                                 Id(rs.getInt("u_id")),
                                 Name(rs.getString("u_name")),
                                 Email(rs.getString("u_email")),
-                                Token(rs.getString("u_token"))
+                                Token(rs.getString("u_token")),
+                                Password(rs.getString("u_password"))
                             ),
                             Court(
                                 Id(rs.getInt("cr_rid")),
@@ -376,7 +389,8 @@
                                             Id(rs.getInt("u_id")),
                                             Name(rs.getString("u_name")),
                                             Email(rs.getString("u_email")),
-                                            Token(rs.getString("u_token"))
+                                            Token(rs.getString("u_token")),
+                                            Password(rs.getString("u_password"))
                                         )
                                     )
                                 )

@@ -50,7 +50,7 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/rental
-Authorization: Bearer 46fc162a-309d-4609-8307-3bf81bb55b52
+Authorization: Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19
 Content-Type: application/json
 
 {

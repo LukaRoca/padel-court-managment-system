@@ -2,8 +2,8 @@ package pt.isel.ls.storage.dataPostgres
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.storage.iStorage.ClubIStorage
+import sun.security.util.Password
 
-import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import javax.sql.DataSource
@@ -17,7 +17,8 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubIStorage {
             users.uid as u_id,
             users.name as u_name,
             users.email as u_email,
-            users.token as u_token
+            users.token as u_token,
+            users.password as u_password
             FROM club
             INNER JOIN users ON club.owner = users.uid
             WHERE club.cid = ?
@@ -28,8 +29,11 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubIStorage {
             stmt.setInt(1, cid.id)
             val rs = stmt.executeQuery()
             if (rs.next()) {
-                val owner = User(Id(rs.getInt("u_id")), Name(rs.getString("u_name")),
-                    Email(rs.getString("u_email")), Token(rs.getString("u_token")))
+                val owner = User(
+                    Id(rs.getInt("u_id")), Name(rs.getString("u_name")),
+                    Email(rs.getString("u_email")), Token(rs.getString("u_token")),
+                    Password(rs.getString("u_password"))
+                )
                 return Club(
                     Id(rs.getInt("c_id")),
                     Name(rs.getString("c_name")),
@@ -66,7 +70,8 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubIStorage {
             users.uid as u_id,
             users.name as u_name,
             users.email as u_email,
-            users.token as u_token
+            users.token as u_token,
+            users.password as u_password
             FROM club
             INNER JOIN users ON club.owner = users.uid
             """.trimIndent()
@@ -75,8 +80,11 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubIStorage {
             val stmt = it.prepareStatement(sql)
             val rs = stmt.executeQuery()
             while (rs.next()) {
-                val owner = User(Id(rs.getInt("u_id")), Name(rs.getString("u_name")),
-                    Email(rs.getString("u_email")), Token(rs.getString("u_token")))
+                val owner = User(
+                    Id(rs.getInt("u_id")), Name(rs.getString("u_name")),
+                    Email(rs.getString("u_email")), Token(rs.getString("u_token")),
+                    Password(rs.getString("u_password"))
+                )
                 clubs.add(
                     Club(
                         Id(rs.getInt("c_id")),
@@ -97,7 +105,8 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubIStorage {
                users.uid as u_id,
                users.name as u_name,
                users.email as u_email,
-               users.token as u_token
+               users.token as u_token,
+                users.password as u_password
         FROM club
         INNER JOIN users ON club.owner = users.uid
         WHERE club.name = ?
@@ -112,7 +121,8 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubIStorage {
                     Id(rs.getInt("u_id")),
                     Name(rs.getString("u_name")),
                     Email(rs.getString("u_email")),
-                    Token(rs.getString("u_token"))
+                    Token(rs.getString("u_token")),
+                    Password(rs.getString("u_password"))
                 )
                 return Club(
                     Id(rs.getInt("c_id")),

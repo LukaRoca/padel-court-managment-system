@@ -3,7 +3,8 @@ create table users (
     uid serial primary key,
     token varchar(255) unique not null,
     name varchar(255) not null,
-    email varchar(255) unique not null
+    email varchar(255) unique not null,
+    password varchar(255) not null
 );
 
 create table club (
