@@ -9,6 +9,7 @@ import pt.isel.ls.domain.User
 data class UserInput(
     val name : String,
     val email : String,
+    val password : String
 )
 
 @Serializable
@@ -23,4 +24,16 @@ data class UserDetails(
     val name : String,
     val email : String,
     val token : String
+)
+
+@Serializable
+data class UserLoginInput(
+    val email: String,
+    val password: String
+)
+
+@Serializable
+data class UserLoginOutput(
+    val id: Int,
+    val token: String
 )

@@ -1,18 +1,16 @@
 package pt.isel.ls.webApi
 
 import kotlinx.serialization.json.Json
-import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
-import org.http4k.routing.bind
 import org.http4k.routing.path
-import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import pt.isel.ls.domain.Email
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
+import pt.isel.ls.domain.Password
 import pt.isel.ls.isNotNegative
 import pt.isel.ls.validateInt
 import pt.isel.ls.webApi.dto.UserDetails
@@ -44,10 +42,13 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
     fun createUser(request: Request): Response = useWithException {
         logRequest(request)
         val response = Json.decodeFromString<UserInput>(request.bodyString())
-        val user = userServices.createUser(Name(response.name), Email(response.email))
-        Response(CREATED).json(UserOutput(user.uid.id, user.token.token))
+        try {
+            val user = userServices.createUser(Name(response.name), Email(response.email), Password(response.password))
+            Response(CREATED).json(UserOutput(user.uid.id, user.token.token))
+        } catch (e: Exception) {
+            throw e
+        }
     }
-
 
     fun getAllUsers(request: Request): Response = useWithException {
         logRequest(request)
@@ -57,5 +58,15 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
         val paginatedResult = userServices.getAllUsers(limit, skip)
 
         Response(OK).json(paginatedResult)
+    }
+    fun loginUser(request: Request): Response = useWithException {
+        logRequest(request)
+        val response = Json.decodeFromString<UserInput>(request.bodyString())
+        try {
+            val user = userServices.loginUser(Email(response.email), Password(response.password))
+            Response(OK).json(UserOutput(user.uid.id, user.token.token))
+        } catch (e: Exception) {
+            throw e
+        }
     }
 }

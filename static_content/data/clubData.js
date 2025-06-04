@@ -1,4 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
+import {getToken} from "../utils/token_utilis.js";
 
 export const fetchClubs = async (limit, skip) => {
     try {
@@ -29,3 +30,37 @@ export const fetchClubsByName = async (clubName) => {
         throw error;
     }
 };
+
+export const fetchCreateClubs = async (clubData) => {
+    try {
+        const token = getToken()
+        const response = await fetch(`${API_BASE_URL}club`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(clubData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error(`Error creating club with name ${clubData.name}:`, error);
+        throw error;
+    }
+}
+
+
+export const fetchDeleteClub = async (clubId) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}clubd/${clubId}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+        return await response.json()
+    } catch (error) {
+        console.error(`Error deleting a club`, error);
+        throw error;
+    }
+}

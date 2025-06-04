@@ -18,7 +18,6 @@ fun <T> List<T>.paginate(limit : Int, skip: Int) : List<T> {
 
 fun <T> List<T>.paginateWithInfo(limit: Int, skip: Int): PaginatedResult<T> {
     val paginatedList = this.paginate(limit, skip)
-    println(paginatedList)
     val hasPrev = skip > 0
     val hasNext = skip + limit < this.size
     return PaginatedResult(paginatedList, hasNext, hasPrev )

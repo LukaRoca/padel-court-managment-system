@@ -1,4 +1,5 @@
 package pt.isel.ls.domain
+import org.mindrot.jbcrypt.BCrypt
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -43,4 +44,15 @@ data class Date( val value: String) {
             throw IllegalArgumentException("Date must be in format YYYY-MM-DD and be a valid date")
         }
     }
+}
+data class Password(val value: String) {
+    init {
+        require(value.isNotBlank()) { "Password must not be empty" }
+        if (!value.startsWith("\$2a\$")) {
+            require(value.length in 8..50) { "Password must be between 8 and 50 characters" }
+        }
+    }
+
+    fun hash(): String = BCrypt.hashpw(value, BCrypt.gensalt())
+    fun verify(hashed: String): Boolean = BCrypt.checkpw(value, hashed)
 }

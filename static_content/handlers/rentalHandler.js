@@ -1,11 +1,17 @@
 import {renderException} from "../views/Exeptions.js";
-import {fetchRentalById, fetchRentalsByCrid, fetchRentalsByUid} from "../data/rentalData.js";
 import {
+    fetchRentalById,
+    fetchRentalsByCrid, fetchRentalsByDate,
+    fetchRentalsByUid,
+} from "../data/rentalData.js";
+import {
+    renderCreateRental,
     renderRentalDetails,
-    renderRentalsByCrid,
-    renderRentalsByUid
+    renderRentalsByCrid, renderRentalsByDate,
+    renderRentalsByUid, renderUpdateRental
 } from "../views/rentalView.js";
 import {LIMIT} from "../utils/configs.js";
+
 
 let skipu = 0
 let skipC = 0
@@ -55,3 +61,43 @@ export const getRentalDetail = async (mainContent, params) => {
         renderException(mainContent, error);
     }
 }
+
+export const createRental = (mainContent) => {
+    try {
+        renderCreateRental(mainContent);
+    } catch (error) {
+        console.error("Erro na criação do aluguer", error);
+        renderException(mainContent, error);
+    }
+};
+
+export const updateRental = async (mainContent, params) => {
+    try {
+        const rentalId = params.rid;
+        renderUpdateRental(mainContent, rentalId)
+    } catch (error) {
+        console.error("Erro ao dar Update ao rental: ", error);
+        renderException(mainContent, error);
+    }
+}
+
+export const searchRentalsByDate = async (mainContent, params = {}) => {
+    try {
+        const { date } = params;
+        const rentals = await fetchRentalsByDate(date);
+        renderRentalsByDate(mainContent, rentals);
+    } catch (error) {
+        console.error("Erro ao encontrar rentals por data:", error);
+        renderException(mainContent, error);
+    }
+};
+
+export const goToRentalByDate = (mainContent, params) => {
+    try{
+        renderRentalsByDate(mainContent);
+    }catch (error) {
+        console.error("Erro ao encontrar rentals:", error);
+        renderException(mainContent, error);
+    }
+}
+

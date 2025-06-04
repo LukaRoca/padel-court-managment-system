@@ -3,14 +3,15 @@ Content-Type: application/json
 
 {
   "name": "Luka Roca",
-  "email": "lukastroca@gmail.com"
+  "email": "lukastrocaaaaa@gmail.com",
+  "password": "lukaroca1rfewfewvew23456"
 }
 ###
 GET http://localhost:8080/users/1
 
 ###
 POST http://localhost:8080/club
-Authorization: Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c
+Authorization: Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19
 Content-Type: application/json
 
 {
@@ -23,11 +24,11 @@ Accept: application/json
 
 ###
 POST http://localhost:8080/courts
-Authorization: Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c
+Authorization: Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19
 Content-Type: application/json
 
 {
-  "name": "Campo Luka1",
+  "name": "Campo Lukaaaa1",
   "cid": 1
 }
 

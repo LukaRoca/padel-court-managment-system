@@ -1,4 +1,5 @@
 import {API_BASE_URL} from "../utils/configs.js";
+import {getToken} from "../utils/token_utilis.js";
 
 export const fetchRentalsByUid = async (userId, limit , skip) => {
     try {
@@ -29,3 +30,68 @@ export const fetchRentalById = async (rentalId) => {
         throw error;
     }
 }
+
+export const fetchCreateRental = async (rentalData) => {
+    try {
+        const token = getToken()
+        const response = await fetch(`${API_BASE_URL}rental`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(rentalData)
+        });
+        return await response.json();
+    } catch (error) {
+        console.error(`Error creating rental`, error);
+        throw error;
+    }
+}
+
+export const fetchDeleteRental = async (rentalId) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}rentalsd/${rentalId}`, {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+        return await response.json()
+    } catch (error) {
+        console.error(`Error deleting a rental`, error);
+        throw error;
+    }
+}
+
+export const fetchUpdateRental = async (rentalId, rentalData) => {
+    try {
+        const token = getToken()
+        const response = await fetch(`${API_BASE_URL}rentalsu/${rentalId}?${rentalData}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+        return await response.json()
+    } catch (error) {
+        console.error(`Error Updating a rental`, error)
+        throw error;
+    }
+}
+
+    export const fetchRentalsByDate = async (date) => {
+        try{
+            const response = await fetch(`${API_BASE_URL}rental/date?date=${date}`);
+            console.log(`Response from fetchRentalsByDate:`, response);
+            const data = await response.json();
+            console.log(`Data from fetchRentalsByDate:`, data);
+            return data;
+        } catch (error) {
+            console.error(`Erro searching rentals with this date ${date}:`, error);
+            throw error;
+        }
+    }
+
+

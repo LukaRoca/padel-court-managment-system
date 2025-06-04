@@ -6,14 +6,12 @@ import java.util.*
 
 object UserDataMem : UserIStorage {
 
-    private val users = mutableListOf(
-        User(Id(1), Name("Michael Jackson"), Email("michael@gmail.com"), Token("42449fc7-0006-458d-b4dc-324d5583f634"))
-    )
+    private val users = mutableListOf<User>()
     private var uid = 2
 
-    override fun createUser(name: Name, email: Email) : User {
+    override fun createUser(name: Name, email: Email,password: Password) : User {
         val token = UUID.randomUUID().toString()
-        val newUser = User(Id(uid), name, email, Token(token))
+        val newUser = User(Id(uid), name, email, Token(token), password)
         uid++
         users.add(newUser)
         return newUser

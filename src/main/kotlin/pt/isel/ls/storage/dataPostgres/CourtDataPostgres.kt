@@ -1,9 +1,6 @@
 package pt.isel.ls.storage.dataPostgres
 import pt.isel.ls.domain.*
-import pt.isel.ls.isUserAuthorized
-import pt.isel.ls.storage.dataMem.UserDataMem.getUserByToken
 import pt.isel.ls.storage.iStorage.CourtIStorage
-import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import javax.sql.DataSource
@@ -37,7 +34,8 @@ class CourtDataPostgres (private val dataSource: DataSource) : CourtIStorage{
             users.uid as u_id,
             users.token as u_token,
             users.name as u_name,
-            users.email as u_email
+            users.email as u_email,
+            users.password as u_password
             FROM court
             INNER JOIN club ON court.club = club.cid
             INNER JOIN users ON club.owner = users.uid
@@ -55,7 +53,8 @@ class CourtDataPostgres (private val dataSource: DataSource) : CourtIStorage{
                             Id(rs.getInt("u_id")),
                             Name(rs.getString("u_name")),
                             Email(rs.getString("u_email")),
-                            Token(rs.getString("u_token"))
+                            Token(rs.getString("u_token")),
+                            Password(rs.getString("u_password"))
                         )
                     )
                 )
@@ -80,7 +79,8 @@ class CourtDataPostgres (private val dataSource: DataSource) : CourtIStorage{
             users.uid as u_id,
             users.token as u_token,
             users.name as u_name,
-            users.email as u_email
+            users.email as u_email,
+            users.password as u_password
             FROM court
             INNER JOIN club ON court.club = club.cid
             INNER JOIN users ON club.owner = users.uid
@@ -104,7 +104,8 @@ class CourtDataPostgres (private val dataSource: DataSource) : CourtIStorage{
                                     Id(rs.getInt("u_id")),
                                     Name(rs.getString("u_name")),
                                     Email(rs.getString("u_email")),
-                                    Token(rs.getString("u_token"))
+                                    Token(rs.getString("u_token")),
+                                    Password(rs.getString("u_password"))
                                 )
                             )
                         )

@@ -3,7 +3,8 @@ create table users (
     uid serial primary key,
     token varchar(255) unique not null,
     name varchar(255) not null,
-    email varchar(255) unique not null
+    email varchar(255) unique not null,
+    password varchar(255) not null
 );
 
 create table club (
@@ -16,7 +17,7 @@ create table club (
 create table court (
     crid serial unique primary key,
     name varchar(255) not null,
-    club int references club(cid)
+    club int references club(cid) on delete cascade
 );
 
 create table rental (
@@ -25,5 +26,5 @@ create table rental (
     initDuration int not null,
     endDuration int not null,
     usr int references users(uid),
-    court int references court(crid)
+    court int references court(crid) on delete cascade
 )

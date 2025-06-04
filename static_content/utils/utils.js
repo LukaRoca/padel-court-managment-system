@@ -40,3 +40,31 @@ export const fetchAndRenderClubs = async (mainContent, fetchFunction, params = {
         renderException(mainContent, error);
     }
 };
+
+// Function to handle the dropdown menu for club actions
+ export const setupDropdown = () => {
+    // Find the dropdown toggle button after rendering
+    const dropdownToggle = document.getElementById('clubActionsDropdown');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    if (dropdownToggle && dropdownMenu) {
+        dropdownToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdownToggle.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    }
+};
+
+// Função utilitária para ler parâmetros da hash
+export function getHashParams() {
+    const hash = window.location.hash.split('?')[1];
+    if (!hash) return {};
+    return Object.fromEntries(new URLSearchParams(hash));
+}

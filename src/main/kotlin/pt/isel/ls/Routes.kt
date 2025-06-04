@@ -12,13 +12,15 @@ class Routes (api: WebApi) {
         routes(
             "users" bind Method.POST to api.user::createUser,
             "users/{id}" bind Method.GET to api.user::getUserById,
-            "users" bind Method.GET to api.user::getAllUsers
+            "users" bind Method.GET to api.user::getAllUsers,
+            "users/login" bind Method.GET to api.user::loginUser,
         )
     private val clubRoutes = routes(
         "club" bind Method.POST to api.club::createClub,
         "clubs/{id}" bind Method.GET to api.club::getClubById,
         "clubs" bind Method.GET to api.club::getClubs,
-        "clubs/name/{name}" bind Method.GET to api.club::getClubByName
+        "clubs/name/{name}" bind Method.GET to api.club::getClubByName,
+        "clubd/{id}" bind Method.DELETE to api.club::deleteClub,
     )
     private val courtRoutes = routes(
         "courts" bind Method.POST to api.court::createCourt,
@@ -34,7 +36,8 @@ class Routes (api: WebApi) {
         "rentals" bind Method.GET to api.rental::getRentals,
         "rentals/courts/{crid}" bind Method.GET to api.rental::getRentalsOfCourt,
         "rentalsd/{id}" bind Method.DELETE to api.rental::deleteRental,
-        "rentalsu/{id}" bind Method.PUT to api.rental::updateRental
+        "rentalsu/{id}" bind Method.PUT to api.rental::updateRental,
+        "rental/date" bind Method.GET to api.rental::getRentalsWithDate
     )
 
     val app =

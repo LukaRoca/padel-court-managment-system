@@ -10,10 +10,8 @@ info:
 paths:
   /users:
     post:
-      tags:
-        - 'Users'
+      tags: [ 'Users' ]
       summary: 'Create a new user'
-      description: 'Create a new user in the system'
       operationId: 'createUser'
       requestBody:
         required: true
@@ -34,12 +32,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
     get:
-      tags:
-        - 'Users'
+      tags: [ 'Users' ]
       summary: 'Get all users'
-      description: 'Retrieve a list of all users in the system'
       operationId: 'getAllUsers'
       responses:
         '200':
@@ -47,9 +42,9 @@ paths:
           content:
             application/json:
               schema:
-                type: 'array'
+                type: array
                 items:
-                  $ref: '#/components/schemas/User'
+                  $ref: '#/components/schemas/UserDetails'
         '404':
           description: 'No users found'
           content:
@@ -59,25 +54,22 @@ paths:
 
   /users/{id}:
     get:
-      tags:
-        - 'Users'
+      tags: [ 'Users' ]
       summary: 'Get user by ID'
-      description: 'Retrieve a user by their unique identifier'
       operationId: 'getUserById'
       parameters:
         - name: 'id'
           in: 'path'
-          description: 'ID of the user to retrieve'
           required: true
           schema:
-            type: 'integer'
+            type: integer
       responses:
         '200':
           description: 'User found'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserDetails'
         '404':
           description: 'User not found'
           content:
@@ -93,10 +85,8 @@ paths:
 
   /club:
     post:
-      tags:
-        - 'Clubs'
+      tags: [ 'Clubs' ]
       summary: 'Create a new club'
-      description: 'Create a new club in the system'
       operationId: 'createClub'
       security:
         - bearerAuth: [ ]
@@ -128,10 +118,8 @@ paths:
 
   /clubs:
     get:
-      tags:
-        - 'Clubs'
+      tags: [ 'Clubs' ]
       summary: 'Get all clubs'
-      description: 'Retrieve a list of all clubs'
       operationId: 'getClubs'
       responses:
         '200':
@@ -139,9 +127,9 @@ paths:
           content:
             application/json:
               schema:
-                type: 'array'
+                type: array
                 items:
-                  $ref: '#/components/schemas/Club'
+                  $ref: '#/components/schemas/ClubDetails'
         '404':
           description: 'No clubs found'
           content:
@@ -151,25 +139,22 @@ paths:
 
   /clubs/{id}:
     get:
-      tags:
-        - 'Clubs'
+      tags: [ 'Clubs' ]
       summary: 'Get club by ID'
-      description: 'Retrieve a club by its unique identifier'
       operationId: 'getClubById'
       parameters:
         - name: 'id'
           in: 'path'
-          description: 'ID of the club to retrieve'
           required: true
           schema:
-            type: 'integer'
+            type: integer
       responses:
         '200':
           description: 'Club found'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Club'
+                $ref: '#/components/schemas/ClubDetails'
         '404':
           description: 'Club not found'
           content:
@@ -182,13 +167,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      tags: [ 'Clubs' ]
+      summary: 'Delete club by ID'
+      operationId: 'deleteClub'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Club deleted or not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
 
   /courts:
     post:
-      tags:
-        - 'Courts'
+      tags: [ 'Courts' ]
       summary: 'Create a new court'
-      description: 'Create a new court in the system'
       operationId: 'createCourt'
       security:
         - bearerAuth: [ ]
@@ -220,25 +220,22 @@ paths:
 
   /courts/{id}:
     get:
-      tags:
-        - 'Courts'
+      tags: [ 'Courts' ]
       summary: 'Get court by ID'
-      description: 'Retrieve a court by its unique identifier'
       operationId: 'getCourtById'
       parameters:
         - name: 'id'
           in: 'path'
-          description: 'ID of the court to retrieve'
           required: true
           schema:
-            type: 'integer'
+            type: integer
       responses:
         '200':
           description: 'Court found'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Court'
+                $ref: '#/components/schemas/CourtDetails'
         '404':
           description: 'Court not found'
           content:
@@ -254,27 +251,24 @@ paths:
 
   /clubs/{id}/courts:
     get:
-      tags:
-        - 'Courts'
+      tags: [ 'Courts' ]
       summary: 'Get courts by club ID'
-      description: 'Retrieve all courts belonging to a specific club'
       operationId: 'getCourtsByClubId'
       parameters:
         - name: 'id'
           in: 'path'
-          description: 'ID of the club'
           required: true
           schema:
-            type: 'integer'
+            type: integer
       responses:
         '200':
           description: 'List of courts found'
           content:
             application/json:
               schema:
-                type: 'array'
+                type: array
                 items:
-                  $ref: '#/components/schemas/Court'
+                  $ref: '#/components/schemas/CourtDetails'
         '404':
           description: 'No courts found for this club'
           content:
@@ -290,10 +284,8 @@ paths:
 
   /rental:
     post:
-      tags:
-        - 'Rentals'
+      tags: [ 'Rentals' ]
       summary: 'Create a new rental'
-      description: 'Create a new court rental'
       operationId: 'createRental'
       security:
         - bearerAuth: [ ]
@@ -331,25 +323,22 @@ paths:
 
   /rental/{id}:
     get:
-      tags:
-        - 'Rentals'
+      tags: [ 'Rentals' ]
       summary: 'Get rental by ID'
-      description: 'Retrieve a rental by its unique identifier'
       operationId: 'getRentalById'
       parameters:
         - name: 'id'
           in: 'path'
-          description: 'ID of the rental to retrieve'
           required: true
           schema:
-            type: 'integer'
+            type: integer
       responses:
         '200':
           description: 'Rental found'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Rental'
+                $ref: '#/components/schemas/RentalDetails'
         '404':
           description: 'Rental not found'
           content:
@@ -362,43 +351,98 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    put:
+      tags: [ 'Rentals' ]
+      summary: 'Update rental by ID'
+      operationId: 'updateRental'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          schema:
+            type: integer
+        - name: 'date'
+          in: 'query'
+          required: true
+          schema:
+            type: string
+        - name: 'initD'
+          in: 'query'
+          required: true
+          schema:
+            type: integer
+        - name: 'endD'
+          in: 'query'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Rental updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentalDetails'
+        '400':
+          description: 'Invalid input'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags: [ 'Rentals' ]
+      summary: 'Delete rental by ID'
+      operationId: 'deleteRental'
+      parameters:
+        - name: 'id'
+          in: 'path'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Rental deleted'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: 'Rental not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /rentals:
     get:
-      tags:
-        - 'Rentals'
+      tags: [ 'Rentals' ]
       summary: 'Get rental list'
-      description: 'Retrieve a list of rentals based on club, court, and date'
       operationId: 'getRentalList'
       parameters:
         - name: 'cid'
           in: 'query'
-          description: 'Club ID'
           required: true
           schema:
-            type: 'integer'
+            type: integer
         - name: 'crid'
           in: 'query'
-          description: 'Court ID'
           required: true
           schema:
-            type: 'integer'
+            type: integer
         - name: 'date'
           in: 'query'
-          description: 'Date of the rental'
           required: true
           schema:
-            type: 'string'
-            format: 'date'
+            type: string
       responses:
         '200':
           description: 'List of rentals found'
           content:
             application/json:
               schema:
-                type: 'array'
+                type: array
                 items:
-                  $ref: '#/components/schemas/Rental'
+                  $ref: '#/components/schemas/RentalDetails'
         '400':
           description: 'Bad request'
           content:
@@ -408,27 +452,24 @@ paths:
 
   /rentals/user/{id}:
     get:
-      tags:
-        - 'Rentals'
+      tags: [ 'Rentals' ]
       summary: 'Get rentals by user ID'
-      description: 'Retrieve all rentals for a specific user'
       operationId: 'getRentalsOfUser'
       parameters:
         - name: 'id'
           in: 'path'
-          description: 'ID of the user'
           required: true
           schema:
-            type: 'integer'
+            type: integer
       responses:
         '200':
           description: 'List of user rentals'
           content:
             application/json:
               schema:
-                type: 'array'
+                type: array
                 items:
-                  $ref: '#/components/schemas/Rental'
+                  $ref: '#/components/schemas/RentalDetails'
         '404':
           description: 'No rentals found or user not found'
           content:
@@ -442,55 +483,100 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /rentals/courts/{crid}:
+    get:
+      tags: [ 'Rentals' ]
+      summary: 'Get rentals by court ID'
+      operationId: 'getRentalsOfCourt'
+      parameters:
+        - name: 'crid'
+          in: 'path'
+          required: true
+          schema:
+            type: integer
+        - name: 'limit'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
+        - name: 'skip'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'List of rentals for the court'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RentalDetails'
+        '404':
+          description: 'No rentals found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /rental/date:
+    get:
+      tags: [ 'Rentals' ]
+      summary: 'Get rentals by date'
+      operationId: 'getRentalsWithDate'
+      parameters:
+        - name: 'date'
+          in: 'query'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'List of rentals for the date'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RentalDetails'
+        '404':
+          description: 'No rentals found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /rentals/available:
     get:
-      tags:
-        - 'Rentals'
+      tags: [ 'Rentals' ]
       summary: 'Get available hours'
-      description: 'Retrieve available time slots for a court on a specific date'
       operationId: 'getAvailableHours'
       parameters:
         - name: 'cid'
           in: 'query'
-          description: 'Club ID'
           required: true
           schema:
-            type: 'integer'
+            type: integer
         - name: 'crid'
           in: 'query'
-          description: 'Court ID'
           required: true
           schema:
-            type: 'integer'
+            type: integer
         - name: 'date'
           in: 'query'
-          description: 'Date to check for availability'
           required: true
           schema:
-            type: 'string'
-            format: 'date'
-        - name: 'initDuration'
-          in: 'query'
-          description: 'Start time of the rental'
-          required: true
-          schema:
-            type: 'integer'
-        - name: 'endDuration'
-          in: 'query'
-          description: 'End time of the rental'
-          required: true
-          schema:
-            type: 'integer'
+            type: string
       responses:
         '200':
           description: 'List of available hours'
           content:
             application/json:
               schema:
-                type: 'array'
+                type: array
                 items:
-                  type: 'string'
-                  format: 'time'
+                  type: string
         '400':
           description: 'Bad request'
           content:
@@ -507,201 +593,127 @@ paths:
 components:
   schemas:
     UserInput:
-      type: 'object'
-      required:
-        - 'name'
-        - 'email'
+      type: object
+      required: [ name, email ]
       properties:
         name:
-          type: 'string'
-          description: 'The name of the user'
+          type: string
         email:
-          type: 'string'
-          format: 'email'
-          description: 'The email address of the user'
-
+          type: string
     UserOutput:
-      type: 'object'
+      type: object
       properties:
         uid:
-          type: 'integer'
-          description: 'The unique identifier for the user'
+          type: integer
         token:
-          type: 'string'
-          description: 'Authentication token for the user'
-
-    User:
-      type: 'object'
+          type: string
+    UserDetails:
+      type: object
       properties:
         id:
-          type: 'integer'
-          description: 'The unique identifier for the user'
+          type: integer
         name:
-          type: 'string'
-          description: 'The name of the user'
+          type: string
         email:
-          type: 'string'
-          format: 'email'
-          description: 'The email address of the user'
-
+          type: string
+        token:
+          type: string
     ClubInput:
-      type: 'object'
-      required:
-        - 'name'
+      type: object
+      required: [ name ]
       properties:
         name:
-          type: 'string'
-          description: 'The name of the club'
-
+          type: string
     ClubOutput:
-      type: 'object'
+      type: object
       properties:
         id:
-          type: 'integer'
-          description: 'The unique identifier for the club'
-
-    Club:
-      type: 'object'
+          type: integer
+    ClubDetails:
+      type: object
       properties:
         id:
-          type: 'integer'
-          description: 'The unique identifier for the club'
+          type: integer
         name:
-          type: 'string'
-          description: 'The name of the club'
+          type: string
         owner:
-          type: 'object'
-          properties:
-            id:
-              type: 'integer'
-              description: 'The ID of the club owner'
-            name:
-              type: 'string'
-              description: 'The name of the club owner'
-
+          $ref: '#/components/schemas/UserDetails'
     CourtInput:
-      type: 'object'
-      required:
-        - 'name'
-        - 'cid'
+      type: object
+      required: [ name, cid ]
       properties:
         name:
-          type: 'string'
-          description: 'The name of the court'
-        id:
-          type: 'integer'
-          description: 'The ID of the club this court belongs to'
-
+          type: string
+        cid:
+          type: integer
     CourtOutput:
-      type: 'object'
+      type: object
       properties:
         id:
-          type: 'integer'
-          description: 'The unique identifier for the court'
-
-    Court:
-      type: 'object'
+          type: integer
+    CourtDetails:
+      type: object
       properties:
         id:
-          type: 'integer'
-          description: 'The unique identifier for the court'
+          type: integer
         name:
-          type: 'string'
-          description: 'The name of the court'
-        clubId:
-          type: 'integer'
-          description: 'The ID of the club this court belongs to'
-
+          type: string
+        club:
+          $ref: '#/components/schemas/ClubDetails'
     RentalInput:
-      type: 'object'
-      required:
-        - 'cid'
-        - 'crid'
-        - 'date'
-        - 'initDuration'
-        - 'endDuration'
+      type: object
+      required: [ cid, crid, date, initDuration, endDuration ]
       properties:
         cid:
-          type: 'integer'
-          description: 'Club ID'
+          type: integer
         crid:
-          type: 'integer'
-          description: 'Court ID'
+          type: integer
         date:
-          type: 'string'
-          format: 'date'
-          description: 'Date of the rental'
+          type: string
         initDuration:
-          type: 'string'
-          format: 'time'
-          description: 'Start time of the rental'
+          type: integer
         endDuration:
-          type: 'string'
-          format: 'time'
-          description: 'End time of the rental'
-
+          type: integer
     RentalOutput:
-      type: 'object'
+      type: object
       properties:
-        rid:
-          type: 'integer'
-          description: 'The unique identifier for the rental'
-
-    Rental:
-      type: 'object'
+        id:
+          type: integer
+    DurationDetails:
+      type: object
       properties:
-        rid:
-          type: 'integer'
-          description: 'The unique identifier for the rental'
-        clubId:
-          type: 'integer'
-          description: 'Club ID'
-        courtId:
-          type: 'integer'
-          description: 'Court ID'
-        userId:
-          type: 'integer'
-          description: 'User ID'
+        initDuration:
+          type: integer
+        endDuration:
+          type: integer
+        hours:
+          type: integer
+    RentalDetails:
+      type: object
+      properties:
+        id:
+          type: integer
         date:
-          type: 'string'
-          format: 'date'
-          description: 'Date of the rental'
-        startTime:
-          type: 'string'
-          format: 'time'
-          description: 'Start time of the rental'
-        endTime:
-          type: 'string'
-          format: 'time'
-          description: 'End time of the rental'
-
-    RentalAvailableHoursRequest:
-      type: 'object'
-      required:
-        - 'cid'
-        - 'crid'
-        - 'date'
+          type: string
+        duration:
+          $ref: '#/components/schemas/DurationDetails'
+        user:
+          $ref: '#/components/schemas/UserDetails'
+        court:
+          $ref: '#/components/schemas/CourtDetails'
+    Message:
+      type: object
       properties:
-        cid:
-          type: 'integer'
-          description: 'Club ID'
-        crid:
-          type: 'integer'
-          description: 'Court ID'
-        date:
-          type: 'string'
-          format: 'date'
-          description: 'Date to check for availability'
-
+        message:
+          type: string
     Error:
-      type: 'object'
+      type: object
       properties:
         error:
-          type: 'string'
-          description: 'Error message'
+          type: string
 
   securitySchemes:
     bearerAuth:
-      type: 'http'
-      scheme: 'bearer'
-      bearerFormat: 'JWT'
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
