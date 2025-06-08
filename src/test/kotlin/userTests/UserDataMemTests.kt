@@ -3,6 +3,7 @@ package userTests
 import pt.isel.ls.domain.Email
 import pt.isel.ls.domain.Id
 import pt.isel.ls.domain.Name
+import pt.isel.ls.domain.Password
 import pt.isel.ls.domain.Token
 import pt.isel.ls.storage.dataMem.UserDataMem
 import kotlin.test.Test
@@ -14,7 +15,7 @@ class UserDataMemTest {
 
     @Test
     fun `test createUser adds user correctly`() {
-        val user = UserDataMem.createUser(Name("John Doe"), Email("john.doe@example.com"))
+        val user = UserDataMem.createUser(Name("John Doe"), Email("john.doe@example.com"), Password("securePassword"))
         assertNotNull(user)
         assertEquals("John Doe", user.name.name)
         assertEquals("john.doe@example.com", user.email.value)
@@ -23,7 +24,7 @@ class UserDataMemTest {
 
     @Test
     fun `test getUserById returns correct user`() {
-        val user = UserDataMem.createUser(Name("Jane Doe"), Email("jane.doe@example.com"))
+        val user = UserDataMem.createUser(Name("Jane Doe"), Email("jane.doe@example.com"), Password("anotherSecurePassword"))
         val retrievedUser = UserDataMem.getUserById(user.uid)
         assertNotNull(retrievedUser)
         assertEquals(user.uid, retrievedUser.uid)

@@ -14,7 +14,8 @@ class CourtDataMemTest {
         val court = CourtDataMem.createCourt(
             name = Name("Padel Court 2"),
             club = Club(Id(1), Name("Padel Club"), owner =Owner(user = User(Id(1), Name("Michael"), Email("Michael@gmail.com"),
-                token = token))))
+                token = token, password = Password("securePassword"))))
+            )
         assertNotNull(court)
         assertEquals("Padel Court 2", court.name.name)
         assertEquals(1, court.club.id.id)

@@ -5,7 +5,15 @@ export const renderHome = (mainContent) => {
     console.log("renderHome called with:", mainContent);
 
     const content = div(
-        {className: "container py-5"},
+        {className: "container py-5 position-relative"},
+        a(
+            {
+                href: "#userc/create",
+                className: "btn btn-outline-secondary position-absolute top-0 end-0 m-4"
+            },
+            span({className: "material-icons me-2"}),
+            "Sign Up"
+        ),
 
         div(
             {className: "row align-items-center mb-5 pb-5 border-bottom"},
