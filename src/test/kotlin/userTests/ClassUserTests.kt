@@ -14,6 +14,7 @@ class ClassUserTest {
             Name("Michael"),
             Email("michael@example.com"),
             Token(UUID.randomUUID().toString()),
+            Password("securePassword")
         )
         assertEquals(1, user.uid.id)
         assertEquals("Michael", user.name.name)
@@ -27,6 +28,7 @@ class ClassUserTest {
             Name(""),
             Email("michael@example.com"),
             Token(UUID.randomUUID().toString()),
+            Password("securePassword")
         )}
     }
 
@@ -38,6 +40,7 @@ class ClassUserTest {
                 Name("John Doe"),
                 Email("invalid-email"),
                 Token(UUID.randomUUID().toString()),
+                Password("securePassword")
             )
         }
     }
@@ -50,6 +53,7 @@ class ClassUserTest {
                 Name("Alice"),
                 Email(""),
                 Token(UUID.randomUUID().toString()),
+                Password("securePassword")
             )
         }
     }
@@ -62,6 +66,7 @@ class ClassUserTest {
                 Name("Bob"),
                 Email("bob@example.com"),
                 Token(UUID.randomUUID().toString()),
+                Password("securePassword")
             )
         }
     }
@@ -74,6 +79,7 @@ class ClassUserTest {
                 Name("Charlie"),
                 Email("charlie@example.com"),
                 Token("short"),
+                Password("securePassword")
             )
         }
     }
@@ -86,6 +92,7 @@ class ClassUserTest {
                 Name("John@123"),
                 Email("john@example.com"),
                 Token(UUID.randomUUID().toString()),
+                Password("securePassword")
             )
         }
     }

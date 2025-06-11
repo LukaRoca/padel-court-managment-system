@@ -1,5 +1,5 @@
 import {renderException} from "../views/Exeptions.js";
-import {renderUsers, renderUserDetail} from "../views/userView.js";
+import {renderUsers, renderUserDetail, renderCreateUserForm} from "../views/userView.js";
 import {fetchAllUsers, fetchUserById} from "../data/userData.js";
 import {LIMIT} from "../utils/configs.js";
 
@@ -36,3 +36,12 @@ export const getUsers = async (mainContent) => {
         }
 }
 
+export const createUser = (mainContent) => {
+        try {
+                renderCreateUserForm(mainContent);
+        } catch (error) {
+                console.error("Erro ao criar usuário:", error);
+                renderException(mainContent, error);
+        }
+
+}

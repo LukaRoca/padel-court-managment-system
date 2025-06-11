@@ -45,7 +45,7 @@ class UserWebApiTests {
 
     @Test
     fun `create a valid user`() {
-        val usDto = UserInput("Jaco", "bjaco@gmail.com")
+        val usDto = UserInput("Jaco", "bjaco@gmail.com", "password123")
         val request = Request(POST, "/users")
             .header("content-type", "application/json")
             .body(Json.encodeToString(usDto))
@@ -79,7 +79,7 @@ class UserWebApiTests {
 
     @Test
     fun `create user with invalid email returns error`() {
-        val usDto = UserInput("Jaco", "invalid-email")
+        val usDto = UserInput("Jaco", "invalid-email", "password123")
         val request = Request(POST, "/users")
             .header("content-type", "application/json")
             .body(Json.encodeToString(usDto))

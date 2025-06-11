@@ -13,7 +13,7 @@ class ClubDataMemTest {
 
     @Test
     fun `test createClub adds club correctly`() {
-        val user = UserDataMem.createUser(Name("John Doe"), Email("john.doe@example.com"))
+        val user = UserDataMem.createUser(Name("John Doe"), Email("john.doe@example.com"), Password("securePassword"))
         val club = ClubDataMem.createClub(Name("Tennis Club"), user)
         assertNotNull(club)
         assertEquals("Tennis Club", club.name.name)
@@ -22,7 +22,7 @@ class ClubDataMemTest {
 
     @Test
     fun `test getClubById returns correct club`() {
-        val user = UserDataMem.createUser(Name("Alice"), Email("alice@example.com"))
+        val user = UserDataMem.createUser(Name("Alice"), Email("alice@example.com"), Password("anotherSecurePassword"))
         val createdClub = ClubDataMem.createClub(Name("Chess Club"), user)
         assertNotNull(createdClub)
         val retrievedClub = ClubDataMem.getClubById(createdClub.id)
