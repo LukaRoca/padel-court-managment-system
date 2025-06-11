@@ -1,12 +1,16 @@
 GET http://localhost:8080/users/2
 
 ###
+GET http://localhost:8080/userss/login?email=bjjaco@gmail.com&password=$2a$10$LbgsghFKvKz2lWzVvHL4EuAxj14XxbfTXEux2VWzwDE0UIatn9h/W
+
+###
 POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "name": "Bernardo Jaco",
-  "email": "bjaco@gmail.com"
+  "name": "Bernjardo Jaco",
+  "email": "bjjaco@gmail.com",
+  "password": "tubarigger"
 }
 
 ###

@@ -61,9 +61,11 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
     }
     fun loginUser(request: Request): Response = useWithException {
         logRequest(request)
-        val response = Json.decodeFromString<UserInput>(request.bodyString())
+        val email = request.query("email") ?: throw IllegalArgumentException("Invalid email")
+        val password = request.query("password") ?: throw IllegalArgumentException("Invalid password")
+
         try {
-            val user = userServices.loginUser(Email(response.email), Password(response.password))
+            val user = userServices.loginUser(Email(email), Password(password))
             Response(OK).json(UserOutput(user.uid.id, user.token.token))
         } catch (e: Exception) {
             throw e
