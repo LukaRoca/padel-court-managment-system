@@ -1,8 +1,8 @@
-import {renderClubs} from "../views/clubView.js";
 import {renderException} from "../views/Exeptions.js";
 import {fetchClubsByName} from "../data/clubData.js";
 import {getClubs} from "../handlers/clubHandler.js";
 import {LIMIT} from "./configs.js";
+import {renderClubs} from "../views/club/clubsList.js";
 
 let skip = 0;
 

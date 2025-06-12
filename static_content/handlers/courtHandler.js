@@ -1,7 +1,10 @@
 import {renderException} from "../views/Exeptions.js";
-import {renderCourtAvailableHours, renderCourtDetail, renderCourtsList, renderCreateCourt} from "../views/courtView.js";
+import {renderCreateCourt} from "../views/court/createCourt.js";
 import {fetchCourtAvailableHours, fetchCourtById, fetchCourts} from "../data/courtData.js";
 import {LIMIT} from "../utils/configs.js";
+import {renderCourtsList} from "../views/court/courtList.js";
+import {renderCourtDetail} from "../views/court/courtDetail.js";
+import {renderCourtAvailableHours} from "../views/court/courtAvailableHours.js";
 
 let skip = 0;
 
@@ -18,8 +21,8 @@ export const getCourtsList = async (mainContent, params) => {
             courts.previous
         );
     } catch (error) {
-        console.error("Erro ao buscar quadras:", error);
-        renderException(mainContent, error);d
+        console.error("Erro searching courts:", error);
+        renderException(mainContent, error);
     }
 };
 
@@ -29,7 +32,7 @@ export const getCourtById = async (mainContent, params) => {
         const court = await fetchCourtById(courtId)
         renderCourtDetail(mainContent,court, undefined,undefined);
     } catch (error) {
-        console.error(`Erro ao encontrar um Court com este Id ${court.crid}`)
+        console.error(`No court with this Id: ${court.crid}`)
         renderException(mainContent,error)
     }
 };
@@ -39,7 +42,7 @@ export const createCourt = (mainContent, params) => {
         const cid = params.cid
         renderCreateCourt(mainContent, cid);
     } catch (error) {
-        console.error("Erro na criação do campo", error);
+        console.error("Error creating court", error);
         renderException(mainContent, error);
     }
 };
@@ -49,7 +52,7 @@ export const getCourtAvailableHoursSpecificDate = async (mainContent, params) =>
         const { crid, date } = params;
         const court = await fetchCourtById(crid);
         if (!court) {
-            throw new Error("Court não encontrado");
+            throw new Error("Court not found");
         }
         if (date) {
             try {
@@ -62,7 +65,7 @@ export const getCourtAvailableHoursSpecificDate = async (mainContent, params) =>
             renderCourtAvailableHours(mainContent, court);
         }
     } catch (error) {
-        console.error("Erro no handler:", error);
+        console.error(`Error fetching available hours for court ${params.crid}:`, error);
         renderException(mainContent, error);
     }
 };
