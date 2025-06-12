@@ -1,11 +1,52 @@
-import {div, a, h1, p, span} from "../utils/elements.js";
+import {div, a, h1, p, span, button} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
 
 export const renderHome = (mainContent) => {
     console.log("renderHome called with:", mainContent);
 
+    const userData = sessionStorage.getItem('user');
+    const user = userData ? JSON.parse(userData) : null;
+
+    const authButtons = div(
+        {className: "position-absolute top-0 end-0 m-4"},
+        user ?
+            div(
+                {className: "d-flex align-items-center gap-3"},
+                span({className: "text-primary"}, `Bem-vindo, ${user.name}`),
+                button(
+                    {
+                        className: "btn btn-outline-danger",
+                        onclick: () => {
+                            sessionStorage.removeItem('user');
+                            window.location.reload();
+                        }
+                    },
+                    "Sair"
+                )
+            ) :
+            div(
+                {className: "d-flex gap-2"},
+                a(
+                    {
+                        href: "#login",
+                        className: "btn btn-primary"
+                    },
+                    "Login"
+                ),
+                a(
+                    {
+                        href: "#userc/create",
+                        className: "btn btn-outline-secondary"
+                    },
+                    "Sign Up"
+                )
+            )
+    );
+
+
     const content = div(
         {className: "container py-5 position-relative"},
+        authButtons,
         a(
             {
                 href: "#userc/create",

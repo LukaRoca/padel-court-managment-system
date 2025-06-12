@@ -1,6 +1,6 @@
 import {renderException} from "../views/Exeptions.js";
-import {renderUsers, renderUserDetail, renderCreateUserForm} from "../views/userView.js";
-import {fetchAllUsers, fetchUserById} from "../data/userData.js";
+import {renderUsers, renderUserDetail, renderCreateUserForm, renderLoginForm} from "../views/userView.js";
+import {fetchAllUsers, fetchLoginUser, fetchUserById} from "../data/userData.js";
 import {LIMIT} from "../utils/configs.js";
 
 export const getUserById = async (mainContent, params) => {
@@ -41,6 +41,19 @@ export const createUser = (mainContent) => {
                 renderCreateUserForm(mainContent);
         } catch (error) {
                 console.error("Erro ao criar usuário:", error);
+                renderException(mainContent, error);
+        }
+
+}
+
+export const loginUser = async (mainContent, params) => {
+        try {
+                const userEmail = params.email;
+                const userPassword = params.password;
+                const user = await fetchLoginUser(userEmail, userPassword);
+                renderLoginForm(mainContent, user);
+        } catch (error) {
+                console.error("Error on login:", error);
                 renderException(mainContent, error);
         }
 
