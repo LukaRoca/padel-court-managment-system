@@ -12,6 +12,7 @@ data class Email(val value: String) {
     init { require(value.isNotBlank()) { "Email must not be empty" }
         require(value.length in 5..100) { "Email must be between 5 and 100 characters" }
         require(value.all { it.isLetterOrDigit() || it == '@' || it == '.' || it == '_' }) { "Email must contain only letters, numbers, @, ., and _" } }
+
 }
 
 data class Token(val token : String) {

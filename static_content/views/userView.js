@@ -186,7 +186,7 @@ export const renderLoginForm = (mainContent) => {
         };
 
         try {
-            const response = await fetchLoginUser(loginData.email, loginData.password);
+            const response = await fetchLoginUser(loginData);
             sessionStorage.setItem('user', JSON.stringify(response));
             window.location.href = `${API_BASE_URL}#home`;
         } catch (error) {

@@ -46,15 +46,13 @@ export const createUser = (mainContent) => {
 
 }
 
-export const loginUser = async (mainContent, params) => {
+export const loginUser = async (mainContent) => {
         try {
-                const userEmail = params.email;
-                const userPassword = params.password;
-                const user = await fetchLoginUser(userEmail, userPassword);
-                renderLoginForm(mainContent, user);
+
+                renderLoginForm(mainContent);
         } catch (error) {
                 console.error("Error on login:", error);
                 renderException(mainContent, error);
         }
-
 }
+

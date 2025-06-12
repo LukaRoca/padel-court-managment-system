@@ -38,15 +38,19 @@ export const fetchCreateUser = async (userData) => {
     }
 };
 
-export const fetchLoginUser = async (email, password) => {
+
+export const fetchLoginUser = async (loginData) => {
     try {
         const response = await fetch(`${API_BASE_URL}users/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify(loginData)
         });
+        if (!response.ok) {
+            throw new Error('Login falhou: ' + response.statusText);
+        }
         return await response.json();
     } catch (error) {
         console.error('Erro ao fazer login:', error);

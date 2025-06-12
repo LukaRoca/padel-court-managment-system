@@ -35,7 +35,7 @@ class UserServices (private val db : IStorage) {
     fun loginUser(email: Email, password: Password): User {
         val user = db.user.getAllUsers().find { it.email == email }
             ?: throw NoSuchElementException("No user found with email: ${email.value}")
-        if (user.password != password) {
+        if (!password.verify(user.password.value)) {
             throw IllegalArgumentException("Invalid password for user with email: ${email.value}")
         }
         return user
