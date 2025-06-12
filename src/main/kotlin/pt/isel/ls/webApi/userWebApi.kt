@@ -17,8 +17,6 @@ import pt.isel.ls.webApi.dto.UserDetails
 import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.webApi.dto.UserOutput
 import pt.isel.ls.webApi.dto.UserInput
-import pt.isel.ls.webApi.dto.UserLoginInput
-import pt.isel.ls.webApi.dto.UserLoginOutput
 
 class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
     val logger = LoggerFactory.getLogger("pt.isel.ls.webApi.routes.user.UserRoute")
@@ -63,10 +61,12 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
     }
     fun loginUser(request: Request): Response = useWithException {
         logRequest(request)
-        val response = Json.decodeFromString<UserLoginInput>(request.bodyString())
+        val email = request.query("email") ?: throw IllegalArgumentException("Invalid email")
+        val password = request.query("password") ?: throw IllegalArgumentException("Invalid password")
+
         try {
-            val user = userServices.loginUser(Email(response.email), Password(response.password))
-            Response(OK).json(UserLoginOutput(user.uid.id, user.token.token))
+            val user = userServices.loginUser(Email(email), Password(password))
+            Response(OK).json(UserOutput(user.uid.id, user.token.token))
         } catch (e: Exception) {
             throw e
         }
