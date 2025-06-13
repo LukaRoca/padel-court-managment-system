@@ -68,3 +68,8 @@ export function getHashParams() {
     if (!hash) return {};
     return Object.fromEntries(new URLSearchParams(hash));
 }
+
+export function getUser() {
+    return sessionStorage.getItem('user');
+}
+

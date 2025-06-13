@@ -12,7 +12,7 @@ export const renderCreateCourt = (mainContent, cid) => {
         try {
             const created = await fetchCreateCourt(data);
             if (!created || !created.id) {
-                throw new Error("The Court created did not return an ID");
+                new Error("The Court created did not return an ID");
             }
             await fetchCourtById(created.id);
             alert("Court created successfully");

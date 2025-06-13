@@ -7,52 +7,8 @@ export const renderHome = (mainContent) => {
     const userData = JSON.parse(sessionStorage.getItem('user'));
     console.log("User data from sessionStorage:", userData);
 
-    const authButtons = div(
-        {className: "container-fluid"},
-        div(
-            {className: "row"},
-            div(
-                {className: "col-12 d-flex justify-content-end p-4"},
-                userData ?
-                    div(
-                        {className: "d-flex align-items-center gap-3"},
-                        span({className: "text-primary"}, `User ${userData.uid}`),
-                        button(
-                            {
-                                className: "btn btn-outline-danger",
-                                onclick: () => {
-                                    sessionStorage.clear();
-                                    window.location.reload();
-                                }
-                            },
-                            "Logout"
-                        )
-                    ) :
-                    div(
-                        {className: "d-flex gap-2"},
-                        a(
-                            {
-                                href: "#user/login",
-                                className: "btn btn-primary"
-                            },
-                            "Login"
-                        ),
-                        a(
-                            {
-                                href: "#userc/create",
-                                className: "btn btn-outline-secondary"
-                            },
-                            "Sign Up"
-                        )
-                    )
-            )
-        )
-    );
-
     const content = div(
         {className: "container py-5 position-relative"},
-        authButtons,
-
         div(
             {className: "row align-items-center mb-5 pb-5 border-bottom"},
             div(

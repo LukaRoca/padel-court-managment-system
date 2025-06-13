@@ -48,8 +48,14 @@ class ClubServices (private val db : IStorage) {
         return db.club.getClubByName(name)
     }
 
-    fun deleteClub(clubId: Id): Boolean {
-       val club = db.club.getClubById(clubId) ?: throw IllegalStateException("Club not found with this id $clubId")
+    fun deleteClub(clubId: Id, token: Token): Boolean {
+
+        val club = db.club.getClubById(clubId) ?: throw IllegalStateException("Club not found with this id $clubId")
+
+        if( club.owner.user.token != token) {
+            throw IllegalStateException("You are not the owner of this club")
+        }
+
         return db.club.deleteClub(club)
     }
 }
