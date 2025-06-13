@@ -1,8 +1,7 @@
-import {a, div, h1, p, span, h2, button, input, label, form} from "../utils/elements.js";
-import {API_BASE_URL} from "../utils/configs.js";
-import {fetchCreateUser} from "../data/userData.js";
+import {a, div, h1, h2, p, span} from "../../utils/elements.js";
+import {API_BASE_URL} from "../../utils/configs.js";
 
-export const renderUserDetail = (mainContent, user) => {
+export const renderUserDetails = (mainContent, user) => {
     console.log("renderUserDetail called with:", user);
 
     const content = div(
@@ -91,87 +90,3 @@ export const renderUserDetail = (mainContent, user) => {
     mainContent.replaceChildren(content);
     console.log("User detail rendered successfully");
 };
-
-export const renderUsers = (mainContent, users, onNext, onPrevious, hasNext, hasPrevious) => {
-    const list = users.map(user =>
-        p({}, `User: ${user.name}`)
-    );
-
-    const buttons = div({className: "d-flex justify-content-between mt-3"},
-        hasPrevious ? button({className: "btn btn-outline-primary", onclick: onPrevious}, "Previous") : div({}),
-        hasNext ? button({className: "btn btn-outline-primary", onclick: onNext}, "Next") : div({})
-    );
-
-    if(!mainContent) {
-        console.error("mainContent is null or undefined");
-        return;
-    }
-
-    mainContent.replaceChildren(
-        div({className: "container py-5"},
-            ...list,
-            buttons
-        )
-    );
-}
-
-export const renderCreateUserForm = (mainContent) => {
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        const userData = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            password: formData.get('password')
-        };
-
-        try {
-            await fetchCreateUser(userData);
-            alert("User created successfully!");
-            window.location.href = `${API_BASE_URL}#home`;
-        } catch (error) {
-            console.error("Error creating user:", error);
-        }
-
-    };
-
-    const content = div(
-        {className: "container py-5"},
-        div(
-            {className: "row mb-5 pb-4 border-bottom"},
-            div(
-                {className: "col-12"},
-                h1({className: "display-4 fw-bold text-primary mb-3"}, "Create User"),
-                p({className: "lead text-muted"}, "Fill in the details to create a new user")
-            )
-        ),
-        div(
-            {className: "row mb-5"},
-            div(
-                {className: "col-md-6 mx-auto"},
-                form(
-                    {onSubmit: handleSubmit, className: "card border-0 shadow-sm p-4"},
-                    div(
-                        {className: "mb-3"},
-                        label({htmlFor: "name", className: "form-label"}, "Name"),
-                        input({type: "text", id: "name", name: "name", className: "form-control", required: true})
-                    ),
-                    div(
-                        {className: "mb-3"},
-                        label({htmlFor: "email", className: "form-label"}, "Email"),
-                        input({type: "email", id: "email", name: "email", className: "form-control", required: true})
-                    ),
-                    div(
-                        {className: "mb-3"},
-                        label({htmlFor: "password", className: "form-label"}, "Password"),
-                        input({type: "password", id: "password", name: "password", className: "form-control", required: true})
-                    ),
-                    button({type: "submit", className: "btn btn-primary w-100"}, "Create User")
-                )
-            )
-        )
-    );
-
-    mainContent.replaceChildren(content);
-}

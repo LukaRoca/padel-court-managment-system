@@ -1,19 +1,57 @@
-import {div, a, h1, p, span} from "../utils/elements.js";
+import {div, a, h1, p, span, button} from "../utils/elements.js";
 import {API_BASE_URL} from "../utils/configs.js";
 
 export const renderHome = (mainContent) => {
     console.log("renderHome called with:", mainContent);
 
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+    console.log("User data from sessionStorage:", userData);
+
+    const authButtons = div(
+        {className: "container-fluid"},
+        div(
+            {className: "row"},
+            div(
+                {className: "col-12 d-flex justify-content-end p-4"},
+                userData ?
+                    div(
+                        {className: "d-flex align-items-center gap-3"},
+                        span({className: "text-primary"}, `User ${userData.uid}`),
+                        button(
+                            {
+                                className: "btn btn-outline-danger",
+                                onclick: () => {
+                                    sessionStorage.clear();
+                                    window.location.reload();
+                                }
+                            },
+                            "Logout"
+                        )
+                    ) :
+                    div(
+                        {className: "d-flex gap-2"},
+                        a(
+                            {
+                                href: "#user/login",
+                                className: "btn btn-primary"
+                            },
+                            "Login"
+                        ),
+                        a(
+                            {
+                                href: "#userc/create",
+                                className: "btn btn-outline-secondary"
+                            },
+                            "Sign Up"
+                        )
+                    )
+            )
+        )
+    );
+
     const content = div(
         {className: "container py-5 position-relative"},
-        a(
-            {
-                href: "#userc/create",
-                className: "btn btn-outline-secondary position-absolute top-0 end-0 m-4"
-            },
-            span({className: "material-icons me-2"}),
-            "Sign Up"
-        ),
+        authButtons,
 
         div(
             {className: "row align-items-center mb-5 pb-5 border-bottom"},

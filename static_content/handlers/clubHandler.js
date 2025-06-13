@@ -1,7 +1,9 @@
-import {fetchClubById, fetchClubs, fetchClubsByName, fetchDeleteClub} from "../data/clubData.js";
-import {renderClubDetail, renderCreateClub, renderDeleteClub} from "../views/clubView.js";
+import {fetchClubById, fetchClubs, fetchClubsByName} from "../data/clubData.js";
+import {renderDeleteClub} from "../views/club/deleteClub.js";
 import {renderException} from "../views/Exeptions.js";
 import {fetchAndRenderClubs} from "../utils/utils.js";
+import {renderClubDetail} from "../views/club/clubDetails.js";
+import {renderCreateClub} from "../views/club/createClub.js";
 
 export const getClubs = async (mainContent) => {
     await fetchAndRenderClubs(mainContent, fetchClubs);

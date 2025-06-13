@@ -1,13 +1,16 @@
 import {renderException} from "../views/Exeptions.js";
-import {renderUsers, renderUserDetail, renderCreateUserForm} from "../views/userView.js";
-import {fetchAllUsers, fetchUserById} from "../data/userData.js";
+import {renderLoginForm} from "../views/user/userLogin.js";
+import {fetchAllUsers,fetchUserById} from "../data/userData.js";
 import {LIMIT} from "../utils/configs.js";
+import {renderUserDetails} from "../views/user/userDetails.js";
+import {renderUsers} from "../views/user/usersList.js";
+import {renderCreateUser} from "../views/user/createUser.js";
 
 export const getUserById = async (mainContent, params) => {
         try {
                 const userId = params.uid;
                 const user = await fetchUserById(userId);
-                renderUserDetail(mainContent, user);
+                renderUserDetails(mainContent, user);
         } catch (error) {
                 console.error("Erro ao buscar usuário:", error);
                 renderException(mainContent, error);
@@ -38,10 +41,21 @@ export const getUsers = async (mainContent) => {
 
 export const createUser = (mainContent) => {
         try {
-                renderCreateUserForm(mainContent);
+                renderCreateUser(mainContent);
         } catch (error) {
                 console.error("Erro ao criar usuário:", error);
                 renderException(mainContent, error);
         }
 
 }
+
+export const loginUser = async (mainContent) => {
+        try {
+
+                renderLoginForm(mainContent);
+        } catch (error) {
+                console.error("Error on login:", error);
+                renderException(mainContent, error);
+        }
+}
+

@@ -83,3 +83,12 @@ content-type: application/json
 GET http://localhost:8080/rental/date?date=2020-06-01
 content-type: application/json
 
+###
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "email": "reiafonso08@gmail.com",
+  "password": "$2a$10$94iUoIZLZxjRTLg.lK0ZTelXBP/EjF7orplkPbEY2n0XdXWCAhyoW"
+}
+

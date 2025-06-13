@@ -1,16 +1,12 @@
 import {renderException} from "../views/Exeptions.js";
-import {
-    fetchRentalById,
-    fetchRentalsByCrid, fetchRentalsByDate,
-    fetchRentalsByUid,
-} from "../data/rentalData.js";
-import {
-    renderCreateRental,
-    renderRentalDetails,
-    renderRentalsByCrid, renderRentalsByDate,
-    renderRentalsByUid, renderUpdateRental
-} from "../views/rentalView.js";
+import {fetchRentalById, fetchRentalsByCrid, fetchRentalsByDate, fetchRentalsByUid} from "../data/rentalData.js";
+import {renderRentalsByDate} from "../views/rental/rentalByDate.js";
 import {LIMIT} from "../utils/configs.js";
+import {renderRentalsByUid} from "../views/rental/rentalsByUid.js";
+import {renderRentalsByCrid} from "../views/rental/rentalsByCrid.js";
+import {renderRentalDetails} from "../views/rental/rentalDetails.js";
+import {renderCreateRental} from "../views/rental/createRental.js";
+import {renderUpdateRental} from "../views/rental/updateRental.js";
 
 
 let skipu = 0
