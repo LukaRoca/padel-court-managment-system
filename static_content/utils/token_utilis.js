@@ -21,3 +21,8 @@ export function setToken(newToken) {
     userData.token = newToken;
     sessionStorage.setItem('user', JSON.stringify(userData));
 }
+
+export function getUserId() {
+    const userData = JSON.parse(sessionStorage.getItem('user') || '{}');
+    return userData.uid || null;
+}

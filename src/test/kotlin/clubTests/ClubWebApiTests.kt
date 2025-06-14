@@ -44,7 +44,7 @@ class ClubWebApiTests {
         val app = Routes(api).app
         val request = Request(Method.POST, "club")
             .header("content-type", "application/json")
-            .header("Authorization", "Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c")
+            .header("Authorization", "Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19")
             .body(Json.encodeToString(clubDto))
         val response = app(request)
         assertEquals(CREATED, response.status)
@@ -97,18 +97,12 @@ class ClubWebApiTests {
     }
 
     @Test
-    fun `delete club by ID returns success`() {
-        val uniqueName = "Oljioenwv"
-        val clubDto = ClubInput(name = uniqueName)
+    fun `delete existing club by ID returns success`() {
+        val clubId = 1
         val api = WebApi(IServices(db = storage))
         val app = Routes(api).app
-        val createRequest = Request(Method.POST, "club")
-            .header("content-type", "application/json")
-            .header("Authorization", "Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c")
-            .body(Json.encodeToString(clubDto))
-        val createResponse = app(createRequest)
-        val createdId = Json.decodeFromString<Map<String, Int>>(createResponse.bodyString())["id"]!!
-        val deleteRequest = Request(Method.DELETE, "clubd/$createdId")
+        val deleteRequest = Request(Method.DELETE, "clubd/$clubId")
+            .header("Authorization", "Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19")
         val deleteResponse = app(deleteRequest)
         assertEquals(Status.OK, deleteResponse.status)
         assertTrue(deleteResponse.bodyString().contains("deleted successfully", ignoreCase = true))

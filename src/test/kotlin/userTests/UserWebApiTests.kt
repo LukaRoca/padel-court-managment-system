@@ -20,6 +20,7 @@ import pt.isel.ls.data.data.Data
 import pt.isel.ls.webApi.dto.UserInput
 import pt.isel.ls.webApi.UserWebApi
 import pt.isel.ls.webApi.WebApi
+import pt.isel.ls.webApi.dto.UserLoginInput
 import pt.isel.ls.webServices.IServices
 import pt.isel.ls.webServices.UserServices
 import kotlin.test.assertTrue
@@ -45,7 +46,7 @@ class UserWebApiTests {
 
     @Test
     fun `create a valid user`() {
-        val usDto = UserInput("Jaco", "bjaco@gmail.com", "password123")
+        val usDto = UserInput("LukaTeste2", "LukaTeste2@gmail.com", "LukaTeste1234")
         val request = Request(POST, "/users")
             .header("content-type", "application/json")
             .body(Json.encodeToString(usDto))
@@ -58,7 +59,7 @@ class UserWebApiTests {
     fun `get club by ID returns the club`() {
         val api = WebApi(IServices(db = storage))
         val app = Routes(api).app
-        val userId = 1 // Assuming this ID exists in the database
+        val userId = 1
         val request = Request(Method.GET, "users/$userId")
         val response = app(request)
         assertEquals(Status.OK, response.status)
@@ -85,5 +86,36 @@ class UserWebApiTests {
             .body(Json.encodeToString(usDto))
         val response = userWebAPI.createUser(request)
         assertEquals(BAD_REQUEST, response.status)
+    }
+
+    @Test
+    fun `get all users returns paginated list`() {
+        val api = WebApi(IServices(db = storage))
+        val app = Routes(api).app
+        val request = Request(Method.GET, "users?limit=2&skip=0")
+        val response = app(request)
+        assertEquals(Status.OK, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        val responseBody = response.bodyString()
+        assertTrue(responseBody.contains("users") || responseBody.contains("name"), "Response body should contain users")
+    }
+
+    @Test
+    fun `login user with valid credentials returns token`() {
+        val usDto = UserInput("TestLogin", "testlogin@email.com", "testpass123")
+        val createRequest = Request(POST, "/users")
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(usDto))
+        userWebAPI.createUser(createRequest)
+
+        val loginDto = UserLoginInput("testlogin@email.com", "testpass123")
+        val loginRequest = Request(Method.POST, "users/login")
+            .header("content-type", "application/json")
+            .body(Json.encodeToString(loginDto))
+        val api = WebApi(IServices(db = storage))
+        val app = Routes(api).app
+        val response = app(loginRequest)
+        assertEquals(Status.OK, response.status)
+        assertTrue(response.bodyString().contains("token"), "Response body should contain token")
     }
 }

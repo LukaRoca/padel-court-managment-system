@@ -120,7 +120,6 @@ export const renderClubs = (mainContent, clubs, onNext, onPrevious, hasNext, has
                                 span({className: "material-icons text-success"}, "add"),
                                 "Create Club"
                             ),
-                            // Placeholders for future functionality
                             a({
                                     href: "#",
                                     className: "dropdown-item d-flex align-items-center gap-2 disabled",
