@@ -1,8 +1,11 @@
 package clubTests
 
-import pt.isel.ls.domain.*
-import pt.isel.ls.storage.dataMem.ClubDataMem
-import pt.isel.ls.storage.dataMem.UserDataMem
+import pt.isel.ls.data.dataMem.ClubDataMem
+import pt.isel.ls.data.dataMem.UserDataMem
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Password
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

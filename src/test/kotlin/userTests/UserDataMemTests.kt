@@ -1,11 +1,11 @@
 package userTests
 
-import pt.isel.ls.domain.Email
-import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Name
-import pt.isel.ls.domain.Password
-import pt.isel.ls.domain.Token
-import pt.isel.ls.storage.dataMem.UserDataMem
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Password
+import pt.isel.ls.utlis.Token
+import pt.isel.ls.data.dataMem.UserDataMem
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

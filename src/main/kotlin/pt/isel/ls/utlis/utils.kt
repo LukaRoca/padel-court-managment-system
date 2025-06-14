@@ -1,26 +1,25 @@
-package pt.isel.ls
+package pt.isel.ls.utlis
 
-import pt.isel.ls.domain.Club
 import pt.isel.ls.domain.Rental
-import pt.isel.ls.domain.Token
-import pt.isel.ls.domain.User
-import pt.isel.ls.storage.iStorage.UserIStorage
-import pt.isel.ls.webApi.TokenNotFoundException
 import pt.isel.ls.webApi.dto.*
 
-
-fun checkIfTokenInDb(token: Token, db: UserIStorage): Boolean {
-    val user = db.getUserByToken(token)
-    if(user == null) {
-        throw TokenNotFoundException("No user found with that token")
-    }
-    else return true
+/**
+ * Checks if an integer is not negative.
+ *
+ * @return `true` if the integer is not negative, `false` otherwise.
+ */
+fun Int.isNotNegative(): Boolean {
+    return this >= 0
 }
 
-fun isUserAuthorized(user: User, club: Club): Boolean {
-    return user.uid == club.owner.user.uid
-}
-
+/**
+ * Validates an integer based on a provided function. If the integer is null, it returns a default value or throws an exception.
+ *
+ * @param defaultValue The value to return if the integer is null.
+ * @param function The function to validate the integer.
+ * @return The integer if it's valid.
+ * @throws IllegalArgumentException If the integer is null and no default value is provided, or if the integer is not valid.
+ */
 fun Int?.validateInt(defaultValue: Int? = null, function: (Int) -> Boolean): Int {
     if (this == null) {
         if (defaultValue != null) {
@@ -34,12 +33,9 @@ fun Int?.validateInt(defaultValue: Int? = null, function: (Int) -> Boolean): Int
     return this
 }
 
-fun Int.isNotNegative(): Boolean {
-    return this >= 0
-}
-
-
-// Helper function to convert a Rental to RentalDetails DTO
+/**
+ * Helper function to convert a Rental to RentalDetails DTO
+*/
  fun mapRentalToDetails(rental: Rental): RentalDetails {
     return RentalDetails(
         rental.rid.id,
@@ -72,7 +68,9 @@ fun Int.isNotNegative(): Boolean {
     )
 }
 
-// Helper function to map a list of Rentals to RentalDetails DTOs
- fun mapRentalsToDetailsList(rentals: List<Rental>): List<RentalDetails> {
+/**
+ * Helper function to map a list of Rentals to RentalDetails DTOs
+ */
+fun mapRentalsToDetailsList(rentals: List<Rental>): List<RentalDetails> {
     return rentals.map { mapRentalToDetails(it) }
 }

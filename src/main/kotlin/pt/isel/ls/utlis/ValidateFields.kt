@@ -1,4 +1,4 @@
-package pt.isel.ls.domain
+package pt.isel.ls.utlis
 
 fun validateName(name: String, minLength: Int, maxLength: Int, entity: String) {
     require(name.isNotBlank()) { "$entity name must not be empty" }

@@ -1,5 +1,10 @@
 package pt.isel.ls.domain
 
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Owner
+import pt.isel.ls.utlis.validateName
+
 data class Club(
     val id : Id,
     val name : Name,

@@ -1,23 +1,21 @@
 package pt.isel.ls.webApi
 
 import kotlinx.serialization.json.Json
-import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
-import org.http4k.routing.bind
 import org.http4k.routing.path
-import org.http4k.routing.routes
-import pt.isel.ls.domain.Date
-import pt.isel.ls.domain.Duration
-import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Token
-import pt.isel.ls.isNotNegative
-import pt.isel.ls.mapRentalToDetails
-import pt.isel.ls.mapRentalsToDetailsList
-import pt.isel.ls.validateInt
+import pt.isel.ls.utlis.Date
+import pt.isel.ls.utlis.Duration
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Token
+import pt.isel.ls.utlis.exceptions.AuthorizationException
+import pt.isel.ls.utlis.isNotNegative
+import pt.isel.ls.utlis.mapRentalToDetails
+import pt.isel.ls.utlis.mapRentalsToDetailsList
+import pt.isel.ls.utlis.validateInt
 import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.RentalServices
 

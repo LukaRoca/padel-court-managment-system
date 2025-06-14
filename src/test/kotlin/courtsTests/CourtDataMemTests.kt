@@ -2,7 +2,13 @@ package courtsTests
 
 import org.junit.Test
 import pt.isel.ls.domain.*
-import pt.isel.ls.storage.dataMem.CourtDataMem
+import pt.isel.ls.data.dataMem.CourtDataMem
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Owner
+import pt.isel.ls.utlis.Password
+import pt.isel.ls.utlis.Token
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -13,8 +19,14 @@ class CourtDataMemTest {
         val token = Token("dbc70057-4a7c-4b1d-805c-6d52490a0a0c")
         val court = CourtDataMem.createCourt(
             name = Name("Padel Court 2"),
-            club = Club(Id(1), Name("Padel Club"), owner =Owner(user = User(Id(1), Name("Michael"), Email("Michael@gmail.com"),
-                token = token, password = Password("securePassword"))))
+            club = Club(
+                Id(1), Name("Padel Club"), owner = Owner(
+                    user = User(
+                        Id(1), Name("Michael"), Email("Michael@gmail.com"),
+                        token = token, password = Password("securePassword")
+                    )
+                )
+            )
             )
         assertNotNull(court)
         assertEquals("Padel Court 2", court.name.name)

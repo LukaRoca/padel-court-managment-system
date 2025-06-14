@@ -1,5 +1,6 @@
-package pt.isel.ls.domain
+package pt.isel.ls.utlis
 import org.mindrot.jbcrypt.BCrypt
+import pt.isel.ls.domain.User
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException

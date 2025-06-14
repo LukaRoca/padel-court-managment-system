@@ -1,4 +1,4 @@
-package pt.isel.ls.webApi
+package pt.isel.ls.utlis.exceptions
 
 class AuthorizationException(message: String) : Exception(message)
 
