@@ -16,6 +16,6 @@ class DataMemMap<T> {
                 return super.put(key, value)
             }
         }
-    val nextId = AtomicInteger(1)
+    var nextId = AtomicInteger(1)
         private set
 }
