@@ -46,15 +46,15 @@ Content-Type: application/json
 
 ###
 POST http://localhost:8080/rental
-Authorization: Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c
+Authorization: Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19
 Content-Type: application/json
 
 {
-  "cid": 1,
-  "crid": 1,
-  "date": "2025-04",
-  "initDuration": "10",
-  "endDuration": "11"
+  "cid": 2,
+  "crid": 2,
+  "date": "2021-06-03",
+  "initDuration": "12",
+  "endDuration": "13"
 }
 
 ###
