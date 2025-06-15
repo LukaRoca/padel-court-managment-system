@@ -2,6 +2,11 @@ package userTests
 
 import org.junit.Test
 import pt.isel.ls.domain.*
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Password
+import pt.isel.ls.utlis.Token
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

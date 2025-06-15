@@ -12,8 +12,8 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.Routes
-import pt.isel.ls.storage.dataPostgres.*
-import pt.isel.ls.storage.iStorage.IStorage
+import pt.isel.ls.data.dataPostgres.*
+import pt.isel.ls.data.data.Data
 import pt.isel.ls.webApi.WebApi
 import pt.isel.ls.webApi.dto.CourtInput
 import pt.isel.ls.webServices.*
@@ -30,7 +30,7 @@ class CourtWebApiTests {
     private val courtStorage = CourtDataPostgres(dataSource)
     private val rentalStorage = RentalDataPostgres(dataSource)
 
-    private val storage = object : IStorage {
+    private val storage = object : Data {
         override val user = userStorage
         override val club = clubStorage
         override val court = courtStorage
@@ -38,15 +38,15 @@ class CourtWebApiTests {
     }
 
     private val courtServices = CourtServices(storage)
-    private val api = WebApi(IServices(db = storage))
-    private val app = Routes(api).app
 
     @Test
     fun `create a valid court`() {
-        val courtDto = CourtInput(name = "Test Court", cid = 1)
-        val request = Request(POST, "/courts")
+        val courtDto = CourtInput(name = "Test Court", cid = 2)
+        val api = WebApi(IServices(db = storage))
+        val app = Routes(api).app
+        val request = Request(POST, "courts")
             .header("content-type", "application/json")
-            .header("Authorization", "Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c")
+            .header("Authorization", "Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19")
             .body(Json.encodeToString(courtDto))
         val response = app(request)
         assertEquals(CREATED, response.status)
@@ -55,17 +55,21 @@ class CourtWebApiTests {
 
     @Test
     fun `get court by ID returns the court`() {
-        val courtId = 1
+        val courtId = 2
         val request = Request(GET, "/courts/$courtId")
+        val api = WebApi(IServices(db = storage))
+        val app = Routes(api).app
         val response = app(request)
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
         val responseBody = response.bodyString()
-        assertTrue(responseBody.contains("Campo Luka1"), "Response body should contain the court name")
+        assertTrue(responseBody.contains("Test Court"), "Response body should contain the court name")
     }
 
     @Test
     fun `get court by non-existent ID returns not found`() {
+        val api = WebApi(IServices(db = storage))
+        val app = Routes(api).app
         val response = app(Request(GET, "/courts/999"))
         assertEquals(NOT_FOUND, response.status)
         assertTrue(response.bodyString().contains("not found", ignoreCase = true))
@@ -73,7 +77,9 @@ class CourtWebApiTests {
 
     @Test
     fun `create court with invalid data returns error`() {
-        val courtDto = CourtInput(name = "", cid = 1)
+        val courtDto = CourtInput(name = "", cid = 2)
+        val api = WebApi(IServices(db = storage))
+        val app = Routes(api).app
         val request = Request(POST, "/courts")
             .header("content-type", "application/json")
             .body(Json.encodeToString(courtDto))

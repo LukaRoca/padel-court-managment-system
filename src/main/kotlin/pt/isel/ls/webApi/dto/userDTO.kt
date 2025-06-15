@@ -1,9 +1,6 @@
 package pt.isel.ls.webApi.dto
 
 import kotlinx.serialization.Serializable
-import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Token
-import pt.isel.ls.domain.User
 
 @Serializable
 data class UserInput(

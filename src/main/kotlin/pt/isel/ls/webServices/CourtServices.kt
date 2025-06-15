@@ -1,14 +1,17 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.PaginatedResult
+import pt.isel.ls.utlis.PaginatedResult
 import pt.isel.ls.domain.*
-import pt.isel.ls.paginateWithInfo
-import pt.isel.ls.storage.iStorage.IStorage
+import pt.isel.ls.utlis.paginateWithInfo
+import pt.isel.ls.data.data.Data
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Token
 import pt.isel.ls.webApi.dto.ClubDetails
 import pt.isel.ls.webApi.dto.CourtDetails
 import pt.isel.ls.webApi.dto.UserDetails
 
-open class CourtServices (private val db: IStorage) {
+open class CourtServices (private val db: Data) {
 
     fun createCourt(name : Name, cid : Id, token: Token) : Court? {
         val user = db.user.getUserByToken(token) ?: throw NullPointerException("User with token ${token} not found")
@@ -22,7 +25,7 @@ open class CourtServices (private val db: IStorage) {
         if (club.owner.user != user) throw IllegalArgumentException("Id or token not valid")
         return db.court.createCourt(name, club)
     }
-    fun getCourtById(crid: Id ) : Court? {
+    fun getCourtById(crid: Id) : Court? {
         return db.court.getCourtById(crid)
     }
     fun getCourtsByClubId(cid : Id, limit : Int, skip : Int) : PaginatedResult<CourtDetails> {

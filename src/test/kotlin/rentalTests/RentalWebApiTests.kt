@@ -12,8 +12,8 @@ import org.http4k.core.Method
 import org.http4k.core.Status.Companion.OK
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.Routes
-import pt.isel.ls.storage.dataPostgres.*
-import pt.isel.ls.storage.iStorage.IStorage
+import pt.isel.ls.data.dataPostgres.*
+import pt.isel.ls.data.data.Data
 import pt.isel.ls.webApi.WebApi
 import pt.isel.ls.webApi.dto.RentalInput
 import pt.isel.ls.webServices.*
@@ -29,7 +29,7 @@ class RentalWebApiTests {
     private val courtStorage = CourtDataPostgres(dataSource)
     private val rentalStorage = RentalDataPostgres(dataSource)
 
-    private val storage = object : IStorage {
+    private val storage = object : Data {
         override val user = userStorage
         override val club = clubStorage
         override val court = courtStorage
@@ -41,10 +41,10 @@ class RentalWebApiTests {
 
     @Test
     fun `create a valid rental`() {
-        val rentalDto = RentalInput(cid = 1, crid = 1, date = "2025-04-30", initDuration = 5, endDuration = 6)
+        val rentalDto = RentalInput(cid = 2, crid = 2, date = "2021-06-03", initDuration = 5, endDuration = 6)
         val request = Request(Method.POST, "rental")
             .header("content-type", "application/json")
-            .header("Authorization", "Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c")
+            .header("Authorization", "Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19")
             .body(Json.encodeToString(rentalDto))
         val response = api(request)
         assertEquals(CREATED, response.status)
@@ -54,13 +54,13 @@ class RentalWebApiTests {
     }
     @Test
     fun `get rental by ID returns the rental`() {
-        val rentalId = 1
+        val rentalId = 2
         val request = Request(GET, "/rentals/$rentalId")
         val response = api(request)
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
         val responseBody = response.bodyString()
-        assertTrue(responseBody.contains("2025-04-30"), "Response body should contain the rental date")
+        assertTrue(responseBody.contains("2021-06-03"), "Response body should contain the rental date")
     }
 
     @Test
@@ -69,5 +69,43 @@ class RentalWebApiTests {
         val response = api(request)
         assertEquals(NOT_FOUND, response.status)
         assertTrue(response.bodyString().contains("not found", ignoreCase = true))
+    }
+
+    @Test
+    fun `get rentals of user returns rentals`() {
+        val userId = 1
+        val request = Request(GET, "/rentals/user/$userId?limit=10&skip=0")
+        val response = api(request)
+        assertEquals(OK, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        assertTrue(response.bodyString().contains("id"))
+    }
+
+    @Test
+    fun `get rentals of court returns rentals`() {
+        val courtId = 2
+        val request = Request(Method.GET, "/rentals/courts/$courtId?limit=10&skip=0")
+        val response = api(request)
+        assertEquals(OK, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        assertTrue(response.bodyString().contains("id"))
+    }
+
+    @Test
+    fun `get rentals with date returns rentals`() {
+        val request = Request(Method.GET, "/rental/date?date=2021-06-03")
+        val response = api(request)
+        assertEquals(OK, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        assertTrue(response.bodyString().contains("id"))
+    }
+
+    @Test
+    fun `get available hours returns list`() {
+        val request = Request(Method.GET, "/rentals/available?cid=2&crid=2&date=2021-06-03")
+        val response = api(request)
+        assertEquals(OK, response.status)
+        assertEquals("application/json", response.header("content-type"))
+        assertTrue(response.bodyString().contains("["))
     }
 }

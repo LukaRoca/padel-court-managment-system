@@ -8,15 +8,14 @@ import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.CREATED
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.Routes
-import pt.isel.ls.storage.dataPostgres.*
-import pt.isel.ls.storage.iStorage.IStorage
+import pt.isel.ls.data.dataPostgres.*
+import pt.isel.ls.data.data.Data
 import pt.isel.ls.webApi.dto.ClubInput
 import pt.isel.ls.webApi.*
 import pt.isel.ls.webServices.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.text.get
 
 class ClubWebApiTests {
 
@@ -29,7 +28,7 @@ class ClubWebApiTests {
     private val courtStorage = CourtDataPostgres(dataSource)
     private val rentalStorage = RentalDataPostgres(dataSource)
 
-    private val storage = object : IStorage {
+    private val storage = object : Data {
         override val user = userStorage
         override val club = clubStorage
         override val court = courtStorage
@@ -45,7 +44,7 @@ class ClubWebApiTests {
         val app = Routes(api).app
         val request = Request(Method.POST, "club")
             .header("content-type", "application/json")
-            .header("Authorization", "Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c")
+            .header("Authorization", "Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19")
             .body(Json.encodeToString(clubDto))
         val response = app(request)
         assertEquals(CREATED, response.status)
@@ -98,18 +97,12 @@ class ClubWebApiTests {
     }
 
     @Test
-    fun `delete club by ID returns success`() {
-        val uniqueName = "Oljioenwv"
-        val clubDto = ClubInput(name = uniqueName)
+    fun `delete existing club by ID returns success`() {
+        val clubId = 1
         val api = WebApi(IServices(db = storage))
         val app = Routes(api).app
-        val createRequest = Request(Method.POST, "club")
-            .header("content-type", "application/json")
-            .header("Authorization", "Bearer dbc70057-4a7c-4b1d-805c-6d52490a0a0c")
-            .body(Json.encodeToString(clubDto))
-        val createResponse = app(createRequest)
-        val createdId = Json.decodeFromString<Map<String, Int>>(createResponse.bodyString())["id"]!!
-        val deleteRequest = Request(Method.DELETE, "clubd/$createdId")
+        val deleteRequest = Request(Method.DELETE, "clubd/$clubId")
+            .header("Authorization", "Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19")
         val deleteResponse = app(deleteRequest)
         assertEquals(Status.OK, deleteResponse.status)
         assertTrue(deleteResponse.bodyString().contains("deleted successfully", ignoreCase = true))
