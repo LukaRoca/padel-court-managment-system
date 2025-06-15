@@ -56,9 +56,9 @@ class CourtDataPostgres (private val dataSource: DataSource) : CourtData{
         dataSource.connection.use {
             val sql = buildString {
                 append(sqlCourt)
-                append("INNER JOIN club ON court.club = club.cid")
-                append("INNER JOIN users ON club.owner = users.uid")
-                append("WHERE court.crid = ?")
+                append(" INNER JOIN club ON court.club = club.cid ")
+                append(" INNER JOIN users ON club.owner = users.uid ")
+                append(" WHERE court.crid = ? ")
             }
             val stmt = it.prepareStatement(
                 sql
@@ -77,9 +77,9 @@ class CourtDataPostgres (private val dataSource: DataSource) : CourtData{
             val courts = mutableListOf<Court>()
             val sql = buildString {
                 append(sqlCourt)
-                append("INNER JOIN club ON court.club = club.cid")
-                append("INNER JOIN users ON club.owner = users.uid")
-                append("WHERE court.club = ?")
+                append(" INNER JOIN club ON court.club = club.cid" )
+                append(" INNER JOIN users ON club.owner = users.uid ")
+                append(" WHERE court.club = ? ")
             }
             val stmt = it.prepareStatement(
                 sql

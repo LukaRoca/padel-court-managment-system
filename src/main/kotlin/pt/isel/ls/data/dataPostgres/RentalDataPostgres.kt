@@ -71,10 +71,10 @@ class RentalDataPostgres (private val dataSource : DataSource) : RentalData {
         dataSource.connection.use {
             val sql = buildString {
                 append(sqlRental)
-                append("INNER JOIN court ON rental.court = court.crid")
-                append("INNER JOIN club ON court.club = club.cid")
-                append("INNER JOIN users ON rental.usr = users.uid")
-                append("WHERE rental.rid = ?")
+                append(" INNER JOIN court ON rental.court = court.crid ")
+                append(" INNER JOIN club ON court.club = club.cid ")
+                append(" INNER JOIN users ON rental.usr = users.uid ")
+                append(" WHERE rental.rid = ? ")
             }
 
             val stmt = it.prepareStatement(
@@ -104,10 +104,10 @@ class RentalDataPostgres (private val dataSource : DataSource) : RentalData {
             val rentals = mutableListOf<Rental>()
             val sql = buildString {
                 append(sqlRental)
-                append("INNER JOIN court ON rental.court = court.crid")
-                append("INNER JOIN club ON court.club = club.cid")
-                append("INNER JOIN users ON rental.usr = users.uid")
-                append("WHERE rental.usr = ?")
+                append(" INNER JOIN court ON rental.court = court.crid ")
+                append(" INNER JOIN club ON court.club = club.cid ")
+                append(" INNER JOIN users ON rental.usr = users.uid ")
+                append(" WHERE rental.usr = ? ")
             }
             val stmt = it.prepareStatement(
                 sql
@@ -138,10 +138,10 @@ class RentalDataPostgres (private val dataSource : DataSource) : RentalData {
             val rentals = mutableListOf<Rental>()
             val sql = buildString {
                 append(sqlRental)
-                append("INNER JOIN court ON rental.court = court.crid")
-                append("INNER JOIN club ON court.club = club.cid")
-                append("INNER JOIN users ON rental.usr = users.uid")
-                append("WHERE rental.court = ?")
+                append(" INNER JOIN court ON rental.court = court.crid ")
+                append(" INNER JOIN club ON court.club = club.cid ")
+                append(" INNER JOIN users ON rental.usr = users.uid ")
+                append(" WHERE rental.court = ? ")
             }
             val stmt = it.prepareStatement(
                 sql
@@ -167,10 +167,10 @@ class RentalDataPostgres (private val dataSource : DataSource) : RentalData {
             val rentals = mutableListOf<Rental>()
             val sql = buildString {
                 append(sqlRental)
-                append("INNER JOIN court ON rental.court = court.crid")
-                append("INNER JOIN club ON court.club = club.cid")
-                append("INNER JOIN users ON rental.usr = users.uid")
-                append("WHERE rental.court = ?")
+                append(" INNER JOIN court ON rental.court = court.crid ")
+                append(" INNER JOIN club ON court.club = club.cid ")
+                append(" INNER JOIN users ON rental.usr = users.uid ")
+                append(" WHERE rental.court = ? ")
             }
             val stmt = it.prepareStatement(
                 sql
@@ -194,10 +194,10 @@ class RentalDataPostgres (private val dataSource : DataSource) : RentalData {
             val rentals = mutableListOf<Rental>()
             val sql = buildString {
                 append(sqlRental)
-                append("INNER JOIN court ON rental.court = court.crid")
-                append("INNER JOIN club ON court.club = club.cid")
-                append("INNER JOIN users ON rental.usr = users.uid")
-                append("WHERE rental.date = ?")
+                append(" INNER JOIN court ON rental.court = court.crid ")
+                append(" INNER JOIN club ON court.club = club.cid ")
+                append(" INNER JOIN users ON rental.usr = users.uid ")
+                append(" WHERE rental.date = ? ")
             }
             val stmt = it.prepareStatement(
                 sql

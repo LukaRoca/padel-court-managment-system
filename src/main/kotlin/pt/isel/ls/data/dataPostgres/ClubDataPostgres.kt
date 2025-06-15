@@ -15,7 +15,7 @@ import java.sql.Statement
 import javax.sql.DataSource
 
 val sqlClub = """
-    SELECT club.cid as c_id,
+    SELECT  club.cid as c_id,
             club.name as c_name,
             club.owner as o_id,
             users.uid,
@@ -71,7 +71,7 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubData {
             val clubs = mutableListOf<Club>()
             val sql = buildString {
                 append(sqlClub)
-                append("INNER JOIN users ON club.owner = users.uid")
+                append(" INNER JOIN users ON club.owner = users.uid ")
             }
             val stmt = it.prepareStatement(sql)
             val rs = stmt.executeQuery()
