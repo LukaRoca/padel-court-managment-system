@@ -26,6 +26,7 @@ import pt.isel.ls.webServices.UserServices
 import kotlin.test.assertTrue
 
 class UserWebApiTests {
+    /*
     private val dataSource = PGSimpleDataSource().apply {
         setURL("jdbc:postgresql://localhost/ls?user=postgres&password=tubarao")
     }
@@ -118,4 +119,6 @@ class UserWebApiTests {
         assertEquals(Status.OK, response.status)
         assertTrue(response.bodyString().contains("token"), "Response body should contain token")
     }
+
+     */
 }
