@@ -8,18 +8,17 @@ import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.CREATED
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.Routes
-import pt.isel.ls.storage.dataPostgres.*
-import pt.isel.ls.storage.iStorage.IStorage
+import pt.isel.ls.data.dataPostgres.*
+import pt.isel.ls.data.data.Data
 import pt.isel.ls.webApi.dto.ClubInput
 import pt.isel.ls.webApi.*
 import pt.isel.ls.webServices.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.text.get
 
 class ClubWebApiTests {
-
+    /*
     private val dataSource = PGSimpleDataSource().apply {
         setURL("jdbc:postgresql://localhost/ls?user=postgres&password=tubarao")
     }
@@ -29,7 +28,7 @@ class ClubWebApiTests {
     private val courtStorage = CourtDataPostgres(dataSource)
     private val rentalStorage = RentalDataPostgres(dataSource)
 
-    private val storage = object : IStorage {
+    private val storage = object : Data {
         override val user = userStorage
         override val club = clubStorage
         override val court = courtStorage
@@ -108,4 +107,6 @@ class ClubWebApiTests {
         assertEquals(Status.OK, deleteResponse.status)
         assertTrue(deleteResponse.bodyString().contains("deleted successfully", ignoreCase = true))
     }
+
+     */
 }

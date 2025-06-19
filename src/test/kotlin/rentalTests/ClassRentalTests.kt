@@ -2,7 +2,14 @@ package rentalTests
 
 import org.junit.Test
 import pt.isel.ls.domain.*
-import pt.isel.ls.domain.Date
+import pt.isel.ls.utlis.Date
+import pt.isel.ls.utlis.Duration
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Owner
+import pt.isel.ls.utlis.Password
+import pt.isel.ls.utlis.Token
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -11,7 +18,13 @@ class ClassRentalTest {
 
     @Test
     fun `Rental Valid`() {
-        val user = User(Id(1), Name("Michael"), Email("michael@example.com"), Token(UUID.randomUUID().toString()), Password("securePassword"))
+        val user = User(
+            Id(1),
+            Name("Michael"),
+            Email("michael@example.com"),
+            Token(UUID.randomUUID().toString()),
+            Password("securePassword")
+        )
         val club = Club(Id(1), Name("Padel Club"), Owner(user))
         val court = Court(Id(1), Name("Padel Court 1"), club)
         val rental = Rental(Id(1), Date("2023-10-10"), Duration(10, 20), user, court)
@@ -25,7 +38,13 @@ class ClassRentalTest {
 
     @Test
     fun `Rental with Negative ID`() {
-        val user = User(Id(1), Name("Michael"), Email("michael@example.com"), Token(UUID.randomUUID().toString()), Password("securePassword"))
+        val user = User(
+            Id(1),
+            Name("Michael"),
+            Email("michael@example.com"),
+            Token(UUID.randomUUID().toString()),
+            Password("securePassword")
+        )
         val club = Club(Id(1), Name("Padel Club"), Owner(user))
         val court = Court(Id(1), Name("Padel Court 1"), club)
         assertFailsWith<IllegalArgumentException> {
@@ -35,7 +54,13 @@ class ClassRentalTest {
 
     @Test
     fun `Rental with Invalid Duration Range`() {
-        val user = User(Id(1), Name("Michael"), Email("michael@example.com"), Token(UUID.randomUUID().toString()), Password("securePassword"))
+        val user = User(
+            Id(1),
+            Name("Michael"),
+            Email("michael@example.com"),
+            Token(UUID.randomUUID().toString()),
+            Password("securePassword")
+        )
         val club = Club(Id(1), Name("Padel Club"), Owner(user))
         val court = Court(Id(1), Name("Padel Court 1"), club)
         assertFailsWith<IllegalArgumentException> {
@@ -45,7 +70,13 @@ class ClassRentalTest {
 
     @Test
     fun `Rental with End Duration Less Than Start Duration`() {
-        val user = User(Id(1), Name("Michael"), Email("michael@example.com"), Token(UUID.randomUUID().toString()), Password("securePassword"))
+        val user = User(
+            Id(1),
+            Name("Michael"),
+            Email("michael@example.com"),
+            Token(UUID.randomUUID().toString()),
+            Password("securePassword")
+        )
         val club = Club(Id(1), Name("Padel Club"), Owner(user))
         val court = Court(Id(1), Name("Padel Court 1"), club)
         assertFailsWith<IllegalArgumentException> {

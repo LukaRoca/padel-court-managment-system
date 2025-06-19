@@ -1,16 +1,19 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.PaginatedResult
+import pt.isel.ls.utlis.PaginatedResult
 import pt.isel.ls.domain.*
-import pt.isel.ls.paginateWithInfo
-import pt.isel.ls.storage.iStorage.IStorage
+import pt.isel.ls.utlis.paginateWithInfo
+import pt.isel.ls.data.data.Data
+import pt.isel.ls.utlis.Date
+import pt.isel.ls.utlis.Duration
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Token
 import pt.isel.ls.webApi.dto.*
 import java.lang.IllegalStateException
-import kotlin.time.Duration.Companion.hours
 
-class RentalServices (private val db : IStorage) {
+class RentalServices (private val db : Data) {
 
-    fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token ): Rental? {
+    fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token): Rental? {
         val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
         val user = db.user.getUserByToken(token) ?: throw IllegalStateException("User not found with this token")
         val club = db.club.getClubById(cid) ?: throw IllegalStateException("Club not found with this id $cid")

@@ -26,7 +26,7 @@ export const fetchCourtAvailableHours = async (courtId, date, clubId) => {
         if (!courtId || !date || !clubId) {
             throw new Error('courtId, clubId e date são obrigatórios');
         }
-        const url = `http://localhost:8080/rentals/available?date=${date}&crid=${courtId}&cid=${clubId}`;
+        const url = `${API_BASE_URL}rentals/available?date=${date}&crid=${courtId}&cid=${clubId}`;
         const response = await fetch(url);
         if (!response.ok) {
             const responseText = await response.text();

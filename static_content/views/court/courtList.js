@@ -2,7 +2,7 @@ import {a, button, div, h1, h2, p, span} from "../../utils/elements.js";
 import {API_BASE_URL} from "../../utils/configs.js";
 import {setupDropdown} from "../../utils/utils.js";
 
-export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNext, hasPrevious) => {
+export const renderCourtsList = (clubId, mainContent, courts, onNext, onPrevious, hasNext, hasPrevious) => {
     console.log("renderCourtsList called with:", courts);
 
     if (!mainContent) {
@@ -85,7 +85,7 @@ export const renderCourtsList = (mainContent, courts, onNext, onPrevious, hasNex
                                 "aria-labelledby": "clubActionsDropdown"
                             },
                             a({
-                                    href: `${API_BASE_URL}#court/create/${courts[0].club.id}`,
+                                    href: `${API_BASE_URL}#court/create/${clubId}`,
                                     className: "dropdown-item d-flex align-items-center gap-2"
                                 },
                                 span({className: "material-icons text-success"}, "add"),

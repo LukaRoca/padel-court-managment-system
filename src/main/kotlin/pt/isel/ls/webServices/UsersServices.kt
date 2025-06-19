@@ -1,13 +1,17 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.PaginatedResult
+import pt.isel.ls.utlis.PaginatedResult
 import pt.isel.ls.domain.*
-import pt.isel.ls.paginateWithInfo
-import pt.isel.ls.storage.iStorage.IStorage
-import pt.isel.ls.storage.iStorage.UserIStorage
+import pt.isel.ls.utlis.paginateWithInfo
+import pt.isel.ls.data.data.Data
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Password
+import pt.isel.ls.utlis.Token
 import pt.isel.ls.webApi.dto.UserDetails
 
-class UserServices (private val db : IStorage) {
+class UserServices (private val db : Data) {
 
     fun getUserById(userId: Id): User? {
         return db.user.getUserById(userId)

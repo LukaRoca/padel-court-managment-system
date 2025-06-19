@@ -7,12 +7,12 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.path
 import org.slf4j.LoggerFactory
-import pt.isel.ls.domain.Email
-import pt.isel.ls.domain.Id
-import pt.isel.ls.domain.Name
-import pt.isel.ls.domain.Password
-import pt.isel.ls.isNotNegative
-import pt.isel.ls.validateInt
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Id
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Password
+import pt.isel.ls.utlis.isNotNegative
+import pt.isel.ls.utlis.validateInt
 import pt.isel.ls.webApi.dto.UserDetails
 import pt.isel.ls.webServices.UserServices
 import pt.isel.ls.webApi.dto.UserOutput
@@ -63,7 +63,6 @@ class UserWebApi(private val userServices: UserServices) : WebApiExceptions() {
     fun loginUser(request: Request): Response = useWithException {
         logRequest(request)
         val loginData = Json.decodeFromString<UserLoginInput>(request.bodyString())
-
 
         try {
             val user = userServices.loginUser(Email(loginData.email), Password(loginData.password))

@@ -2,6 +2,7 @@ package pt.isel.ls.webApi
 import kotlinx.serialization.json.Json
 import org.http4k.core.Response
 import org.http4k.core.Status
+import pt.isel.ls.utlis.exceptions.AuthorizationException
 
 abstract class WebApiExceptions {
     inline fun <reified T> Response.json(body: T): Response {

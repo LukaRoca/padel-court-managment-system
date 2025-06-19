@@ -1,8 +1,6 @@
 package pt.isel.ls.webApi.dto
 
 import kotlinx.serialization.Serializable
-import pt.isel.ls.domain.Date
-import pt.isel.ls.domain.Id
 
 @Serializable
 data class RentalInput(

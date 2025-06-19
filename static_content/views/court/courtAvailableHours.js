@@ -7,8 +7,8 @@ export const renderCourtAvailableHours = (mainContent, court, availableHours = n
         e.preventDefault();
         try {
             const selectedDate = e.target.date.value;
-            if (!court.id) {
-                new Error("ID of court is invalid or not provided.");
+            if (!court.id || !court.club.id) { // Verificar ambos os IDs
+                throw new Error("Court ID or Club ID is invalid or not provided.");
             }
             const hours = await fetchCourtAvailableHours(court.id, selectedDate, court.club.id);
             renderCourtAvailableHours(mainContent, court, hours);
