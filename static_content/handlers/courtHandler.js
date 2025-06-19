@@ -13,6 +13,7 @@ export const getCourtsList = async (mainContent, params) => {
         const clubId = params.cid;
         const courts = await fetchCourts(clubId, LIMIT, skip);
         renderCourtsList(
+            clubId,
             mainContent,
             courts.list,
             () => { skip += LIMIT; getCourtsList(mainContent, params)},
