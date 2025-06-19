@@ -36,15 +36,33 @@ paths:
       tags: [ 'Users' ]
       summary: 'Get all users'
       operationId: 'getAllUsers'
+      parameters:
+        - name: 'limit'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
+        - name: 'skip'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: 'List of users'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UserDetails'
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserDetails'
+                  next:
+                    type: boolean
+                  previous:
+                    type: boolean
         '404':
           description: 'No users found'
           content:
@@ -78,6 +96,31 @@ paths:
                 $ref: '#/components/schemas/Error'
         '400':
           description: 'Invalid ID format'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/login:
+    post:
+      tags: [ 'Users' ]
+      summary: 'Login user'
+      operationId: 'loginUser'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLoginInput'
+      responses:
+        '200':
+          description: 'Login successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOutput'
+        '400':
+          description: 'Invalid credentials'
           content:
             application/json:
               schema:
@@ -121,15 +164,33 @@ paths:
       tags: [ 'Clubs' ]
       summary: 'Get all clubs'
       operationId: 'getClubs'
+      parameters:
+        - name: 'limit'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
+        - name: 'skip'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: 'List of clubs'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ClubDetails'
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClubDetails'
+                  next:
+                    type: boolean
+                  previous:
+                    type: boolean
         '404':
           description: 'No clubs found'
           content:
@@ -177,6 +238,8 @@ paths:
           required: true
           schema:
             type: integer
+      security:
+        - bearerAuth: [ ]
       responses:
         '200':
           description: 'Club deleted or not found'
@@ -184,6 +247,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Message'
+        '401':
+          description: 'Unauthorized - Missing or invalid token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /clubs/name/{name}:
+    get:
+      tags: [ 'Clubs' ]
+      summary: 'Get club by name'
+      operationId: 'getClubByName'
+      parameters:
+        - name: 'name'
+          in: 'path'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Club found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClubDetails'
+        '404':
+          description: 'Club not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: 'Invalid name'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /courts:
     post:
@@ -213,6 +313,43 @@ paths:
                 $ref: '#/components/schemas/Error'
         '401':
           description: 'Unauthorized - Missing or invalid token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags: [ 'Courts' ]
+      summary: 'Get all courts'
+      operationId: 'getAllCourts'
+      parameters:
+        - name: 'limit'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
+        - name: 'skip'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'List of courts'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CourtDetails'
+                  next:
+                    type: boolean
+                  previous:
+                    type: boolean
+        '404':
+          description: 'No courts found'
           content:
             application/json:
               schema:
@@ -260,15 +397,32 @@ paths:
           required: true
           schema:
             type: integer
+        - name: 'limit'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
+        - name: 'skip'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: 'List of courts found'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CourtDetails'
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CourtDetails'
+                  next:
+                    type: boolean
+                  previous:
+                    type: boolean
         '404':
           description: 'No courts found for this club'
           content:
@@ -351,6 +505,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /rentalsu/{id}:
     put:
       tags: [ 'Rentals' ]
       summary: 'Update rental by ID'
@@ -389,6 +545,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /rentalsd/{id}:
     delete:
       tags: [ 'Rentals' ]
       summary: 'Delete rental by ID'
@@ -461,15 +619,32 @@ paths:
           required: true
           schema:
             type: integer
+        - name: 'limit'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
+        - name: 'skip'
+          in: 'query'
+          required: false
+          schema:
+            type: integer
       responses:
         '200':
           description: 'List of user rentals'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RentalDetails'
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RentalDetails'
+                  next:
+                    type: boolean
+                  previous:
+                    type: boolean
         '404':
           description: 'No rentals found or user not found'
           content:
@@ -510,9 +685,16 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RentalDetails'
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RentalDetails'
+                  next:
+                    type: boolean
+                  previous:
+                    type: boolean
         '404':
           description: 'No rentals found'
           content:
@@ -594,11 +776,21 @@ components:
   schemas:
     UserInput:
       type: object
-      required: [ name, email ]
+      required: [ name, email, password ]
       properties:
         name:
           type: string
         email:
+          type: string
+        password:
+          type: string
+    UserLoginInput:
+      type: object
+      required: [ email, password ]
+      properties:
+        email:
+          type: string
+        password:
           type: string
     UserOutput:
       type: object
