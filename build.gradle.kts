@@ -41,7 +41,16 @@ tasks.withType<Jar>().configureEach {
     }
 }
 
-// Opcional: tarefa para criar um fat JAR (recomendado para deploys)
+// Task para dar run ao servidor atraves da linha de comandos
+tasks.register<JavaExec>("runServer") {
+    group = "application"
+    description = "Run server.kt"
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("pt/isel/ls/ServerKt") // Substitui pelo package + ServerKt
+    environment("JDBC_DATABASE_URL","jdbc:postgresql://localhost/postgres?user=postgres&password=tubarao")
+}
+
+
 tasks.register<Jar>("fatJar") {
     archiveClassifier.set("all")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -55,7 +64,7 @@ tasks.register<Jar>("fatJar") {
     })
 }
 
-// Copiar dependências separadas, se preferires
+
 tasks.register<Copy>("copyRuntimeDependencies") {
     into("build/libs")
     from(configurations.runtimeClasspath)
