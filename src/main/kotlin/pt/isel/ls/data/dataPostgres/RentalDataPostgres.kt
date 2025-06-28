@@ -2,18 +2,13 @@ package pt.isel.ls.data.dataPostgres
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.data.data.RentalData
-import pt.isel.ls.utlis.Date
-import pt.isel.ls.utlis.Duration
-import pt.isel.ls.utlis.Email
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
-import pt.isel.ls.utlis.Owner
-import pt.isel.ls.utlis.Password
-import pt.isel.ls.utlis.Token
-import pt.isel.ls.utlis.postgres.toClub
-import pt.isel.ls.utlis.postgres.toCourt
-import pt.isel.ls.utlis.postgres.toRental
-import pt.isel.ls.utlis.postgres.toUser
+import pt.isel.ls.utils.Date
+import pt.isel.ls.utils.Duration
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.postgres.toClub
+import pt.isel.ls.utils.postgres.toCourt
+import pt.isel.ls.utils.postgres.toRental
+import pt.isel.ls.utils.postgres.toUser
 import java.sql.SQLException
 import java.sql.Statement
 import javax.sql.DataSource

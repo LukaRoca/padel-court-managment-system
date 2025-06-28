@@ -1,11 +1,11 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.utlis.PaginatedResult
+import pt.isel.ls.utils.PaginatedResult
 import pt.isel.ls.domain.Club
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
-import pt.isel.ls.utlis.Token
-import pt.isel.ls.utlis.paginateWithInfo
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Name
+import pt.isel.ls.utils.Token
+import pt.isel.ls.utils.paginateWithInfo
 import pt.isel.ls.data.data.Data
 import pt.isel.ls.webApi.dto.ClubDetails
 import pt.isel.ls.webApi.dto.UserDetails

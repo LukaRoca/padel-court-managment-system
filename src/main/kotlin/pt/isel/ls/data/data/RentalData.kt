@@ -1,9 +1,9 @@
 package pt.isel.ls.data.data
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.utlis.Date
-import pt.isel.ls.utlis.Duration
-import pt.isel.ls.utlis.Id
+import pt.isel.ls.utils.Date
+import pt.isel.ls.utils.Duration
+import pt.isel.ls.utils.Id
 
 interface RentalData {
     fun createRental(court: Court, date: Date, duration: Duration, user: User): Rental?

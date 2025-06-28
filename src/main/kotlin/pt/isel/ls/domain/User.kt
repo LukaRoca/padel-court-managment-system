@@ -1,11 +1,11 @@
 package pt.isel.ls.domain
 
-import pt.isel.ls.utlis.Email
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
-import pt.isel.ls.utlis.Password
-import pt.isel.ls.utlis.Token
-import pt.isel.ls.utlis.validateName
+import pt.isel.ls.utils.Email
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Name
+import pt.isel.ls.utils.Password
+import pt.isel.ls.utils.Token
+import pt.isel.ls.utils.validateName
 
 data class User(
     val uid: Id,

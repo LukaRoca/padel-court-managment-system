@@ -1,8 +1,8 @@
 package pt.isel.ls.data.data
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Name
 
 interface ClubData {
     fun createClub(name: Name, user: User) : Club?

@@ -2,13 +2,11 @@ package pt.isel.ls.data.dataPostgres
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.data.data.ClubData
-import pt.isel.ls.utlis.Email
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
-import pt.isel.ls.utlis.Owner
-import pt.isel.ls.utlis.Token
-import pt.isel.ls.utlis.postgres.toClub
-import pt.isel.ls.utlis.postgres.toUser
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Name
+import pt.isel.ls.utils.Owner
+import pt.isel.ls.utils.postgres.toClub
+import pt.isel.ls.utils.postgres.toUser
 
 import java.sql.SQLException
 import java.sql.Statement

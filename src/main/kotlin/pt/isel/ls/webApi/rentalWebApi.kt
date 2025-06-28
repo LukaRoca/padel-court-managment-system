@@ -7,15 +7,15 @@ import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.path
-import pt.isel.ls.utlis.Date
-import pt.isel.ls.utlis.Duration
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Token
-import pt.isel.ls.utlis.exceptions.AuthorizationException
-import pt.isel.ls.utlis.isNotNegative
-import pt.isel.ls.utlis.mapRentalToDetails
-import pt.isel.ls.utlis.mapRentalsToDetailsList
-import pt.isel.ls.utlis.validateInt
+import pt.isel.ls.utils.Date
+import pt.isel.ls.utils.Duration
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Token
+import pt.isel.ls.utils.exceptions.AuthorizationException
+import pt.isel.ls.utils.isNotNegative
+import pt.isel.ls.utils.mapRentalToDetails
+import pt.isel.ls.utils.mapRentalsToDetailsList
+import pt.isel.ls.utils.validateInt
 import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.RentalServices
 

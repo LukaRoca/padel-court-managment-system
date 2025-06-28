@@ -1,22 +1,7 @@
 package data.courts
 
 import data.DataMemTests
-import pt.isel.ls.domain.Court
-import pt.isel.ls.domain.Club
-import pt.isel.ls.domain.User
-import pt.isel.ls.utlis.Email
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
-import pt.isel.ls.utlis.Owner
-import pt.isel.ls.utlis.Password
-import pt.isel.ls.utlis.Token
-import java.util.UUID
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFails
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class CourtMemTests : DataMemTests(), CourtTest {
     /*

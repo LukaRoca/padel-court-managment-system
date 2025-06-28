@@ -1,35 +1,43 @@
 @startuml
+skinparam defaultFontSize 18
+left to right direction
+
 
 entity User {
-    +Id uid
-    +Name name
-    +Email email
-    +Token token
+  * ID: Int <<PK>>
+  --
+  Name: String
+  Email: String
+  Password: String
 }
 
 entity Club {
-    +Id cid
-    +Name name
-    +Owner owner
+  * ID: Int <<PK>>
+  --
+  Name: String
+  OwnerId: Int <<FK>>
 }
 
 entity Court {
-    +Id crid
-    +Name name
-    +Club club
+  * ID: Int <<PK>>
+  --
+  Name: String
+  Location: String
+  ClubId: Int <<FK>>
 }
 
 entity Rental {
-    +Id rid
-    +Date date
-    +Duration duration
-    +User user
-    +Court court
+  * ID: Int <<PK>>
+  --
+  Date: Date
+  Initial_Hour: Time
+  End_Hour: Time
+  UserId: Int <<FK>>
+  CourtId: Int <<FK>>
 }
 
-User ||--o{ Rental : "makes"
-Club ||--o{ Court : "has"
-Court ||--o{ Rental : "is rented for"
-Club ||--o{ Rental : "has"
-
+User ||--o{ Club : owns
+Club ||--o{ Court : contains
+User ||--o{ Rental : reserves
+Court ||--o{ Rental : associated_with
 @enduml

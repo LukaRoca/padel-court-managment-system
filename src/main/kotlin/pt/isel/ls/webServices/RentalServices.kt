@@ -1,13 +1,13 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.utlis.PaginatedResult
+import pt.isel.ls.utils.PaginatedResult
 import pt.isel.ls.domain.*
-import pt.isel.ls.utlis.paginateWithInfo
+import pt.isel.ls.utils.paginateWithInfo
 import pt.isel.ls.data.data.Data
-import pt.isel.ls.utlis.Date
-import pt.isel.ls.utlis.Duration
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Token
+import pt.isel.ls.utils.Date
+import pt.isel.ls.utils.Duration
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Token
 import pt.isel.ls.webApi.dto.*
 import java.lang.IllegalStateException
 
