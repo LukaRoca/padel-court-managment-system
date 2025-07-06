@@ -2,9 +2,9 @@ package pt.isel.ls.data.dataMem
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.data.data.RentalData
-import pt.isel.ls.utlis.Date
-import pt.isel.ls.utlis.Duration
-import pt.isel.ls.utlis.Id
+import pt.isel.ls.utils.Date
+import pt.isel.ls.utils.Duration
+import pt.isel.ls.utils.Id
 
 class RentalDataMem(private val rentals: DataMemMap<Rental> = DataMemMap()) : RentalData {
 

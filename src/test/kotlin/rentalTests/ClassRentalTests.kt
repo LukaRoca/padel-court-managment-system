@@ -2,14 +2,14 @@ package rentalTests
 
 import org.junit.Test
 import pt.isel.ls.domain.*
-import pt.isel.ls.utlis.Date
-import pt.isel.ls.utlis.Duration
-import pt.isel.ls.utlis.Email
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
-import pt.isel.ls.utlis.Owner
-import pt.isel.ls.utlis.Password
-import pt.isel.ls.utlis.Token
+import pt.isel.ls.utils.Date
+import pt.isel.ls.utils.Duration
+import pt.isel.ls.utils.Email
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Name
+import pt.isel.ls.utils.Owner
+import pt.isel.ls.utils.Password
+import pt.isel.ls.utils.Token
 import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

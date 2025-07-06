@@ -1,4 +1,3 @@
-# Phase 1
 
 ## Introduction
 
@@ -10,7 +9,7 @@ This document contains the relevant design and implementation aspects of LS proj
 
 The following diagram holds the Entity-Relationship model for the information managed by the system.
 
-![img.png](img.png)
+![Diagrama.png](Diagrama.png)
 
 We highlight the following aspects:
 
@@ -20,31 +19,41 @@ We highlight the following aspects:
 
 The conceptual model has the following restrictions:
 
-- Data Integrity: We need to ensure that each field is not null, and that the data is consistent with the type of the field.
-- Relationship Integrity: We need to ensure that the relationships between the domains are consistent, and that the data is consistent with the relationships.
-- Security: We need to ensure that the data is secure and that only authorized users can access the data needing a token that is unique to each user.
-- Error handling: We need to ensure that the data is handled correctly and that the user is informed of any errors that may occur.
+#### 1. User
+- Each user must have a unique email.
+- Each user must have a unique token.
+- Passwords must meet basic security standards (minimum length, special character, etc...).
+
+#### 2. Club
+- Each club must have a unique name.
+- A club must have an owner.
+
+#### 3. Court
+- Courts within the same club must have unique names.
+- Courts must belong to only one club.
+
+#### 4. Rental
+- The start time must be before the end time.
+- Rentals must be for available courts only.
 
 ### Physical Model ###
 
-The physical model has the following tables:
-- User: This table stores information about users, including their ID, name, email, and password.
-- Club: This table stores information about clubs, including their ID, name.
-- Court: This table stores information about courts, including their ID, name, and location.
-- Rental: This table stores information about rentals, including their ID, date, start and end time, user ID, and court ID.
+Physical model of database: [SQL Schema](../src/main/sql/createSchema.sql)
 
-We highlight the following aspects of this model:  
+We highlight the following aspects of this model:
 
-- Indexing: Proper indexing of tables to improve query performance.
-- Foreign Keys: Use of foreign keys to enforce referential integrity.
-- Data Types: Choosing appropriate data types for each column to optimize storage and performance.
-- Constraints: Implementing constraints to ensure data validity and integrity.
+- A `Rental` is considered valid only if the start time precedes the end time.  
+- A `Club` with active courts or rentals cannot be deleted.  
+- The uniqueness of `User` emails ensures no duplicate accounts can exist.  
+- The relationship integrity is maintained through entity constraints (e.g., a `Court` must belong to an existing `Club`).  
+- Dates are validated to match the format `YYYY-MM-DD` and must represent real, valid dates.
+
 
 ## Software organization
 
 ### Open-API Specification ###
 
-https://app.swaggerhub.com/apis/afonsosantos-d07/courts-api/1.0.0
+[API Documentation](apiDoc.yaml)
 
 In our Open-API specification, we highlight the following aspects:
 
@@ -113,12 +122,18 @@ The errors are handled in the following way:
 
 - By a try-catch block that is going to call another class that treats the error by their type and returns the exact type in Http error number format (ex: 404, 500, etc.).
 
-## Critical Evaluation
+## Deployment
 
-- Identified Defects: There are known issues with the date handling in rental bookings, which need to be addressed.
+We have successfully deployed our site using Render and Docker. The Dockerfile used for the deployment is located in the root directory of our project. The deployment process involves building a Docker image from our Dockerfile and then deploying that image using Render.
 
-Improvements for Next Phase:
-- Complete the implementation of more endpoints.
-- Improve error handling to provide more detailed error messages.
-- Optimize database queries for better performance.
-- Enhance security measures, such as implementing rate limiting and improving token management.
+### Docker
+
+Docker is a platform that allows us to automate the deployment, scaling, and management of applications. It uses containerization technology to package up an application with all of its dependencies into a standardized unit for software development.
+
+### Password Encryption
+
+We use bcrypt for password encryption. When a player creates an account or changes their password, we hash the password using bcrypt and store the hash in our database. The `Password` class ensures that passwords meet strength requirements.
+
+During login, the entered password is hashed and compared with the stored hash. If they match, access is granted. This method ensures that even if our database is compromised, the actual passwords remain secure.
+
+Bcrypt is a one-way hash function, making it computationally infeasible to reverse the process and obtain the original password from the hash.

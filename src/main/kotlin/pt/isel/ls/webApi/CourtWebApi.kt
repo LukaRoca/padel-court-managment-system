@@ -6,11 +6,11 @@ import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.path
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
-import pt.isel.ls.utlis.Token
-import pt.isel.ls.utlis.isNotNegative
-import pt.isel.ls.utlis.validateInt
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Name
+import pt.isel.ls.utils.Token
+import pt.isel.ls.utils.isNotNegative
+import pt.isel.ls.utils.validateInt
 import pt.isel.ls.webApi.dto.*
 import pt.isel.ls.webServices.CourtServices
 

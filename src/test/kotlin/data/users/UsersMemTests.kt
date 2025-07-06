@@ -1,21 +1,7 @@
 package data.users
 
 import data.DataMemTests
-import jdk.internal.org.jline.utils.InfoCmp
-import junit.framework.TestCase.assertNull
-import pt.isel.ls.domain.User
-import pt.isel.ls.utlis.Email
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
-import pt.isel.ls.utlis.Password
-import pt.isel.ls.utlis.Token
-import java.util.UUID
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFails
-import kotlin.test.assertFailsWith
-import kotlin.test.assertNotEquals
-import kotlin.test.assertNull
 
 class UsersMemTests : DataMemTests(), UsersTest {
     @Test

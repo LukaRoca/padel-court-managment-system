@@ -1,4 +1,4 @@
-package pt.isel.ls.utlis.exceptions
+package pt.isel.ls.utils.exceptions
 
 class AuthorizationException(message: String) : Exception(message)
 

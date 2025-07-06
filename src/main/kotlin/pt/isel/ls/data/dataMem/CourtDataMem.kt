@@ -2,8 +2,8 @@ package pt.isel.ls.data.dataMem
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.data.data.CourtData
-import pt.isel.ls.utlis.Id
-import pt.isel.ls.utlis.Name
+import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.Name
 
 class CourtDataMem(private val courts: DataMemMap<Court> = DataMemMap()) : CourtData {
 

@@ -15,14 +15,6 @@ export const renderSelectClub = async (mainContent) => {
         )
     );
 
-    /*
-    clubSelect.addEventListener("change", (e) => {
-        const selectedClubId = e.target.value;
-        clubSelect.disabled = true;
-        //renderSelectCourt(mainContent, selectedClubId)
-    });
-
-     */
 };
 
 export const renderSelectCourt = async (mainContent, clubID) => {
@@ -135,9 +127,9 @@ export const renderCreateRental = async (mainContent) => {
                                 className: "form-control",
                                 required: true,
                                 id: "endDuration",
-                                min: "1",
-                                max: "24",
-                                placeholder: "Enter hour (1-24)"
+                                min: "0",
+                                max: "23",
+                                placeholder: "Enter hour (0-23)"
                             })
                         ),
                         button({ type: "submit", className: "btn btn-primary" }, "Create Rental")

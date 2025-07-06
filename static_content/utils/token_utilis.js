@@ -1,15 +1,4 @@
 
-/*
-export function getToken() {
-    return token
-}
-
-export function setToken(setoken) {
-    token = setoken
-}
-
- */
-
 export function getToken() {
     const userData = JSON.parse(sessionStorage.getItem('user') || '{}');
     return userData.token || null;

@@ -1,4 +1,4 @@
-package pt.isel.ls.utlis
+package pt.isel.ls.utils
 import org.mindrot.jbcrypt.BCrypt
 import pt.isel.ls.domain.User
 import java.time.LocalDate
