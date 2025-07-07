@@ -1,7 +1,7 @@
 GET http://localhost:8080/users/1
 
 ###
-GET http://localhost:8080/userss/login?email=bjjaco@gmail.com&password=$2a$10$LbgsghFKvKz2lWzVvHL4EuAxj14XxbfTXEux2VWzwDE0UIatn9h/W
+GET http://localhost:8080/userss/login?email=lukastrocaaaaa@gmail.com&password=$2a$10$LdpOpuzlM.AQg3kHu9jfLORvcIvOVqSG45S5qdWRj9LN7Vt9DDyee
 
 ###
 POST http://localhost:8080/users

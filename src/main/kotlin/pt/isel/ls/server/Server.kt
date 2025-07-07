@@ -1,7 +1,11 @@
-package pt.isel.ls
+package pt.isel.ls.server
 
 import org.http4k.server.*
+import pt.isel.ls.CONN_NAME
+import pt.isel.ls.PORT
+import pt.isel.ls.Routes
 import pt.isel.ls.data.dataPostgres.*
+import pt.isel.ls.logger
 import pt.isel.ls.webApi.*
 import pt.isel.ls.webServices.*
 

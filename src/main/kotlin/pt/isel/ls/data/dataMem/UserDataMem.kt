@@ -1,21 +1,23 @@
 package pt.isel.ls.data.dataMem
 
-import pt.isel.ls.domain.*
 import pt.isel.ls.data.UserData
-import pt.isel.ls.utils.Email
+import pt.isel.ls.domain.*
 import pt.isel.ls.utils.Id
-import pt.isel.ls.utils.Name
-import pt.isel.ls.utils.Password
 import pt.isel.ls.utils.Token
+import pt.isel.ls.webApi.models.user.UserCreate
 import java.util.*
 
-class UserDataMem(private val users: DataMemMap<User> = DataMemMap()) : pt.isel.ls.data.UserData {
+class UserDataMem(private val users: DataMemMap<User> = DataMemMap()) : UserData {
 
-    override fun createUser(
-        name: Name, email: Email, password: Password
-    ): User {
+    override fun createUser(userCreate: UserCreate): User {
         val token = UUID.randomUUID().toString()
-        val newUser = User(Id(users.nextId.get()), name, email, Token(token), password)
+        val newUser = User(
+            Id(users.nextId.get()),
+            userCreate.name,
+            userCreate.email,
+            Token(token),
+            userCreate.password
+        )
         users.map[users.nextId.get()] = newUser
         return newUser
     }

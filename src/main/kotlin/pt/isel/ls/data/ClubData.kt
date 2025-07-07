@@ -7,7 +7,7 @@ import pt.isel.ls.webApi.dto.ClubInput
 import pt.isel.ls.webApi.models.club.ClubCreate
 
 interface ClubData {
-    fun createClub(clubCreate: ClubCreate) : Club
+    fun createClub(clubCreate: ClubCreate, user: User) : Club
 
     fun getClubById(cid: Id): Club?
 

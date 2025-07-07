@@ -1,17 +1,23 @@
-package pt.isel.ls.data.dataMem
-
+import pt.isel.ls.data.dataMem.ClubDataMem
+import pt.isel.ls.data.dataMem.CourtDataMem
+import pt.isel.ls.data.dataMem.DataSchema
+import pt.isel.ls.data.dataMem.RentalDataMem
+import pt.isel.ls.data.dataMem.UserDataMem
 import pt.isel.ls.data.ClubData
 import pt.isel.ls.data.CourtData
-import pt.isel.ls.data.Data
 import pt.isel.ls.data.RentalData
 import pt.isel.ls.data.UserData
 
 class DataMem : pt.isel.ls.data.Data, DataSchema() {
-    override val user: pt.isel.ls.data.UserData = UserDataMem(usersDb)
+    override fun reset() {
+        usersDb.clear()
+        clubsDb.clear()
+        courtsDb.clear()
+        rentalsDb.clear()
+    }
 
-    override val club: pt.isel.ls.data.ClubData = ClubDataMem(clubsDb)
-
-    override val court: pt.isel.ls.data.CourtData = CourtDataMem(courtsDb)
-
-    override val rental: pt.isel.ls.data.RentalData = RentalDataMem(rentalsDb)
+    override val user: UserData = UserDataMem(usersDb)
+    override val club: ClubData = ClubDataMem(clubsDb)
+    override val court: CourtData = CourtDataMem(courtsDb)
+    override val rental: RentalData = RentalDataMem(rentalsDb)
 }

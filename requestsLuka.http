@@ -11,7 +11,7 @@ GET http://localhost:8080/users/1
 
 ###
 POST http://localhost:8080/club
-Authorization: Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19
+Authorization: Bearer d857c1b1-f889-4926-a2e0-3a07b93f11da
 Content-Type: application/json
 
 {
@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/clubs/name/Padel Luka1
+GET http://localhost:8080/clubs/name/Test Club
 Accept: application/json
 
 ###

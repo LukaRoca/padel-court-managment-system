@@ -30,7 +30,7 @@ val sqlClub = """
 class ClubDataPostgres (private val conn: () -> Connection): ClubData {
 
 
-    /*
+
     override fun createClub(
         name: Name, user: User
     ) : Club? =
@@ -57,7 +57,7 @@ class ClubDataPostgres (private val conn: () -> Connection): ClubData {
         }
 
 
-     */
+
 
     override fun createClub(
         clubCreate: ClubCreate,
