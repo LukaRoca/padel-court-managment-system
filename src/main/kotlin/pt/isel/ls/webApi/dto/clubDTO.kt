@@ -11,10 +11,3 @@ data class ClubInput(
 data class ClubOutput(
     val id : Int
 )
-
-@Serializable
-data class ClubDetails(
-    val id : Int,
-    val name : String,
-    val owner : UserDetails
-)

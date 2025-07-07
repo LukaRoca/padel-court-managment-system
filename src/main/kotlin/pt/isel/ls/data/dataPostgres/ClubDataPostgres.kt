@@ -5,10 +5,14 @@ import pt.isel.ls.data.ClubData
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Owner
+import pt.isel.ls.utils.PaginatedResponse
 import pt.isel.ls.utils.postgres.toClub
 import pt.isel.ls.utils.postgres.toUser
 import pt.isel.ls.utils.postgres.useWithRollback
 import pt.isel.ls.webApi.models.club.ClubCreate
+import pt.isel.ls.webApi.models.club.ClubListResponse
+import pt.isel.ls.webApi.models.club.ClubResponse
+import pt.isel.ls.webApi.models.club.ClubSearch
 import java.sql.Connection
 
 import java.sql.SQLException
@@ -47,18 +51,22 @@ class ClubDataPostgres (private val conn: () -> Connection): ClubData {
 
     override fun getClubByName(name: Name): Club? = fetchClub("name", name.name)
 
-    override fun getClubs(): List<Club> =
+    override fun getClubs(
+        searchParams: ClubSearch,
+        limit: Int,
+        skip: Int
+    ): PaginatedResponse<ClubResponse> =
         conn().useWithRollback {
-            val clubs = mutableListOf<Club>()
-            val sql = "SELECT * FROM club"
-            val stmt = it.prepareStatement(sql)
+            val clubs = mutableListOf<ClubResponse>()
+            val sql = "SELECT * FROM club WHERE name = ?"
+            val stmt = it.prepareStatement(sql).apply { setString(1, searchParams.name) }
             val rs = stmt.executeQuery()
             while (rs.next()) {
                 clubs.add(
-                    rs.toClub()
+                    ClubResponse(rs.toClub())
                 )
             }
-            return clubs
+            return PaginatedResponse.fromList(clubs, limit, skip)
         }
 
     override fun deleteClub(club: Club): Boolean =
