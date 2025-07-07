@@ -13,8 +13,8 @@ export const renderUpdateRental = (mainContent, rentalId) => {
             alert("Rental updated with sucess")
             const rental = await fetchRentalById(update.id)
             if (context === "user") {
-                window.location.hash = `rentals/${rental.user.id}`
-            } else window.location.hash = `court/rentals/${rental.court.id}`
+                window.location.hash = `rentals/${rental.user}`
+            } else window.location.hash = `court/rentals/${rental.courtId}`
         } catch (error) {
             alert("Error creating rental : " + (error.message || error));
         }
