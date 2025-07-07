@@ -6,10 +6,10 @@ import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.generateRandomString
 
 @Serializable
-data class ClubCreate(val name: Name) {
+data class ClubCreate(val name: String) {
     companion object Factory {
         fun create(
-            name: Name = Name(generateRandomString()),
+            name: String = generateRandomString(),
         ): ClubCreate {
             return ClubCreate(name)
         }

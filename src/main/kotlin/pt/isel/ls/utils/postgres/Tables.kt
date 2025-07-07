@@ -1,5 +1,6 @@
 package pt.isel.ls.utils.postgres
 
+import kotlinx.serialization.internal.InlinePrimitiveDescriptor
 import pt.isel.ls.domain.Club
 import pt.isel.ls.domain.Court
 import pt.isel.ls.domain.Rental
@@ -34,11 +35,12 @@ fun ResultSet.toUser(): User {
  *
  * @return The converted [Club] object.
  */
-fun ResultSet.toClub(owner: User): Club {
+fun ResultSet.toClub(): Club {
     return Club(
-        Id(getInt("c_id")),
-        Name(getString("c_name")),
-        Owner(owner)
+        Id(getInt("cid")),
+        Name(getString("name")),
+        Id(getInt("owner")),
+        mutableListOf()
     )
 }
 
@@ -47,11 +49,11 @@ fun ResultSet.toClub(owner: User): Club {
  *
  * @return The converted [Court] object.
  */
-fun ResultSet.toCourt(club: Club): Court {
+fun ResultSet.toCourt(): Court {
     return Court(
-        Id(getInt("cr_rid")),
-        Name(getString("cr_name")),
-        club
+        Id(getInt("crid")),
+        Name(getString("name")),
+        Id(getInt("club"))
     )
 }
 
@@ -60,14 +62,14 @@ fun ResultSet.toCourt(club: Club): Court {
  *
  * @return The converted [Rental] object.
  */
-fun ResultSet.toRental(user: User, court: Court): Rental {
+fun ResultSet.toRental(): Rental {
     return Rental(
-        Id(getInt("r_id")),
-        Date(getString("r_date")),
-        Duration(getInt("r_initd"),
-            getInt("r_end")),
-        user,
-        court
+        Id(getInt("rid")),
+        Date(getString("date")),
+        Duration(getInt("initDuration"),
+            getInt("endDuration")),
+        Id(getInt("usr")),
+        Id(getInt("court"))
     )
 }
 

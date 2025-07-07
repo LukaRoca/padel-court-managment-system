@@ -38,15 +38,20 @@ class UserDataPostgres (private val conn: () -> Connection) : UserData {
             val keys = stmt.generatedKeys
 
             if (keys.next()) {
-                return User(Id(keys.getInt(1)), name , email, Token(token.toString()), password)
+                return User(Id(keys.getInt(1)), name , email, token, password)
             }
 
             throw SQLException("Error while creating a new user.")
         }
 
-    override fun getUserById(userId: Id): User? = fetchUser("uid", userId)
+    override fun getUserById(userId: Id): User? = fetchUser("uid", userId.id)
 
-    override fun getUserByToken(token: Token): User? = fetchUser("token", token)
+    override fun getUserByToken(token: UUID): User? = fetchUser("token", token)
+
+    override fun getUserByEmail(email: Email): User? = fetchUser("email", email.value)
+
+    override fun getUserByName(name : Name): User? = fetchUser("name", name.name)
+
 
     override fun getAllUsers(): List<User> =
         conn().useWithRollback {

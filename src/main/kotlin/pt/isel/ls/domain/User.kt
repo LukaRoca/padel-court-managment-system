@@ -1,17 +1,21 @@
 package pt.isel.ls.domain
 
+import kotlinx.serialization.Serializable
 import pt.isel.ls.utils.Email
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Password
 import pt.isel.ls.utils.Token
 import pt.isel.ls.utils.validateName
+import java.util.UUID
+import pt.isel.ls.utils.serializers.UUIDSerializer
 
 data class User(
     val uid: Id,
     val name: Name,
     val email: Email,
-    val token: Token,
+    @Serializable(with = UUIDSerializer::class)
+    val token: UUID,
     val password: Password
 ){
     init {

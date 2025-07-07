@@ -28,6 +28,6 @@ create table if not exists rental (
     endDuration int not null,
     usr int references users(uid),
     court int references court(crid) on delete cascade
-)
+);
 
 commit;

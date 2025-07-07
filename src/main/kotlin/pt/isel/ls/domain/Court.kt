@@ -8,10 +8,9 @@ import pt.isel.ls.utils.validateName
 data class Court(
     val id: Id,
     val name: Name,
-    val club: Club,
+    val club: Id,
 ) {
     init {
         validateName(name.name, 3, 100, "Court")
-        validateClubName(club.name.name, 3, 100, "Club")
     }
 }
