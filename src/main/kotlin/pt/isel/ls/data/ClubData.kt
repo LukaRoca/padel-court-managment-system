@@ -14,7 +14,6 @@ interface ClubData {
     fun getClubById(cid: Id): Club?
 
     fun getClubs(
-        searchParams: ClubSearch,
         limit: Int,
         skip: Int
     ): PaginatedResponse<ClubResponse>

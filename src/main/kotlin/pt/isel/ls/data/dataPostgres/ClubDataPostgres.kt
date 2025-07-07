@@ -52,14 +52,13 @@ class ClubDataPostgres (private val conn: () -> Connection): ClubData {
     override fun getClubByName(name: Name): Club? = fetchClub("name", name.name)
 
     override fun getClubs(
-        searchParams: ClubSearch,
         limit: Int,
         skip: Int
     ): PaginatedResponse<ClubResponse> =
         conn().useWithRollback {
             val clubs = mutableListOf<ClubResponse>()
             val sql = "SELECT * FROM club WHERE name = ?"
-            val stmt = it.prepareStatement(sql).apply { setString(1, searchParams.name) }
+            val stmt = it.prepareStatement(sql)
             val rs = stmt.executeQuery()
             while (rs.next()) {
                 clubs.add(
