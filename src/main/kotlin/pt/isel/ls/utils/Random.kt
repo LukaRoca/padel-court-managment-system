@@ -67,3 +67,28 @@ fun generateRandomPassword(length: Int = 10): Password {
     return Password(passwordChars.shuffled().joinToString(""))
 }
 
+/*
+* Generates a random duration for a rental
+*
+* init can be from 0..22 because a rental needs to be at least 1 hour long
+*
+* end it will be from init..23.
+ */
+fun generateRandomDuration(): Duration {
+    val inithours = (0..22).random()
+    val endHours = (inithours..23).random()
+    return Duration(inithours, endHours)
+}
+
+/*
+* Generates a random date for a rental
+*
+* Defines the format being YYYY-MM-DD
+ */
+fun generateRandomDate(): Date {
+    val year = (0..9999).random().toString().padStart(4, '0')
+    val month = (1..12).random().toString().padStart(2, '0')
+    val day = (1..30).random().toString().padStart(2, '0')
+    return Date("$year-$month-$day")
+}
+

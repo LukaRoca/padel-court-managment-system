@@ -4,19 +4,14 @@ import kotlinx.serialization.Serializable
 import pt.isel.ls.domain.User
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.generateRandomString
-import pt.isel.ls.webApi.dto.UserDetails
 
 @Serializable
-data class ClubCreate(
-    val name: Name,
-    val owner: UserDetails
-) {
+data class ClubCreate(val name: String) {
     companion object Factory {
         fun create(
-            name: Name = Name(generateRandomString()),
-            owner: UserDetails
+            name: String = generateRandomString(),
         ): ClubCreate {
-            return ClubCreate(name, owner)
+            return ClubCreate(name)
         }
     }
 }

@@ -30,6 +30,7 @@ data class Id (val id : Int){
     init { if(id <= 0) throw IllegalArgumentException("Id must be positive and non-zero") }
 }
 
+@Serializable
 data class Duration (val initDuration : Int, val endDuration : Int) {
     val hours = endDuration - initDuration
 
@@ -40,6 +41,8 @@ data class Duration (val initDuration : Int, val endDuration : Int) {
         require(endDuration > initDuration) { "End duration must be greater than initial duration" }
     }
 }
+
+@Serializable
 data class Date( val value: String) {
     init {
         try {
