@@ -1,4 +1,4 @@
-package pt.isel.ls.data.data
+package pt.isel.ls.data
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.utils.Id

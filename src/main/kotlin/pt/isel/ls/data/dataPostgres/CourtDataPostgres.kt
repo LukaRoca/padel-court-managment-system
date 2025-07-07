@@ -1,11 +1,12 @@
 package pt.isel.ls.data.dataPostgres
 import pt.isel.ls.domain.*
-import pt.isel.ls.data.data.CourtData
+import pt.isel.ls.data.CourtData
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.postgres.toClub
 import pt.isel.ls.utils.postgres.toCourt
 import pt.isel.ls.utils.postgres.toUser
+import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import javax.sql.DataSource
@@ -25,7 +26,7 @@ val sqlCourt = """
             FROM court
 """.trimIndent()
 
-class CourtDataPostgres (private val dataSource: DataSource) : CourtData{
+class CourtDataPostgres (private val conn: () -> Connection) : CourtData {
     override fun createCourt(name: Name, club: Club): Court? =
         dataSource.connection.use {
             val sql = "INSERT INTO court(name, club) VALUES (?, ?)"

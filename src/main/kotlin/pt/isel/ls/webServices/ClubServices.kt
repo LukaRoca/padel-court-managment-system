@@ -6,11 +6,11 @@ import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Token
 import pt.isel.ls.utils.paginateWithInfo
-import pt.isel.ls.data.data.Data
+import pt.isel.ls.data.Data
 import pt.isel.ls.webApi.dto.ClubDetails
 import pt.isel.ls.webApi.dto.UserDetails
 
-class ClubServices (private val db : Data) {
+class ClubServices (private val db : pt.isel.ls.data.Data) {
     fun createClub(name : Name, token : Token) : Club? {
         val user = db.user.getUserByToken(token) ?: throw IllegalArgumentException("Invalid token")
         val existingClubs = db.club.getClubs()

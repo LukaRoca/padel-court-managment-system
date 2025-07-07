@@ -9,7 +9,7 @@ import org.http4k.core.Status.Companion.CREATED
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.Routes
 import pt.isel.ls.data.dataPostgres.*
-import pt.isel.ls.data.data.Data
+import pt.isel.ls.data.Data
 import pt.isel.ls.webApi.dto.ClubInput
 import pt.isel.ls.webApi.*
 import pt.isel.ls.webServices.*

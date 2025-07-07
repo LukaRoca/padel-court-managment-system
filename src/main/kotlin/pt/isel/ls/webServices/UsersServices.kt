@@ -3,7 +3,7 @@ package pt.isel.ls.webServices
 import pt.isel.ls.utils.PaginatedResult
 import pt.isel.ls.domain.*
 import pt.isel.ls.utils.paginateWithInfo
-import pt.isel.ls.data.data.Data
+import pt.isel.ls.data.Data
 import pt.isel.ls.utils.Email
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
@@ -11,7 +11,7 @@ import pt.isel.ls.utils.Password
 import pt.isel.ls.utils.Token
 import pt.isel.ls.webApi.dto.UserDetails
 
-class UserServices (private val db : Data) {
+class UserServices (private val db : pt.isel.ls.data.Data) {
 
     fun getUserById(userId: Id): User? {
         return db.user.getUserById(userId)
