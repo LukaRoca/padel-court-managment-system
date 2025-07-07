@@ -16,8 +16,8 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
             {className: "align-middle"},
             td({className: "px-3 py-3"}, rental.id),
             td({className: "px-3 py-3"}, rental.date),
-            td({className: "px-3 py-3"}, rental.user.id),
-            td({className: "px-3 py-3"}, rental.court.id),
+            td({className: "px-3 py-3"}, rental.user),
+            td({className: "px-3 py-3"}, rental.courtId),
             td(
                 {className: "px-3 py-3 text-center"},
                 a({
@@ -35,7 +35,7 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
                         if (confirm("Tens a certeza que queres eliminar este rental?")) {
                             await fetchDeleteRental(rental.id);
                             console.log(rental.user.id)
-                            window.location.hash = `#rentals/${rental.user.id}`;
+                            window.location.hash = `#rentals/${rental.user}`;
                             window.location.reload(); // força o refresh da página
                         }
                     }
@@ -48,7 +48,7 @@ export const renderRentalsByUid = (mainContent, rentals, onNext, onPrevious, has
         {className: "d-flex justify-content-between align-items-center mt-5 pt-4 border-top"},
         hasPrevious ? button({className: "btn btn-outline-primary", onclick: onPrevious}, "Previous") : div({}),
         rentals[0] ? a({
-                href: `${API_BASE_URL}#users/${rentals[0].user.id}`,
+                href: `${API_BASE_URL}#users/${rentals[0].user}`,
                 className: "btn btn-outline-secondary d-inline-flex align-items-center gap-1"
             },
             span({className: "material-icons", style: "font-size: 1.1em;"}),

@@ -49,13 +49,8 @@ export const renderCourtDetail = (mainContent, court) => {
                         {className: "card-body py-3 px-3"},
                         p(
                             {className: "card-text mb-2"},
-                            span({className: "fw-bold"}, "Club: "),
-                            court.club?.name || 'N/A'
-                        ),
-                        p(
-                            {className: "card-text mb-2"},
-                            span({className: "fw-bold"}, "Club Owner: "),
-                            court.club.owner?.name || 'N/A'
+                            span({className: "fw-bold"}, "Club ID: "),
+                            court.clubId || 'N/A'
                         ),
                         p(
                             {className: "small text-muted mt-3"},
@@ -92,7 +87,7 @@ export const renderCourtDetail = (mainContent, court) => {
         div(
             {className: "d-flex justify-content-between align-items-center mt-5 pt-4 border-top"},
             a({
-                    href: `${API_BASE_URL}#club/${court.club.id}`,
+                    href: `${API_BASE_URL}#club/${court.clubId}`,
                     className: "btn btn-outline-secondary d-inline-flex align-items-center gap-1",
                 },
                 span({ className: "material-icons", style: "font-size: 1.1em;" }),

@@ -35,9 +35,9 @@ export const renderRentalsByDate = (mainContent, rentals = null) => {
                                 {className: "card-body"},
                                 rental.rid && h5({className: "card-title"}, `Rental #${rental.rid}`),
                                 rental.user ?
-                                    p({className: "card-text"}, strong({}, "User: "), rental.user.name || rental.user.username || `User ${rental.user.id || rental.user.uid}`) : null,
+                                    p({className: "card-text"}, strong({}, "User: "), `User ${rental.user || rental.user}`) : null,
                                 rental.court ?
-                                    p({className: "card-text"}, strong({}, "Court: "), rental.court.name || rental.court.location || `Court ${rental.court.id || rental.court.cid}`) : null,
+                                    p({className: "card-text"}, strong({}, "Court: "), `Court ${rental.courtId || rental.court.cid}`) : null,
                                 rental.date ?
                                     p({className: "card-text"}, strong({}, "Date: "), new Date(rental.date).toLocaleDateString()) : null,
                                 rental.duration ?

@@ -56,21 +56,7 @@ export const renderRentalDetails = (mainContent, rental) => {
                                     {className: "col-md-6"},
                                     div({className: "mb-2"},
                                         span({className: "fw-bold d-block text-muted small"}, "Duration"),
-                                        span({className: "fs-5"}, `${rental.duration.hours}h`)
-                                    )
-                                ),
-                                div(
-                                    {className: "col-md-6"},
-                                    div({className: "mb-2"},
-                                        span({className: "fw-bold d-block text-muted small"}, "Initial Hours"),
-                                        span({className: "fs-5"},  `${rental.duration.initDuration}h`)
-                                    )
-                                ),
-                                div(
-                                    {className: "col-md-6"},
-                                    div({className: "mb-2"},
-                                        span({className: "fw-bold d-block text-muted small"}, "Final Hours"),
-                                        span({className: "fs-5"}, `${rental.duration.endDuration}h`)
+                                        span({className: "fs-5"}, `${rental.duration.initDuration}h`)
                                     )
                                 ),
                             )
@@ -85,9 +71,9 @@ export const renderRentalDetails = (mainContent, rental) => {
                                     div({className: "d-flex flex-column"},
                                         span({className: "fw-bold d-block text-muted small mb-2"}, "User"),
                                         a({
-                                            href: `${API_BASE_URL}#users/${rental.user.id}`,
+                                            href: `${API_BASE_URL}#users/${rental.user}`,
                                             className: "btn btn-outline-primary btn-sm"
-                                        }, `View User #${rental.user.id}`)
+                                        }, `View User #${rental.user}`)
                                     )
                                 ),
                                 div(
@@ -95,9 +81,9 @@ export const renderRentalDetails = (mainContent, rental) => {
                                     div({className: "d-flex flex-column"},
                                         span({className: "fw-bold d-block text-muted small mb-2"}, "Court"),
                                         a({
-                                            href: `${API_BASE_URL}#court/${rental.court.id}`,
+                                            href: `${API_BASE_URL}#court/${rental.courtId}`,
                                             className: "btn btn-outline-primary btn-sm"
-                                        }, `View Court #${rental.court.id}`)
+                                        }, `View Court #${rental.courtId}`)
                                     )
                                 )
                             )

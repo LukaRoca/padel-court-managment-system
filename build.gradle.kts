@@ -47,7 +47,7 @@ tasks.register<JavaExec>("runServer") {
     description = "Run server.kt"
     classpath = sourceSets["main"].runtimeClasspath
     mainClass.set("pt/isel/ls/ServerKt") // Substitui pelo package + ServerKt
-    environment("JDBC_DATABASE_URL","jdbc:postgresql://localhost/postgres?user=postgres&password=tubarao")
+    environment("JDBC_DATABASE_URL","jdbc:postgresql://localhost/ls?user=postgres&password=tubarao")
 }
 
 

@@ -16,8 +16,8 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
             {className: "align-middle"},
             td({className: "px-3 py-3"}, rental.id),
             td({className: "px-3 py-3"}, rental.date),
-            td({className: "px-3 py-3"}, rental.user.id),
-            td({className: "px-3 py-3"}, rental.court.id),
+            td({className: "px-3 py-3"}, rental.user),
+            td({className: "px-3 py-3"}, rental.courtId),
             td(
                 {className: "px-3 py-3 text-center"},
                 a({
@@ -34,8 +34,8 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
                         e.preventDefault();
                         if (confirm("Tens a certeza que queres eliminar este rental?")) {
                             await fetchDeleteRental(rental.id);
-                            console.log(rental.court.id)
-                            window.location.hash = `#court/rentals/${rental.court.id}`;
+                            console.log(rental.courtId)
+                            window.location.hash = `#court/rentals/${rental.courtId}`;
                             window.location.reload(); // força o refresh da página
                         }
                     }
@@ -48,7 +48,7 @@ export const renderRentalsByCrid = (mainContent, rentals, onNext, onPrevious, ha
         {className: "d-flex justify-content-between align-items-center mt-5 pt-4 border-top"},
         hasPrevious ? button({className: "btn btn-outline-primary", onclick: onPrevious}, "Previous") : div({}),
         rentals[0] ? a({
-                href: `${API_BASE_URL}#court/${rentals[0].court.id}`,
+                href: `${API_BASE_URL}#court/${rentals[0].courtId}`,
                 className: "btn btn-outline-secondary d-inline-flex align-items-center gap-1"
             },
             span({className: "material-icons", style: "font-size: 1.1em;"}),

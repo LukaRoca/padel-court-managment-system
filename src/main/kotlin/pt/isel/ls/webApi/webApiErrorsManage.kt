@@ -1,5 +1,6 @@
 package pt.isel.ls.webApi
 import kotlinx.serialization.json.Json
+import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import pt.isel.ls.utils.exceptions.AuthorizationException
@@ -11,7 +12,7 @@ abstract class WebApiExceptions {
             .body(Json.encodeToString(body))
     }
 
-    inline fun useWithException(block: () -> Response): Response {
+    inline fun Request.useWithException(block: () -> Response): Response {
         return try {
             block()
         } catch (e: Exception) {

@@ -16,6 +16,10 @@ class DataMemMap<T> {
                 return super.put(key, value)
             }
         }
+
+    fun clear() {
+        map.clear()
+    }
     var nextId = AtomicInteger(1)
         private set
 }

@@ -7,10 +7,10 @@ export const renderCourtAvailableHours = (mainContent, court, availableHours = n
         e.preventDefault();
         try {
             const selectedDate = e.target.date.value;
-            if (!court.id || !court.club.id) { // Verificar ambos os IDs
+            if (!court.id || !court.clubId) {
                 throw new Error("Court ID or Club ID is invalid or not provided.");
             }
-            const hours = await fetchCourtAvailableHours(court.id, selectedDate, court.club.id);
+            const hours = await fetchCourtAvailableHours(court.id, selectedDate, court.clubId);
             renderCourtAvailableHours(mainContent, court, hours);
             window.location.hash = `court/hours/${court.id}/${selectedDate}`;
         } catch (error) {

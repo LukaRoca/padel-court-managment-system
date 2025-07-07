@@ -5,11 +5,19 @@ import pt.isel.ls.data.ClubData
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Owner
+import pt.isel.ls.webApi.models.club.ClubCreate
+import kotlin.text.get
+import kotlin.text.set
 
-class ClubDataMem(private val clubs: DataMemMap<Club> = DataMemMap()) : pt.isel.ls.data.ClubData {
+class ClubDataMem(private val clubs: DataMemMap<Club> = DataMemMap()) : ClubData {
 
-    override fun createClub(name: Name, user: User): Club? {
-        val newClub = Club(Id(clubs.nextId.get()), name, Owner(user))
+    override fun createClub(clubCreate: ClubCreate, uid: Id): Club {
+        val newClub = Club(
+            Id(clubs.nextId.get()),
+            Name(clubCreate.name),
+            uid,
+            mutableListOf()
+        )
         clubs.map[clubs.nextId.get()] = newClub
         return newClub
     }

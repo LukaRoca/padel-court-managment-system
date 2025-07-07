@@ -57,11 +57,10 @@ export const renderCreateRental = async (mainContent) => {
         e.preventDefault();
         const form = e.target;
         const date = form.date.value;
-        const initDuration = parseInt(form.initDuration.value);
-        const endDuration = parseInt(form.endDuration.value);
+        const duration = parseInt(form.duration.value);
 
 
-        const data = { cid: selectedClubId, crid: selectedCourtId, date, initDuration, endDuration };
+        const data = { clubId: selectedClubId, courtId: selectedCourtId, date, duration };
 
         try {
             const submitButton = form.querySelector('button[type="submit"]');
