@@ -5,11 +5,14 @@ import pt.isel.ls.data.UserData
 import pt.isel.ls.utils.Email
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
+import pt.isel.ls.utils.PaginatedResponse
 import pt.isel.ls.utils.Password
 import pt.isel.ls.utils.Token
 import pt.isel.ls.utils.postgres.toUser
 import pt.isel.ls.utils.postgres.useWithRollback
 import pt.isel.ls.webApi.models.user.UserCreate
+import pt.isel.ls.webApi.models.user.UserListElement
+import pt.isel.ls.webApi.models.user.UserSearch
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
@@ -53,18 +56,21 @@ class UserDataPostgres (private val conn: () -> Connection) : UserData {
     override fun getUserByName(name : Name): User? = fetchUser("name", name.name)
 
 
-    override fun getAllUsers(): List<User> =
+    override fun getAllUsers(searchParameters: UserSearch, skip: Int, limit: Int): PaginatedResponse<UserListElement> =
         conn().useWithRollback {
-            val users = mutableListOf<User>()
-            val sql = "SELECT * FROM users"
-            val stmt = it.prepareStatement(sql)
-            val rs = stmt.executeQuery()
-            while (rs.next()) {
-                users.add(
-                    rs.toUser()
-                )
+            val userName = searchParameters.username
+            val sql = "SELECT * FROM users ${if (userName.isNullOrBlank()) "" else "WHERE name = ?"}"
+            val stmt = it.prepareStatement(sql).apply {
+                userName?.let { setString(1, "$userName%") }
             }
-            return users
+
+            val rs = stmt.executeQuery()
+            val users = mutableListOf<UserListElement>()
+
+            while (rs.next()) {
+                users.add(UserListElement(rs.toUser()))
+            }
+            return PaginatedResponse.fromList(users, skip, limit)
         }
 
     private fun fetchUser(identifier : String, value: Any): User? =

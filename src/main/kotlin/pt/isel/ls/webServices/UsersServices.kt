@@ -1,8 +1,6 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.utils.PaginatedResult
 import pt.isel.ls.domain.*
-import pt.isel.ls.utils.paginateWithInfo
 import pt.isel.ls.data.Data
 import pt.isel.ls.utils.Email
 import pt.isel.ls.utils.Id
@@ -12,8 +10,10 @@ import pt.isel.ls.utils.Token
 import pt.isel.ls.utils.exceptions.BadRequestException
 import pt.isel.ls.webApi.models.user.UserCreate
 import pt.isel.ls.webApi.models.user.UserDetails
+import pt.isel.ls.webApi.models.user.UserListResponse
 import pt.isel.ls.webApi.models.user.UserLogin
 import pt.isel.ls.webApi.models.user.UserResponse
+import pt.isel.ls.webApi.models.user.UserSearch
 import java.util.UUID
 
 class UserServices (private val db : Data) : ServicesSchema(db) {
@@ -39,14 +39,13 @@ class UserServices (private val db : Data) : ServicesSchema(db) {
     }
 
     fun getAllUsers(
-        searchParameters
+        searchParameters: UserSearch,
+        token: UUID,
         limit : Int,
         skip : Int
-    ): PaginatedResult<UserDetails> {
-        val listUsers = db.user.getAllUsers().map {
-            UserDetails(it.uid.id, it.name.name, it.email.value, it.token.token)
-        }
-        return listUsers.paginateWithInfo(limit, skip)
+    ): UserListResponse = withAuthorization(token) {
+        val users = db.user.getAllUsers(searchParameters,skip,limit)
+        return@withAuthorization UserListResponse(users)
     }
     fun loginUser(userLogin: UserLogin): UserResponse {
         val user = db.user.getUserByEmail(userLogin.email)

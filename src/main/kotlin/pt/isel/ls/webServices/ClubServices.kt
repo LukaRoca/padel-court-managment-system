@@ -1,59 +1,53 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.utils.PaginatedResult
 import pt.isel.ls.domain.Club
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Token
-import pt.isel.ls.utils.paginateWithInfo
 import pt.isel.ls.data.Data
-import pt.isel.ls.webApi.dto.ClubDetails
+import pt.isel.ls.utils.exceptions.BadRequestException
 import pt.isel.ls.webApi.dto.UserDetails
+import pt.isel.ls.webApi.models.club.ClubCreate
+import pt.isel.ls.webApi.models.club.ClubDetails
+import pt.isel.ls.webApi.models.club.ClubListResponse
+import pt.isel.ls.webApi.models.club.ClubResponse
+import pt.isel.ls.webApi.models.club.ClubSearch
+import java.util.NoSuchElementException
+import java.util.UUID
+import kotlin.io.path.FileVisitorBuilder
 
-class ClubServices (private val db : pt.isel.ls.data.Data) {
-    fun createClub(name : Name, token : Token) : Club? {
-        val user = db.user.getUserByToken(token) ?: throw IllegalArgumentException("Invalid token")
-        val existingClubs = db.club.getClubs()
-        for (club in existingClubs) {
-            if (club.name.name == name.name) {
-                throw IllegalArgumentException("Already exists one club with the same name: '${name.name}'")
+class ClubServices (private val db : Data) : ServicesSchema(db) {
+    fun createClub(clubCreate: ClubCreate, token : UUID) : ClubResponse =
+        withAuthorization(token) {
+            if (db.club.getClubByName(Name(clubCreate.name)) != null) {
+                throw BadRequestException("The name of a game has to be unique")
             }
-        }
-        return db.club.createClub(name, user)
-    }
 
-    fun getClubById(clubId: Id): Club? {
-        return db.club.getClubById(clubId)
-    }
+            val user = db.user.getUserByToken(token) ?: throw BadRequestException("The token has to be a user")
 
-    fun getClubs(limit : Int, skip : Int): PaginatedResult<ClubDetails> {
-        val clubs = db.club.getClubs().map {
-            ClubDetails(
-                it.id.id,
-                it.name.name,
-                UserDetails(
-                    it.owner.user.uid.id,
-                    it.owner.user.name.name,
-                    it.owner.user.email.value,
-                    it.owner.user.token.token
-                )
-            )
-        }
-        return clubs.paginateWithInfo(limit, skip)
-    }
+            val club = db.club.createClub(clubCreate, user.uid)
 
-    fun getClubByName(name: Name): Club? {
-        return db.club.getClubByName(name)
-    }
-
-    fun deleteClub(clubId: Id, token: Token): Boolean {
-
-        val club = db.club.getClubById(clubId) ?: throw IllegalStateException("Club not found with this id $clubId")
-
-        if( club.owner.user.token != token) {
-            throw IllegalStateException("You are not the owner of this club")
+            return@withAuthorization ClubResponse(club)
         }
 
-        return db.club.deleteClub(club)
-    }
+    fun getClubById(
+        clubId: Id,
+        token : UUID
+    ): ClubDetails =
+        withAuthorization(token) {
+            val club = db.club.getClubById(clubId)
+                ?: throw NoSuchElementException("No Club with id ${clubId.id} was found")
+            return@withAuthorization ClubDetails(club)
+        }
+
+    fun getClubs(
+        searchParameters: ClubSearch,
+        token : UUID,
+        skip : Int,
+        limit : Int
+    ): ClubListResponse =
+        withAuthorization(token) {
+            val clubs = db.club.getClubs(searchParameters,limit, skip)
+            return@withAuthorization ClubListResponse(clubs)
+        }
 }
