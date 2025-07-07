@@ -3,71 +3,42 @@ package pt.isel.ls.webApi
 import kotlinx.serialization.json.Json
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.path
-import pt.isel.ls.utils.Id
-import pt.isel.ls.utils.Name
-import pt.isel.ls.utils.Token
 import pt.isel.ls.utils.isNotNegative
 import pt.isel.ls.utils.validateInt
-import pt.isel.ls.webApi.dto.ClubDetails
-import pt.isel.ls.webApi.dto.ClubInput
-import pt.isel.ls.webApi.dto.ClubOutput
-import pt.isel.ls.webApi.dto.UserDetails
+import pt.isel.ls.webApi.models.club.ClubCreate
 import pt.isel.ls.webServices.ClubServices
 
 
-class ClubWebApi(private val clubServices: ClubServices) : WebApiExceptions() {
+class ClubWebApi(private val clubServices: ClubServices) : ServiceSchema() {
 
-    fun createClub(request: Request): Response = useWithException {
-        val token = request.header("Authorization")?.removePrefix("Bearer ")
-            ?: throw IllegalArgumentException("Missing or invalid token")
-        val clubDto = Json.decodeFromString<ClubInput>(request.bodyString())
-        val club = clubServices.createClub(Name(clubDto.name), Token(token)) ?: throw NoSuchElementException()
-        Response(CREATED).json(ClubOutput(club.id.id))
-    }
-
-    fun getClubById(request: Request): Response = useWithException {
-        val clubId = request.path("id")?.toIntOrNull() ?: throw IllegalArgumentException()
-        val club = clubServices.getClubById(Id(clubId)) ?: throw NoSuchElementException()
-        Response(OK).json(ClubDetails(club.id.id, club.name.name, UserDetails(club.owner.user.uid.id,
-            club.owner.user.name.name,
-            club.owner.user.email.value,
-            club.owner.user.token.token)))
-    }
-
-    fun getClubs(request: Request): Response = useWithException {
-        val limit = request.query("limit")?.toInt().validateInt { it.isNotNegative() }
-        val skip  = request.query("skip")?.toInt().validateInt { it.isNotNegative() }
-
-        val paginatedResult = clubServices.getClubs(limit, skip)
-
-        Response(OK).json(paginatedResult)
-    }
-
-    fun getClubByName(request: Request): Response = useWithException {
-        val clubName = request.path("name")?.let { Name(it) } ?: throw IllegalArgumentException()
-        val club = clubServices.getClubByName(clubName) ?: throw NoSuchElementException()
-        Response(OK).json(ClubDetails(club.id.id, club.name.name, UserDetails(club.owner.user.uid.id,
-            club.owner.user.name.name,
-            club.owner.user.email.value,
-            club.owner.user.token.token)))
-    }
-
-    fun deleteClub(request: Request): Response = useWithException {
-        val clubId = request.path("id")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid club ID")
-
-        val authToken = request.header("Authorization")?.removePrefix("Bearer ")
-            ?: throw IllegalArgumentException("Missing or invalid token")
-
-        val deleted = clubServices.deleteClub(Id(clubId), Token(authToken))
-        if (deleted) {
-            Response(OK).json("Club with ID $clubId deleted successfully")
-        } else {
-            Response(OK).json("Failed to delete club with ID $clubId")
+    fun createClub(request: Request): Response =
+        request.useWithException { token ->
+            val gameInput = Json.decodeFromString<ClubCreate>(request.bodyString())
+            Response(Status.CREATED)
+                .json(clubServices.createGame(gameInput, token))
         }
-    }
+
+    fun getClubById(request: Request): Response =
+        request.useWithException { token ->
+            val clubId = request.path("clubId")?.toInt().validateInt { it.isNotNegative() }
+            Response(Status.OK)
+                .json(clubServices.getClubById(clubId, token))
+        }
+
+    fun getClubs(request: Request): Response =
+        request.useWithException { token ->
+            Response(OK).json(clubServices.getClubs(token))
+        }
+
+    fun getClubByName(request: Request): Response =
+        request.useWithException { token ->
+            val clubName = request.path("clubName").toString()
+            Response(Status.OK)
+                .json(clubServices.getClubById(clubName, token))
+        }
 
     }
 
