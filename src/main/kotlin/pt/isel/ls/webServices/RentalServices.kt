@@ -1,177 +1,93 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.utils.PaginatedResult
 import pt.isel.ls.domain.*
-import pt.isel.ls.utils.paginateWithInfo
 import pt.isel.ls.data.Data
 import pt.isel.ls.utils.Date
 import pt.isel.ls.utils.Duration
 import pt.isel.ls.utils.Id
-import pt.isel.ls.utils.Token
-import pt.isel.ls.webApi.dto.*
+import pt.isel.ls.webApi.models.rental.RentalCreate
+import pt.isel.ls.webApi.models.rental.RentalDetails
+import pt.isel.ls.webApi.models.rental.RentalListResponse
+import pt.isel.ls.webApi.models.rental.RentalResponse
 import java.lang.IllegalStateException
+import java.util.UUID
 
-class RentalServices (private val db : pt.isel.ls.data.Data) {
+class RentalServices (private val db : Data) : ServicesSchema(db){
 
-    fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token): Rental? {
-        val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
-        val user = db.user.getUserByToken(token) ?: throw IllegalStateException("User not found with this token")
-        val club = db.club.getClubById(cid) ?: throw IllegalStateException("Club not found with this id $cid")
-        val availableHours = db.rental.getAvailableHours(club, court, date) ?: throw IllegalStateException("No available hours for this club and court")
-        val hoursofNewRental = duration.initDuration..duration.endDuration
-        if (!(hoursofNewRental.all { it in hoursofNewRental })) {
-            throw IllegalArgumentException("The selected time slot is already occupied")
+    fun createRental(rentalCreate: RentalCreate, court : Int, token: UUID): RentalResponse =
+        withAuthorization(token){
+            val court = db.court.getCourtById(Id(court)) ?: throw NoSuchElementException("No court found with this Id $court")
+            val user = db.user.getUserByToken(token) ?: throw NoSuchElementException("No user found with this token")
+            val club = db.club.getClubById(court.club)
+            val duration = db.rental.getAvailableHours(court, rentalCreate.date) ?: throw NoSuchElementException("No available hours found")
+            val hoursOfNewRental = rentalCreate.duration.initDuration..rentalCreate.duration.endDuration
+            if (!(duration.all { it in hoursOfNewRental })) {
+                throw IllegalArgumentException("The selected time slot is already occupied")
+            }
+            val rental = db.rental.createRental(rentalCreate, court.id, user.uid)
+            return@withAuthorization RentalResponse(rental)
         }
-        return db.rental.createRental(court, date, duration, user)
-    }
 
-    fun getRentalById(rentalId: Id): Rental? {
-        return db.rental.getRentalById(rentalId)
 
-    }
-
-    fun getRentalsOfUser(uid: Id, limit : Int, skip : Int): PaginatedResult<RentalDetails> {
-        val users = db.user.getUserById(uid) ?: throw IllegalStateException("User not found with this id")
-        val rentals = db.rental.getRentalsOfUser(users)?.map { rental ->
-            RentalDetails(
-                rental.rid.id,
-                rental.date.value,
-                DurationDetails(
-                    rental.duration.initDuration,
-                    rental.duration.endDuration,
-                    rental.duration.hours
-                ),
-                UserDetails(
-                    rental.user.uid.id,
-                    rental.user.name.name,
-                    rental.user.email.value,
-                    rental.user.token.token
-                ),
-                CourtDetails(
-                    rental.court.id.id,
-                    rental.court.name.name,
-                    ClubDetails(
-                        rental.court.club.id.id,
-                        rental.court.club.name.name,
-                        UserDetails(
-                            rental.user.uid.id,
-                            rental.user.name.name,
-                            rental.user.email.value,
-                            rental.user.token.token
-                        )
-                    )
-                ),
-
-            )
-
+    fun getRentalById(
+        rentalId: Id,
+        token: UUID
+    ) : RentalDetails =
+        withAuthorization(token) {
+            val rentals = db.rental.getRentalById(rentalId)
+                ?: throw NoSuchElementException("No Rental found with this id")
+            return@withAuthorization RentalDetails(rentals)
         }
-        if (rentals != null ) {
-            return rentals.paginateWithInfo(limit, skip)
-        }
-        else throw IllegalArgumentException("No rental found with this $uid")
-    }
 
-    fun getRentals(cid: Id, crid: Id, date: Date): List<Rental>? {
-        val club = db.club.getClubById(cid) ?: throw IllegalStateException("Club not found with this id $cid")
-        val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
-        return db.rental.getRentals(club, court, date)
-    }
 
-    fun getRentalsOfCourt(crid: Id, limit: Int, skip: Int) : PaginatedResult<RentalDetails> {
-        val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
-        val rentals = db.rental.getRentalsOfCourt(court)?.map { rental ->
-            RentalDetails(
-                rental.rid.id,
-                rental.date.value,
-                DurationDetails(
-                    rental.duration.initDuration,
-                    rental.duration.endDuration,
-                    rental.duration.hours
-                ),
-                UserDetails(
-                    rental.user.uid.id,
-                    rental.user.name.name,
-                    rental.user.email.value,
-                    rental.user.token.token
-                ),
-                CourtDetails(
-                    rental.court.id.id,
-                    rental.court.name.name,
-                    ClubDetails(
-                        rental.court.club.id.id,
-                        rental.court.club.name.name,
-                        UserDetails(
-                            rental.user.uid.id,
-                            rental.user.name.name,
-                            rental.user.email.value,
-                            rental.user.token.token
-                        )
-                    )
-                ),
 
-                )
+    fun getRentalsOfUser(
+        uid: Id,
+        token: UUID,
+        limit : Int,
+        skip : Int
+    ): RentalListResponse =
+        withAuthorization(token) {
+            val rentals = db.rental.getRentalsOfUser(uid, limit,skip)
+            return@withAuthorization RentalListResponse(rentals)
         }
-        if (rentals != null) {
-            return rentals.paginateWithInfo(limit, skip)
+
+
+    fun getRentalsOfCourt(
+        crid: Id,
+        token: UUID,
+        limit: Int,
+        skip: Int
+    ): RentalListResponse =
+        withAuthorization(token) {
+            val rentals = db.rental.getRentalsOfCourt(crid, limit, skip)
+            return@withAuthorization RentalListResponse(rentals)
         }
-        else throw IllegalArgumentException("No rental found with this $crid")
-    }
+
+    fun getRentalsWithDate(
+        date: Date,
+        token : UUID,
+    ): List<Rental> =
+        withAuthorization(token) {
+            val rentals = db.rental.getRentalsWithDate(date)
+            return@withAuthorization rentals
+        }
 
     fun getAvailableHours(cid: Id, crid: Id, date: Date): List<Int>? {
         val club = db.club.getClubById(cid) ?: throw IllegalStateException("Club not found with this id $cid")
         val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")
-        return db.rental.getAvailableHours(club, court, date)
+        return db.rental.getAvailableHours(court, date)
     }
 
     fun deleteRental(rid : Id) : Boolean {
         val rental = db.rental.getRentalById(rid) ?: throw IllegalStateException("Rental not found with this id $rid")
-        return db.rental.deleteRental(rental)
+        return db.rental.deleteRental(rental.rid)
     }
 
-    fun updateRental(date: Date, duration: Duration, rid: Id) : RentalDetails? {
+    fun updateRental(date: Date, duration: Duration, rid: Id) : Boolean {
         val rental = db.rental.getRentalById(rid) ?: throw IllegalStateException("Rental not found with this id $rid")
-        val updatedRental = db.rental.updateRental(date,duration, rental) ?: throw IllegalStateException("Error during update")
-        return RentalDetails(updatedRental.rid.id,
-        updatedRental.date.value,
-            DurationDetails(
-                updatedRental.duration.initDuration,
-                updatedRental.duration.endDuration,
-                updatedRental.duration.hours
-            ),
-            UserDetails(
-                updatedRental.user.uid.id,
-                updatedRental.user.name.name,
-                updatedRental.user.email.value,
-                updatedRental.user.token.token
-            ),
-            CourtDetails(
-                updatedRental.court.id.id,
-                updatedRental.court.name.name,
-                ClubDetails(
-                    updatedRental.court.club.id.id,
-                    updatedRental.court.club.name.name,
-                    UserDetails(
-                        updatedRental.user.uid.id,
-                        updatedRental.user.name.name,
-                        updatedRental.user.email.value,
-                        updatedRental.user.token.token
-                    )
-                )
-            )
-        )
+        val updatedRental = db.rental.updateRental(date,duration, rid)
+        return updatedRental
     }
-
-    fun getRentalsWithDate(date: Date): List<Rental>? {
-        return db.rental.getRentalsWithDate(date)?.map { rental ->
-            Rental(
-                rental.rid,
-                rental.date,
-                rental.duration,
-                rental.user,
-                rental.court
-            )
-        }
-    }
-
 }
 

@@ -1,49 +1,51 @@
 package pt.isel.ls.webServices
 
+import kotlinx.serialization.internal.InlinePrimitiveDescriptor
 import pt.isel.ls.domain.*
 import pt.isel.ls.data.Data
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Token
-import pt.isel.ls.webApi.dto.CourtDetails
-import pt.isel.ls.webApi.dto.UserDetails
+import pt.isel.ls.utils.exceptions.BadRequestException
 import pt.isel.ls.webApi.models.court.CourtCreate
+import pt.isel.ls.webApi.models.court.CourtDetails
+import pt.isel.ls.webApi.models.court.CourtListResponse
+import pt.isel.ls.webApi.models.court.CourtResponse
+import java.awt.image.DataBufferInt
+import java.util.NoSuchElementException
 import java.util.UUID
 
 open class CourtServices (private val db: Data) : ServicesSchema(db) {
-
-    fun createCourt(courtCreate: CourtCreate, token: UUID) : CourtResponse =
+    fun createCourt(courtCreate: CourtCreate, club : Int,token: UUID) : CourtResponse =
         withAuthorization(token) {
+            if (db.court.getCourtByName(Name(courtCreate.name)) != null) {
+                throw BadRequestException("The name of a court has to be unique")
+            }
 
-        }
-    fun getCourtById(crid: Id) : Court? {
-        return db.court.getCourtById(crid)
-    }
-    fun getCourtsByClubId(cid : Id, limit : Int, skip : Int) : PaginatedResult<CourtDetails> {
-        val courts = db.court.getCourtByClubId(cid) ?: throw NullPointerException("Court with id ${cid} not found")
-        val newCourts = courts.map { courts ->
-            CourtDetails(
-                courts.id.id, courts.name.name, ClubDetails(
-                    courts.club.id.id,
-                    courts.club.name.name,
-                    UserDetails(
-                        courts.club.owner.user.uid.id,
-                        courts.club.owner.user.name.name,
-                        courts.club.owner.user.email.value,
-                        courts.club.owner.user.token.token
-                    )
-                )
-            )
+            val club = db.court.createCourt(courtCreate, Id(club))
 
+            return@withAuthorization CourtResponse(club)
         }
-        if (courts != null) {
-            return newCourts.paginateWithInfo(limit, skip)
-        }
-        else {
-            throw IllegalArgumentException("No courts found for $cid")
-        }
+
+    fun getCourtById(
+        crid: Id,
+        token: UUID
+    ) : CourtDetails =
+        withAuthorization(token) {
+            val court = db.court.getCourtById(crid)
+                ?: throw NoSuchElementException("No Court with id ${crid.id} was found")
+            return@withAuthorization CourtDetails(court)
     }
 
-
+    fun getCourtsByClubId(
+        cid : Id,
+        token: UUID,
+        limit : Int,
+        skip : Int
+    ): CourtListResponse =
+        withAuthorization(token) {
+            val courts = db.court.getCourtByClubId(cid, limit, skip)
+            return@withAuthorization CourtListResponse(courts)
+        }
 }
 

@@ -1,16 +1,19 @@
 package pt.isel.ls.data.dataPostgres
 
+import org.http4k.lens.IntBiDiMappings
 import pt.isel.ls.domain.*
 import pt.isel.ls.data.RentalData
 import pt.isel.ls.utils.Date
 import pt.isel.ls.utils.Duration
 import pt.isel.ls.utils.Id
+import pt.isel.ls.utils.PaginatedResponse
 import pt.isel.ls.utils.postgres.toClub
 import pt.isel.ls.utils.postgres.toCourt
 import pt.isel.ls.utils.postgres.toRental
 import pt.isel.ls.utils.postgres.toUser
 import pt.isel.ls.utils.postgres.useWithRollback
 import pt.isel.ls.webApi.models.rental.RentalCreate
+import pt.isel.ls.webApi.models.rental.RentalResponse
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
@@ -46,26 +49,24 @@ class RentalDataPostgres (private val conn: () -> Connection) : RentalData {
 
     override fun getRentalById(rentalId: Id): Rental? = fetchRental("rid", rentalId.id)
 
-    override fun getRentalsOfUser(user: Id): List<Rental> = fetchRentals("usr", user.id)
+    override fun getRentalsOfUser(user: Id,  limit: Int, skip: Int): PaginatedResponse<RentalResponse> = fetchRentals("usr", user.id, limit, skip)
 
-    override fun getRentals(): List<Rental> =
+    override fun getRentalsOfCourt(court: Id, limit: Int, skip: Int): PaginatedResponse<RentalResponse> = fetchRentals("court", court.id, limit,  skip)
+
+    override fun getRentalsWithDate(date: Date): List<Rental> {
         conn().useWithRollback {
             val rentals = mutableListOf<Rental>()
-            val sql = "SELECT * FROM rental"
-            val stmt = it.prepareStatement(sql)
+            val sql = "SELECT * FROM rental WHERE date = ?"
+            val stmt = it.prepareStatement(sql).apply { setString(1, date.value) }
             val rs = stmt.executeQuery()
-
             while (rs.next()) {
                 rentals.add(
-                    rs.toRental()
+                    (rs.toRental())
                 )
             }
             return rentals
         }
-
-    override fun getRentalsOfCourt(court: Id): List<Rental> = fetchRentals("court", court.id)
-
-    override fun getRentalsWithDate(date: Date): List<Rental> = fetchRentals("date", date.value)
+    }
 
     override fun getAvailableHours(court: Court, date: Date): List<Int>? {
         val rentals = getRentalsWithDate(date)
@@ -130,17 +131,19 @@ class RentalDataPostgres (private val conn: () -> Connection) : RentalData {
             return null
         }
 
-    private fun fetchRentals(identifier: String, value: Any): List<Rental> =
+    private fun fetchRentals(identifier: String, value: Any, limit: Int, skip: Int): PaginatedResponse<RentalResponse> =
         conn().useWithRollback {
-            val rentals = mutableListOf<Rental>()
+            val rentals = mutableListOf<RentalResponse>()
             val sql = "SELECT * FROM rental WHERE $identifier = ?"
-            val stmt = it.prepareStatement(sql)
+            val stmt = it.prepareStatement(sql).apply {
+                setObject(1, value)
+            }
             val rs = stmt.executeQuery()
             while (rs.next()) {
                 rentals.add(
-                    rs.toRental()
+                    RentalResponse(rs.toRental())
                 )
             }
-            return rentals
+            return PaginatedResponse.fromList(rentals, limit, skip)
         }
 }

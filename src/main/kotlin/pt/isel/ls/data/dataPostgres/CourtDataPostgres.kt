@@ -3,11 +3,14 @@ import pt.isel.ls.domain.*
 import pt.isel.ls.data.CourtData
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
+import pt.isel.ls.utils.PaginatedResponse
 import pt.isel.ls.utils.postgres.toClub
 import pt.isel.ls.utils.postgres.toCourt
 import pt.isel.ls.utils.postgres.toUser
 import pt.isel.ls.utils.postgres.useWithRollback
+import pt.isel.ls.webApi.models.club.ClubResponse
 import pt.isel.ls.webApi.models.court.CourtCreate
+import pt.isel.ls.webApi.models.court.CourtResponse
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
@@ -43,20 +46,26 @@ class CourtDataPostgres (private val conn: () -> Connection) : CourtData {
 
     override fun getCourtById(crid: Id): Court? = fetchCourt("crid", crid.id)
 
-    override fun getCourtByClubId(cid: Id): List<Court> =
+    override fun getCourtByName(name: Name) : Court? = fetchCourt("name", name.name)
+
+    override fun getCourtByClubId(
+        id: Id,
+        limit: Int,
+        skip: Int
+    ): PaginatedResponse<CourtResponse> =
         conn().useWithRollback {
-            val courts = mutableListOf<Court>()
+            val courts = mutableListOf<CourtResponse>()
             val query = "SELECT * FROM court WHERE club = ?"
             val stmt = it.prepareStatement(query).apply {
-                setInt(1, cid.id)
+                setInt(1, id.id)
             }
             val rs = stmt.executeQuery()
             while (rs.next()) {
                 courts.add(
-                    rs.toCourt()
+                    CourtResponse(rs.toCourt())
                 )
             }
-            return courts
+            return PaginatedResponse.fromList(courts, skip, limit)
         }
 
     private fun fetchCourt(identifier : String, value: Any) : Court? {

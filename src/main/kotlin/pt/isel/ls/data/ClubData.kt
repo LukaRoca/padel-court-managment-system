@@ -4,7 +4,6 @@ import pt.isel.ls.domain.*
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.PaginatedResponse
-import pt.isel.ls.webApi.dto.ClubInput
 import pt.isel.ls.webApi.models.club.ClubCreate
 import pt.isel.ls.webApi.models.club.ClubResponse
 import pt.isel.ls.webApi.models.club.ClubSearch

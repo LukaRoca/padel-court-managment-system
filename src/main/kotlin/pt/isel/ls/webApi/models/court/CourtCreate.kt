@@ -7,7 +7,7 @@ import pt.isel.ls.utils.generateRandomString
 data class CourtCreate(val name : String) {
     companion object Factory {
         fun create(
-            name : String = generateRandomString()
+            name : String = generateRandomString(),
         ) : CourtCreate {
             return CourtCreate(name)
         }

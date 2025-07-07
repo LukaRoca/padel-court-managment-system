@@ -6,7 +6,6 @@ import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Token
 import pt.isel.ls.data.Data
 import pt.isel.ls.utils.exceptions.BadRequestException
-import pt.isel.ls.webApi.dto.UserDetails
 import pt.isel.ls.webApi.models.club.ClubCreate
 import pt.isel.ls.webApi.models.club.ClubDetails
 import pt.isel.ls.webApi.models.club.ClubListResponse
@@ -20,7 +19,7 @@ class ClubServices (private val db : Data) : ServicesSchema(db) {
     fun createClub(clubCreate: ClubCreate, token : UUID) : ClubResponse =
         withAuthorization(token) {
             if (db.club.getClubByName(Name(clubCreate.name)) != null) {
-                throw BadRequestException("The name of a game has to be unique")
+                throw BadRequestException("The name of a club has to be unique")
             }
 
             val user = db.user.getUserByToken(token) ?: throw BadRequestException("The token has to be a user")

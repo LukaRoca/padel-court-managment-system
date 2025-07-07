@@ -1,13 +1,12 @@
-package pt.isel.ls.webApi.models.club
+package pt.isel.ls.webApi.models.court
 
-import pt.isel.ls.domain.Club
+import pt.isel.ls.domain.Court
 import pt.isel.ls.webApi.models.user.UserDetails
 
-
-class ClubDetails private constructor(val id: Int, val name: String){
+class CourtDetails private constructor(val id: Int, val name: String,val club: Int){
     companion object {
-        operator fun invoke(club : Club) : ClubDetails {
-            return ClubDetails(club.id.id, club.name.name)
+        operator fun invoke(court: Court) : CourtDetails {
+            return CourtDetails( court.id.id, court.name.name, court.club.id )
         }
     }
 
@@ -16,10 +15,11 @@ class ClubDetails private constructor(val id: Int, val name: String){
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ClubDetails
+        other as CourtDetails
 
         if (id != other.id) return false
         if (name != other.name) return false
+        if (club != other.club) return false
 
         return true
     }
@@ -27,6 +27,7 @@ class ClubDetails private constructor(val id: Int, val name: String){
     override fun hashCode(): Int {
         var result = id
         result = 31 * result + name.hashCode()
+        result = 31 * result + club.hashCode()
         return result
     }
 }
