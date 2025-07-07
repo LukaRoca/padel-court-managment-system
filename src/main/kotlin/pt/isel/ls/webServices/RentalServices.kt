@@ -32,11 +32,11 @@ class RentalServices (private val db : Data) : ServicesSchema(db){
     fun getRentalById(
         rentalId: Id,
         token: UUID
-    ) : RentalDetails =
+    ) : Rental =
         withAuthorization(token) {
             val rentals = db.rental.getRentalById(rentalId)
                 ?: throw NoSuchElementException("No Rental found with this id")
-            return@withAuthorization RentalDetails(rentals)
+            return@withAuthorization Rental(rentals.rid, rentals.date, rentals.duration, rentals.user, rentals.court)
         }
 
 
@@ -79,15 +79,28 @@ class RentalServices (private val db : Data) : ServicesSchema(db){
         return db.rental.getAvailableHours(court, date)
     }
 
-    fun deleteRental(rid : Id) : Boolean {
+    fun deleteRental(rid : Id, token:UUID) : Boolean = withAuthorization(token) {
         val rental = db.rental.getRentalById(rid) ?: throw IllegalStateException("Rental not found with this id $rid")
-        return db.rental.deleteRental(rental.rid)
+        return@withAuthorization db.rental.deleteRental(rental.rid)
     }
 
     fun updateRental(date: Date, duration: Duration, rid: Id) : Boolean {
         val rental = db.rental.getRentalById(rid) ?: throw IllegalStateException("Rental not found with this id $rid")
         val updatedRental = db.rental.updateRental(date,duration, rid)
         return updatedRental
+    }
+
+
+    fun getClubById(clubId: Id, token: UUID) = withAuthorization(token) {
+        db.club.getClubById(clubId)
+    }
+
+    fun getCourtById(courtId: Id, token: UUID) = withAuthorization(token) {
+        db.court.getCourtById(courtId)
+    }
+
+    fun getUserById(userId: Id, token: UUID) = withAuthorization(token) {
+        db.user.getUserById(userId)
     }
 }
 
