@@ -1,14 +1,17 @@
 package pt.isel.ls.utils
+import kotlinx.serialization.Serializable
 import org.mindrot.jbcrypt.BCrypt
 import pt.isel.ls.domain.User
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
+@Serializable
 data class Name (val name : String)
 
 data class Owner (val user : User)
 
+@Serializable
 data class Email(val value: String) {
     init { require(value.isNotBlank()) { "Email must not be empty" }
         require(value.length in 5..100) { "Email must be between 5 and 100 characters" }
@@ -27,6 +30,7 @@ data class Id (val id : Int){
     init { if(id <= 0) throw IllegalArgumentException("Id must be positive and non-zero") }
 }
 
+@Serializable
 data class Duration (val initDuration : Int, val endDuration : Int) {
     val hours = endDuration - initDuration
 
@@ -37,6 +41,8 @@ data class Duration (val initDuration : Int, val endDuration : Int) {
         require(endDuration > initDuration) { "End duration must be greater than initial duration" }
     }
 }
+
+@Serializable
 data class Date( val value: String) {
     init {
         try {
@@ -47,6 +53,8 @@ data class Date( val value: String) {
         }
     }
 }
+
+@Serializable
 data class Password(val value: String) {
     init {
         require(value.isNotBlank()) { "Password must not be empty" }

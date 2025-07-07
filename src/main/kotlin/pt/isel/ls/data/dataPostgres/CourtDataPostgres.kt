@@ -1,93 +1,79 @@
 package pt.isel.ls.data.dataPostgres
 import pt.isel.ls.domain.*
-import pt.isel.ls.data.data.CourtData
+import pt.isel.ls.data.CourtData
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.postgres.toClub
 import pt.isel.ls.utils.postgres.toCourt
 import pt.isel.ls.utils.postgres.toUser
+import pt.isel.ls.utils.postgres.useWithRollback
+import pt.isel.ls.webApi.models.court.CourtCreate
+import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import javax.sql.DataSource
 
-val sqlCourt = """
-    SELECT court.crid as cr_rid,
-            court.name as cr_name,
-            court.club as c_rid,
-            club.cid as c_id,
-            club.name as c_name,
-            club.owner as c_owner,
-            users.uid,
-            users.token,
-            users.name,
-            users.email,
-            users.password
-            FROM court
-""".trimIndent()
-
-class CourtDataPostgres (private val dataSource: DataSource) : CourtData{
-    override fun createCourt(name: Name, club: Club): Court? =
-        dataSource.connection.use {
-            val sql = "INSERT INTO court(name, club) VALUES (?, ?)"
+class CourtDataPostgres (private val conn: () -> Connection) : CourtData {
+    override fun createCourt(
+        courtCreate: CourtCreate,
+        club : Id
+    ): Court =
+        conn().useWithRollback {
+            val name = courtCreate
+            val sql = "INSERT INTO court(name,club) VALUES (?,?)"
             val stmt = it.prepareStatement(
                 sql, Statement.RETURN_GENERATED_KEYS
             ).apply {
                 setString(1, name.name)
-                setInt(2, club.id.id)
+                setInt(2, club.id)
             }
 
             if (stmt.executeUpdate() == 0) {
-                throw SQLException("Error creating a Court")
-            }
-            val keys = stmt.generatedKeys
-
-            if(keys.next()){
-                return Court(Id(keys.getInt(1)), name, club)
+                throw SQLException("Error while creating a new court.")
             }
 
-            throw SQLException("Error creating a Court")
+            val key = stmt.generatedKeys
+
+            if (key.next()) {
+                return Court(Id(key.getInt(1)), Name(name.name), Id(key.getInt("club")))
+            }
+
+            throw SQLException("Error while creating a new court")
         }
 
-    override fun getCourtById(crid: Id): Court? =
-        dataSource.connection.use {
-            val sql = buildString {
-                append(sqlCourt)
-                append(" INNER JOIN club ON court.club = club.cid ")
-                append(" INNER JOIN users ON club.owner = users.uid ")
-                append(" WHERE court.crid = ? ")
-            }
-            val stmt = it.prepareStatement(
-                sql
-            ).apply {
-                setInt(1, crid.id)
-            }
-            val rs = stmt.executeQuery()
-            if (rs.next()) {
-                return rs.toCourt(rs.toClub(rs.toUser()))
-            }
-            return null
-        }
+    override fun getCourtById(crid: Id): Court? = fetchCourt("crid", crid.id)
 
     override fun getCourtByClubId(cid: Id): List<Court> =
-        dataSource.connection.use {
+        conn().useWithRollback {
             val courts = mutableListOf<Court>()
-            val sql = buildString {
-                append(sqlCourt)
-                append(" INNER JOIN club ON court.club = club.cid" )
-                append(" INNER JOIN users ON club.owner = users.uid ")
-                append(" WHERE court.club = ? ")
-            }
-            val stmt = it.prepareStatement(
-                sql
-            ).apply {
+            val query = "SELECT * FROM court WHERE club = ?"
+            val stmt = it.prepareStatement(query).apply {
                 setInt(1, cid.id)
             }
             val rs = stmt.executeQuery()
             while (rs.next()) {
                 courts.add(
-                    rs.toCourt(rs.toClub(rs.toUser()))
+                    rs.toCourt()
                 )
             }
             return courts
         }
+
+    private fun fetchCourt(identifier : String, value: Any) : Court? {
+        conn().useWithRollback {
+            val query = "SELECT * FROM court WHERE $identifier=?"
+
+            val stmt = it.prepareStatement(query).apply {
+                setObject(1, value)
+            }
+
+            val rs = stmt.executeQuery()
+
+            if (rs.next()) {
+                return rs.toCourt()
+            }
+
+            return null
+        }
+    }
 }

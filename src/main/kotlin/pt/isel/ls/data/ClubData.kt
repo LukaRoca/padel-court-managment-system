@@ -1,11 +1,13 @@
-package pt.isel.ls.data.data
+package pt.isel.ls.data
 
 import pt.isel.ls.domain.*
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
+import pt.isel.ls.webApi.dto.ClubInput
+import pt.isel.ls.webApi.models.club.ClubCreate
 
 interface ClubData {
-    fun createClub(name: Name, user: User) : Club?
+    fun createClub(clubCreate: ClubCreate, uid: Id) : Club
 
     fun getClubById(cid: Id): Club?
 

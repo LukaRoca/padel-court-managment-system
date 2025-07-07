@@ -13,7 +13,7 @@ import org.http4k.core.Status.Companion.OK
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.Routes
 import pt.isel.ls.data.dataPostgres.*
-import pt.isel.ls.data.data.Data
+import pt.isel.ls.data.Data
 import pt.isel.ls.webApi.WebApi
 import pt.isel.ls.webApi.dto.RentalInput
 import pt.isel.ls.webServices.*

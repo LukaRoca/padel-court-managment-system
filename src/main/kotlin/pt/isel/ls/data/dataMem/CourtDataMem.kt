@@ -1,13 +1,13 @@
 package pt.isel.ls.data.dataMem
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.data.data.CourtData
+import pt.isel.ls.data.CourtData
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 
-class CourtDataMem(private val courts: DataMemMap<Court> = DataMemMap()) : CourtData {
+class CourtDataMem(private val courts: DataMemMap<Court> = DataMemMap()) : pt.isel.ls.data.CourtData {
 
-    override fun createCourt(name: Name, club: Club): Court? {
+    override fun createCourt(name: Name, club: Club): Court {
         val newCourt = Court(Id(courts.nextId.get()), name, club)
         courts.map[courts.nextId.get()] = newCourt
         return newCourt

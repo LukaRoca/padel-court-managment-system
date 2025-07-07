@@ -1,12 +1,12 @@
 package pt.isel.ls.data.dataMem
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.data.data.ClubData
+import pt.isel.ls.data.ClubData
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Owner
 
-class ClubDataMem(private val clubs: DataMemMap<Club> = DataMemMap()) : ClubData {
+class ClubDataMem(private val clubs: DataMemMap<Club> = DataMemMap()) : pt.isel.ls.data.ClubData {
 
     override fun createClub(name: Name, user: User): Club? {
         val newClub = Club(Id(clubs.nextId.get()), name, Owner(user))

@@ -3,7 +3,7 @@ package pt.isel.ls.webServices
 import pt.isel.ls.utils.PaginatedResult
 import pt.isel.ls.domain.*
 import pt.isel.ls.utils.paginateWithInfo
-import pt.isel.ls.data.data.Data
+import pt.isel.ls.data.Data
 import pt.isel.ls.utils.Date
 import pt.isel.ls.utils.Duration
 import pt.isel.ls.utils.Id
@@ -11,7 +11,7 @@ import pt.isel.ls.utils.Token
 import pt.isel.ls.webApi.dto.*
 import java.lang.IllegalStateException
 
-class RentalServices (private val db : Data) {
+class RentalServices (private val db : pt.isel.ls.data.Data) {
 
     fun createRental(cid: Id, crid: Id, date: Date, duration: Duration, token: Token): Rental? {
         val court = db.court.getCourtById(crid) ?: throw IllegalStateException("Court not found with this id $crid")

@@ -1,17 +1,17 @@
 package pt.isel.ls.data.dataMem
 
-import pt.isel.ls.data.data.ClubData
-import pt.isel.ls.data.data.CourtData
-import pt.isel.ls.data.data.Data
-import pt.isel.ls.data.data.RentalData
-import pt.isel.ls.data.data.UserData
+import pt.isel.ls.data.ClubData
+import pt.isel.ls.data.CourtData
+import pt.isel.ls.data.Data
+import pt.isel.ls.data.RentalData
+import pt.isel.ls.data.UserData
 
-class DataMem : Data, DataSchema() {
-    override val user: UserData = UserDataMem(usersDb)
+class DataMem : pt.isel.ls.data.Data, DataSchema() {
+    override val user: pt.isel.ls.data.UserData = UserDataMem(usersDb)
 
-    override val club: ClubData = ClubDataMem(clubsDb)
+    override val club: pt.isel.ls.data.ClubData = ClubDataMem(clubsDb)
 
-    override val court: CourtData = CourtDataMem(courtsDb)
+    override val court: pt.isel.ls.data.CourtData = CourtDataMem(courtsDb)
 
-    override val rental: RentalData = RentalDataMem(rentalsDb)
+    override val rental: pt.isel.ls.data.RentalData = RentalDataMem(rentalsDb)
 }

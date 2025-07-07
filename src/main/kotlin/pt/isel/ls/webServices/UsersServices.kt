@@ -3,46 +3,58 @@ package pt.isel.ls.webServices
 import pt.isel.ls.utils.PaginatedResult
 import pt.isel.ls.domain.*
 import pt.isel.ls.utils.paginateWithInfo
-import pt.isel.ls.data.data.Data
+import pt.isel.ls.data.Data
 import pt.isel.ls.utils.Email
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Password
 import pt.isel.ls.utils.Token
-import pt.isel.ls.webApi.dto.UserDetails
+import pt.isel.ls.utils.exceptions.BadRequestException
+import pt.isel.ls.webApi.models.user.UserCreate
+import pt.isel.ls.webApi.models.user.UserDetails
+import pt.isel.ls.webApi.models.user.UserLogin
+import pt.isel.ls.webApi.models.user.UserResponse
+import java.util.UUID
 
-class UserServices (private val db : Data) {
-
-    fun getUserById(userId: Id): User? {
-        return db.user.getUserById(userId)
-    }
-
-    fun createUser(name: Name, email: Email, password : Password): User {
-        val existingEmail = db.user.getAllUsers().find { it.email == email }
-        if (existingEmail != null) {
-            throw IllegalArgumentException("Already exists a user with this email:  '${email.value}'")
+class UserServices (private val db : Data) : ServicesSchema(db) {
+    fun createUser(userCreate: UserCreate): UserResponse {
+        if (db.user.getUserByName(userCreate.name) != null) {
+            throw BadRequestException("The given name is already taken")
         }
-        println(password)
-        return db.user.createUser(name,email, password)
+        if (db.user.getUserByEmail(userCreate.email) != null) {
+            throw BadRequestException("The given email is already taken")
+        }
+
+        val user = db.user.createUser(userCreate)
+        return UserResponse(user)
     }
 
-    fun getUserByToken(token: Token): User? {
-        return db.user.getUserByToken(token)
+    fun getUser(
+        userId : Id,
+        token : UUID
+    ): UserDetails = withAuthorization(token) {
+        val user = db.user.getUserById(userId)
+            ?: throw NoSuchElementException("No user with id $userId was found")
+        return@withAuthorization UserDetails(user)
     }
 
-    fun getAllUsers(limit : Int, skip : Int): PaginatedResult<UserDetails> {
+    fun getAllUsers(
+        searchParameters
+        limit : Int,
+        skip : Int
+    ): PaginatedResult<UserDetails> {
         val listUsers = db.user.getAllUsers().map {
             UserDetails(it.uid.id, it.name.name, it.email.value, it.token.token)
         }
         return listUsers.paginateWithInfo(limit, skip)
     }
-    fun loginUser(email: Email, password: Password): User {
-        val user = db.user.getAllUsers().find { it.email == email }
-            ?: throw NoSuchElementException("No user found with email: ${email.value}")
-        if (!password.verify(user.password.value)) {
-            throw IllegalArgumentException("Invalid password for user with email: ${email.value}")
+    fun loginUser(userLogin: UserLogin): UserResponse {
+        val user = db.user.getUserByEmail(userLogin.email)
+            ?: throw NoSuchElementException("No user found with email: ${userLogin.email}")
+        if (!Password(userLogin.password).verify(user.password.value)) {
+            throw IllegalArgumentException("The given password is incorrect")
         }
-        return user
+        return UserResponse(user)
     }
 
 }
