@@ -12,7 +12,7 @@ import pt.isel.ls.webApi.models.club.ClubCreate
 import pt.isel.ls.webServices.ClubServices
 
 
-class ClubWebApi(private val clubServices: ClubServices) : ServiceSchema() {
+class ClubWebApi(private val clubServices: ClubServices) : APISchema() {
 
     fun createClub(request: Request): Response =
         request.useWithException { token ->
