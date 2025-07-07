@@ -1,25 +1,35 @@
 package pt.isel.ls.utils
 
-import kotlinx.serialization.Serializable
+class PaginatedResponse<T> private constructor (
+    val element : List<T>,
+    val hasNext : Boolean,
+    val hasPrevious : Boolean
+) {
+    companion object {
+        fun <T> fromList(list: List<T>, skip: Int, limit: Int): PaginatedResponse<T> {
+            val hasNext = skip + limit < list.size
+            val hasPrevious = skip > 0
+            return PaginatedResponse(list.paginate(skip, limit), hasNext, hasPrevious)
+        }
 
-@Serializable
-data class PaginatedResult<T>(
-    val list : List<T>,
-    val next : Boolean,
-    val previous : Boolean
-)
-fun <T> List<T>.paginate(limit : Int, skip: Int) : List<T> {
-    if (this.isEmpty() || skip >= size) {
-        return emptyList()
+        private fun <T> List<T>.paginate(
+            skip: Int,
+            limit: Int,
+        ): List<T> {
+            require(skip >= 0) { "skip must be a non negative integer\nskip=$skip" }
+            require(limit >= 0) { "Limit must be a non negative integer\nlimit=$limit" }
+            if (this.isEmpty() || skip >= size) {
+                return emptyList()
+            }
+            val lastIndex: Int = if (limit + skip > size) size else limit + skip
+            return subList(skip, lastIndex)
+        }
     }
-    val lastIndex: Int = if (limit + skip > size) size else limit + skip
-    return subList(skip, lastIndex)
-}
 
-fun <T> List<T>.paginateWithInfo(limit: Int, skip: Int): PaginatedResult<T> {
-    val paginatedList = this.paginate(limit, skip)
-    val hasPrev = skip > 0
-    val hasNext = skip + limit < this.size
-    return PaginatedResult(paginatedList, hasNext, hasPrev )
+    operator fun component1() = element
+
+    operator fun component2() = hasNext
+
+    operator fun component3() = hasPrevious
 }
 
