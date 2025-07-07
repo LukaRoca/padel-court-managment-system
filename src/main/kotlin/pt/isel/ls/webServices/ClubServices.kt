@@ -40,13 +40,22 @@ class ClubServices (private val db : Data) : ServicesSchema(db) {
         }
 
     fun getClubs(
-        searchParameters: ClubSearch,
         token : UUID,
         skip : Int,
         limit : Int
     ): ClubListResponse =
         withAuthorization(token) {
-            val clubs = db.club.getClubs(searchParameters,limit, skip)
+            val clubs = db.club.getClubs(limit, skip)
             return@withAuthorization ClubListResponse(clubs)
+        }
+
+    fun getClubByName(
+        clubName : String,
+        token : UUID
+    ) : ClubDetails =
+        withAuthorization(token) {
+            val club = db.club.getClubByName(Name(clubName))
+                ?: throw NoSuchElementException("No club with this Name $clubName was found")
+            return@withAuthorization ClubDetails(club)
         }
 }
