@@ -1,5 +1,6 @@
+begin;
 
-create table users (
+create table if not exists users (
     uid serial primary key,
     token varchar(255) unique not null,
     name varchar(255) not null,
@@ -7,20 +8,20 @@ create table users (
     password varchar(255) not null
 );
 
-create table club (
+create table if not exists club (
     cid serial primary key,
     name varchar(255) unique not null,
     owner int references users(uid)
 );
 
 
-create table court (
+create table if not exists court (
     crid serial unique primary key,
     name varchar(255) not null,
     club int references club(cid) on delete cascade
 );
 
-create table rental (
+create table if not exists rental (
     rid serial primary key,
     date varchar(255) not null,
     initDuration int not null,
@@ -28,3 +29,5 @@ create table rental (
     usr int references users(uid),
     court int references court(crid) on delete cascade
 )
+
+commit;

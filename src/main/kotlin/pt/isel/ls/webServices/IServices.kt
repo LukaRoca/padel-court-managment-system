@@ -1,8 +1,8 @@
 package pt.isel.ls.webServices
 
-import pt.isel.ls.data.data.Data
+import pt.isel.ls.data.Data
 
-class IServices (db : Data) {
+class IServices (db : pt.isel.ls.data.Data) {
     val user = UserServices(db)
     val club = ClubServices(db)
     val court = CourtServices(db)

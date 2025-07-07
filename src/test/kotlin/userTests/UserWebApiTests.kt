@@ -16,7 +16,7 @@ import pt.isel.ls.data.dataPostgres.ClubDataPostgres
 import pt.isel.ls.data.dataPostgres.CourtDataPostgres
 import pt.isel.ls.data.dataPostgres.RentalDataPostgres
 import pt.isel.ls.data.dataPostgres.UserDataPostgres
-import pt.isel.ls.data.data.Data
+import pt.isel.ls.data.Data
 import pt.isel.ls.webApi.dto.UserInput
 import pt.isel.ls.webApi.UserWebApi
 import pt.isel.ls.webApi.WebApi

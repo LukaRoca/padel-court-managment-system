@@ -1,7 +1,7 @@
 package pt.isel.ls.data.dataPostgres
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.data.data.RentalData
+import pt.isel.ls.data.RentalData
 import pt.isel.ls.utils.Date
 import pt.isel.ls.utils.Duration
 import pt.isel.ls.utils.Id
@@ -9,6 +9,7 @@ import pt.isel.ls.utils.postgres.toClub
 import pt.isel.ls.utils.postgres.toCourt
 import pt.isel.ls.utils.postgres.toRental
 import pt.isel.ls.utils.postgres.toUser
+import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import javax.sql.DataSource
@@ -34,7 +35,7 @@ val sqlRental = """
         FROM rental
 """.trimIndent()
 
-class RentalDataPostgres (private val dataSource : DataSource) : RentalData {
+class RentalDataPostgres (private val conn: () -> Connection) : RentalData {
 
     override fun createRental(court: Court, date: Date, duration: Duration, user: User): Rental? =
         dataSource.connection.use {

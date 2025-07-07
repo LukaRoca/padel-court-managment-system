@@ -1,12 +1,15 @@
 package pt.isel.ls.data.dataPostgres
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.data.data.ClubData
+import pt.isel.ls.data.ClubData
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Owner
 import pt.isel.ls.utils.postgres.toClub
 import pt.isel.ls.utils.postgres.toUser
+import pt.isel.ls.utils.postgres.useWithRollback
+import pt.isel.ls.webApi.models.club.ClubCreate
+import java.sql.Connection
 
 import java.sql.SQLException
 import java.sql.Statement
@@ -24,8 +27,13 @@ val sqlClub = """
             FROM club
 """.trimIndent()
 
-class ClubDataPostgres (private val dataSource : DataSource): ClubData {
-    override fun createClub(name: Name, user: User) : Club? =
+class ClubDataPostgres (private val conn: () -> Connection): ClubData {
+
+
+    /*
+    override fun createClub(
+        name: Name, user: User
+    ) : Club? =
         dataSource.connection.use {
             val sql = "INSERT INTO club(name, owner) VALUES (?, ?)"
             val stmt = it.prepareStatement(
@@ -47,6 +55,36 @@ class ClubDataPostgres (private val dataSource : DataSource): ClubData {
 
             throw SQLException("Error while creating a new club.")
         }
+
+
+     */
+
+    override fun createClub(
+        clubCreate: ClubCreate,
+        uid : Id
+    ): Club? =
+        conn().useWithRollback {
+            val name = clubCreate
+            val sql = "INSERT INTO club(name, owner) VALUES (?, ?)"
+            val stmt = it.prepareStatement(
+                sql, Statement.RETURN_GENERATED_KEYS
+            ).apply {
+                setString(1, name.name)
+                setInt(2, uid.id)
+            }
+            if (stmt.executeUpdate() == 0) {
+                throw SQLException("Error while creating a new club.")
+            }
+
+            val key = stmt.generatedKeys
+
+            if (key.next()) {
+                return Club(Id(key.getInt(1)), name.name, )
+            }
+
+            throw SQLException("Error while creating a new club.")
+        }
+
 
     override fun getClubById(cid: Id): Club? =
         dataSource.connection.use {

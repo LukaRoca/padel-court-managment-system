@@ -1,21 +1,25 @@
 package pt.isel.ls.data.dataPostgres
 
 import pt.isel.ls.domain.*
-import pt.isel.ls.data.data.UserData
+import pt.isel.ls.data.UserData
 import pt.isel.ls.utils.Email
 import pt.isel.ls.utils.Id
 import pt.isel.ls.utils.Name
 import pt.isel.ls.utils.Password
 import pt.isel.ls.utils.Token
 import pt.isel.ls.utils.postgres.toUser
+import pt.isel.ls.utils.postgres.useWithRollback
+import pt.isel.ls.webApi.models.user.UserCreate
+import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
 import java.util.*
 import javax.sql.DataSource
 
-class UserDataPostgres (private val dataSource : DataSource) : UserData {
-    override fun createUser(name: Name, email: Email, password: Password) : User =
-        dataSource.connection.use {
+class UserDataPostgres (private val conn: () -> Connection) : UserData {
+    override fun createUser(userCreate: UserCreate): User =
+        conn().useWithRollback {
+            val (name,email,password) = userCreate
             val token = UUID.randomUUID()
             val hash = password.hash()
             val sql = "INSERT INTO users(token, name, email, password) VALUES (?, ?,?,?)"
@@ -34,53 +38,20 @@ class UserDataPostgres (private val dataSource : DataSource) : UserData {
             val keys = stmt.generatedKeys
 
             if (keys.next()) {
-                return User(Id(keys.getInt(1)), name, email, Token(token.toString()), password)
+                return User(Id(keys.getInt(1)), name , email, Token(token.toString()), password)
             }
 
             throw SQLException("Error while creating a new user.")
         }
 
-    override fun getUserById(userId: Id): User? =
-        dataSource.connection.use {
-            val sql = "SELECT * FROM users WHERE uid = ?"
-            val stmt =
-                it.prepareStatement(
-                    sql
-                ).apply {
-                    setInt(1, userId.id)
-                }
+    override fun getUserById(userId: Id): User? = fetchUser("uid", userId)
 
-            val rs = stmt.executeQuery()
-
-            if (rs.next()) {
-                return rs.toUser()
-            }
-            return null
-        }
-
-    override fun getUserByToken(token: Token): User? =
-        dataSource.connection.use {
-            val sql = "SELECT * FROM users WHERE users.token = ?"
-            val stmt =
-                it.prepareStatement(
-                    sql
-                ).apply {
-                    setString(1, token.token)
-                }
-
-            val rs = stmt.executeQuery()
-
-            if (rs.next()) {
-                return rs.toUser()
-            }
-            return null
-        }
-
+    override fun getUserByToken(token: Token): User? = fetchUser("token", token)
 
     override fun getAllUsers(): List<User> =
-        dataSource.connection.use {
+        conn().useWithRollback {
             val users = mutableListOf<User>()
-            val sql = "SELECT uid, name, email, token, password FROM users"
+            val sql = "SELECT * FROM users"
             val stmt = it.prepareStatement(sql)
             val rs = stmt.executeQuery()
             while (rs.next()) {
@@ -89,5 +60,21 @@ class UserDataPostgres (private val dataSource : DataSource) : UserData {
                 )
             }
             return users
+        }
+
+    private fun fetchUser(identifier : String, value: Any): User? =
+        conn().useWithRollback {
+            val query = "SELECT * FROM users WHERE $identifier = ?"
+
+            val stmt = it.prepareStatement(query).apply {
+                setObject(1, value)
+            }
+
+            val rs = stmt.executeQuery()
+
+            if (rs.next()) {
+                return rs.toUser()
+            }
+            return null
         }
 }
