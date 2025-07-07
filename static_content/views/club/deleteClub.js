@@ -51,8 +51,8 @@ export const renderDeleteClub = async (mainContent) => {
                                 {},
                                 ...(clubs.list || []).map(club => {
                                     // Debug log for each club's ownerId
-                                    console.log(`Club "${club.name}" - Owner ID:`, club.owner.id);
-                                    console.log('Comparison result:', club.owner.id === currentUserId);
+                                    console.log(`Club "${club.name}" - Owner ID:`, club.ownerId);
+                                    console.log('Comparison result:', club.ownerId === currentUserId);
 
                                     return tr(
                                         {},
@@ -62,8 +62,8 @@ export const renderDeleteClub = async (mainContent) => {
                                             {className: "text-end"},
                                             button(
                                                 {
-                                                    className: `btn btn-${club.owner.id === currentUserId ? 'danger' : 'secondary'} btn-sm`,
-                                                    onClick: () => handleDelete(club.id, club.owner.id === currentUserId)
+                                                    className: `btn btn-${club.ownerId === currentUserId ? 'danger' : 'secondary'} btn-sm`,
+                                                    onClick: () => handleDelete(club.id, club.ownerId === currentUserId)
                                                 },
                                                 "Delete"
                                             )

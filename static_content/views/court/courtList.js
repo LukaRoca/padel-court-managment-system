@@ -30,8 +30,7 @@ export const renderCourtsList = (clubId, mainContent, courts, onNext, onPrevious
                 ),
                 div(
                     {className: "card-body py-3 px-3"},
-                    p({className: "card-text mb-2"}, span({className: "fw-bold"}, "Club: "), court.club?.name || 'N/A'),
-                    p({className: "card-text mb-2"}, span({className: "fw-bold"}, "Owner: "), court.club?.owner?.name || 'N/A'),
+                    p({className: "card-text mb-2"}, span({className: "fw-bold"}, "Club ID: "), court.clubId || 'N/A'),
                     p({className: "small text-muted mt-3"}, `ID: ${court?.id || 'Unknown ID'}`)
                 ),
                 div(
