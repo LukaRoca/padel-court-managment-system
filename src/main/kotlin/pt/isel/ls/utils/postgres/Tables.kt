@@ -14,6 +14,7 @@ import pt.isel.ls.utils.Owner
 import pt.isel.ls.utils.Password
 import pt.isel.ls.utils.Token
 import java.sql.ResultSet
+import java.util.UUID
 
 /**
  * Converts a [ResultSet] into a [User] object.
@@ -25,7 +26,7 @@ fun ResultSet.toUser(): User {
         Id(getInt("uid")),
         Name(getString("name")),
         Email(getString("email")),
-        Token(getString("token")),
+        UUID.fromString(getString("token")),
         Password(getString("password"))
     )
 }

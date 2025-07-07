@@ -11,11 +11,12 @@ import kotlin.text.set
 
 class ClubDataMem(private val clubs: DataMemMap<Club> = DataMemMap()) : ClubData {
 
-    override fun createClub(clubCreate: ClubCreate, user: User): Club {
+    override fun createClub(clubCreate: ClubCreate, uid: Id): Club {
         val newClub = Club(
             Id(clubs.nextId.get()),
-            clubCreate.name,
-            Owner(user)
+            Name(clubCreate.name),
+            uid,
+            mutableListOf()
         )
         clubs.map[clubs.nextId.get()] = newClub
         return newClub
