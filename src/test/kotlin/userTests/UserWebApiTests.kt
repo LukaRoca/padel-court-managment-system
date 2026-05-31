@@ -26,7 +26,7 @@ import pt.isel.ls.webServices.UserServices
 import kotlin.test.assertTrue
 
 class UserWebApiTests {
-    /*
+
     private val dataSource = PGSimpleDataSource().apply {
         setURL("jdbc:postgresql://localhost/ls?user=postgres&password=tubarao")
     }
@@ -60,8 +60,13 @@ class UserWebApiTests {
     fun `get club by ID returns the club`() {
         val api = WebApi(IServices(db = storage))
         val app = Routes(api).app
-        val userId = 1
-        val request = Request(Method.GET, "users/$userId")
+        val createdUser = userStorage.createUser(
+            pt.isel.ls.utlis.Name("Luka Roca"),
+            pt.isel.ls.utlis.Email("lukaroca_test@example.com"),
+            pt.isel.ls.utlis.Password("password123")
+        )
+        val userId = createdUser.uid.id
+        val request = Request(Method.GET, "/users/$userId")
         val response = app(request)
         assertEquals(Status.OK, response.status)
         assertEquals("application/json", response.header("content-type"))
@@ -120,5 +125,5 @@ class UserWebApiTests {
         assertTrue(response.bodyString().contains("token"), "Response body should contain token")
     }
 
-     */
+
 }

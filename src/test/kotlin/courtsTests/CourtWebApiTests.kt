@@ -13,14 +13,22 @@ import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.Routes
 import pt.isel.ls.data.dataPostgres.*
+<<<<<<< Updated upstream
 import pt.isel.ls.data.Data
+=======
+import pt.isel.ls.data.data.Data
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Password
+>>>>>>> Stashed changes
 import pt.isel.ls.webApi.WebApi
 import pt.isel.ls.webApi.dto.CourtInput
 import pt.isel.ls.webServices.*
+import java.util.UUID
 import kotlin.test.assertTrue
 
 class CourtWebApiTests {
-    /*
+
     private val dataSource = PGSimpleDataSource().apply {
         setURL("jdbc:postgresql://localhost/ls?user=postgres&password=tubarao")
     }
@@ -37,16 +45,29 @@ class CourtWebApiTests {
         override val rental = rentalStorage
     }
 
-    private val courtServices = CourtServices(storage)
+    private fun uniqueSuffix() = UUID.randomUUID().toString().substring(0, 8)
+
+    private fun createOwnerAndClub(): Pair<pt.isel.ls.domain.User, pt.isel.ls.domain.Club> {
+        val suffix = uniqueSuffix()
+        val owner = userStorage.createUser(
+            Name("Owner $suffix"),
+            Email("owner_$suffix@example.com"),
+            Password("Password123")
+        )
+        val club = clubStorage.createClub(Name("Club $suffix"), owner)
+            ?: throw IllegalStateException("Failed to create club for test")
+        return owner to club
+    }
 
     @Test
     fun `create a valid court`() {
-        val courtDto = CourtInput(name = "Test Court", cid = 2)
+        val (owner, club) = createOwnerAndClub()
+        val courtDto = CourtInput(name = "Test Court ${uniqueSuffix()}", cid = club.id.id)
         val api = WebApi(IServices(db = storage))
         val app = Routes(api).app
-        val request = Request(POST, "courts")
+        val request = Request(POST, "/courts")
             .header("content-type", "application/json")
-            .header("Authorization", "Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19")
+            .header("Authorization", "Bearer ${owner.token.token}")
             .body(Json.encodeToString(courtDto))
         val response = app(request)
         assertEquals(CREATED, response.status)
@@ -55,7 +76,11 @@ class CourtWebApiTests {
 
     @Test
     fun `get court by ID returns the court`() {
-        val courtId = 2
+        val (_, club) = createOwnerAndClub()
+        val courtName = "Test Court ${uniqueSuffix()}"
+        val createdCourt = courtStorage.createCourt(Name(courtName), club)
+            ?: throw IllegalStateException("Failed to create court for test")
+        val courtId = createdCourt.id.id
         val request = Request(GET, "/courts/$courtId")
         val api = WebApi(IServices(db = storage))
         val app = Routes(api).app
@@ -63,7 +88,7 @@ class CourtWebApiTests {
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
         val responseBody = response.bodyString()
-        assertTrue(responseBody.contains("Test Court"), "Response body should contain the court name")
+        assertTrue(responseBody.contains(courtName), "Response body should contain the court name")
     }
 
     @Test
@@ -87,5 +112,5 @@ class CourtWebApiTests {
         assertEquals(BAD_REQUEST, response.status)
     }
 
-     */
+
 }

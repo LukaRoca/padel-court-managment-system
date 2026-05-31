@@ -13,13 +13,23 @@ import org.http4k.core.Status.Companion.OK
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.Routes
 import pt.isel.ls.data.dataPostgres.*
+<<<<<<< Updated upstream
 import pt.isel.ls.data.Data
+=======
+import pt.isel.ls.data.data.Data
+import pt.isel.ls.utlis.Date
+import pt.isel.ls.utlis.Duration
+import pt.isel.ls.utlis.Email
+import pt.isel.ls.utlis.Name
+import pt.isel.ls.utlis.Password
+>>>>>>> Stashed changes
 import pt.isel.ls.webApi.WebApi
 import pt.isel.ls.webApi.dto.RentalInput
 import pt.isel.ls.webServices.*
+import java.util.UUID
 
 class RentalWebApiTests {
-    /*
+
     private val dataSource = PGSimpleDataSource().apply {
         setURL("jdbc:postgresql://localhost/ls?user=postgres&password=tubarao")
     }
@@ -36,15 +46,47 @@ class RentalWebApiTests {
         override val rental = rentalStorage
     }
 
-    private val rentalServices = RentalServices(storage)
     private val api = Routes(WebApi(IServices(storage))).app
+
+    private data class Fixture(
+        val user: pt.isel.ls.domain.User,
+        val club: pt.isel.ls.domain.Club,
+        val court: pt.isel.ls.domain.Court,
+        val rental: pt.isel.ls.domain.Rental,
+        val date: String,
+    )
+
+    private fun uniqueSuffix() = UUID.randomUUID().toString().substring(0, 8)
+
+    private fun createFixture(date: String = "2026-01-01"): Fixture {
+        val suffix = uniqueSuffix()
+        val user = userStorage.createUser(
+            Name("Rental User $suffix"),
+            Email("rental_user_$suffix@example.com"),
+            Password("Password123")
+        )
+        val club = clubStorage.createClub(Name("Rental Club $suffix"), user)
+            ?: throw IllegalStateException("Failed to create club fixture")
+        val court = courtStorage.createCourt(Name("Rental Court $suffix"), club)
+            ?: throw IllegalStateException("Failed to create court fixture")
+        val rental = rentalStorage.createRental(court, Date(date), Duration(5, 6), user)
+            ?: throw IllegalStateException("Failed to create rental fixture")
+        return Fixture(user, club, court, rental, date)
+    }
 
     @Test
     fun `create a valid rental`() {
-        val rentalDto = RentalInput(cid = 2, crid = 2, date = "2021-06-03", initDuration = 5, endDuration = 6)
-        val request = Request(Method.POST, "rental")
+        val fixture = createFixture(date = "2026-01-02")
+        val rentalDto = RentalInput(
+            cid = fixture.club.id.id,
+            crid = fixture.court.id.id,
+            date = fixture.date,
+            initDuration = 7,
+            endDuration = 8
+        )
+        val request = Request(Method.POST, "/rental")
             .header("content-type", "application/json")
-            .header("Authorization", "Bearer 6f1dab46-dc62-4f52-ac55-3afb43a41a19")
+            .header("Authorization", "Bearer ${fixture.user.token.token}")
             .body(Json.encodeToString(rentalDto))
         val response = api(request)
         assertEquals(CREATED, response.status)
@@ -54,13 +96,14 @@ class RentalWebApiTests {
     }
     @Test
     fun `get rental by ID returns the rental`() {
-        val rentalId = 2
+        val fixture = createFixture(date = "2026-01-03")
+        val rentalId = fixture.rental.rid.id
         val request = Request(GET, "/rentals/$rentalId")
         val response = api(request)
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
         val responseBody = response.bodyString()
-        assertTrue(responseBody.contains("2021-06-03"), "Response body should contain the rental date")
+        assertTrue(responseBody.contains(fixture.date), "Response body should contain the rental date")
     }
 
     @Test
@@ -73,41 +116,48 @@ class RentalWebApiTests {
 
     @Test
     fun `get rentals of user returns rentals`() {
-        val userId = 1
+        val fixture = createFixture(date = "2026-01-04")
+        val userId = fixture.user.uid.id
         val request = Request(GET, "/rentals/user/$userId?limit=10&skip=0")
         val response = api(request)
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
-        assertTrue(response.bodyString().contains("id"))
+        assertTrue(response.bodyString().contains("list"))
     }
 
     @Test
     fun `get rentals of court returns rentals`() {
-        val courtId = 2
+        val fixture = createFixture(date = "2026-01-05")
+        val courtId = fixture.court.id.id
         val request = Request(Method.GET, "/rentals/courts/$courtId?limit=10&skip=0")
         val response = api(request)
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
-        assertTrue(response.bodyString().contains("id"))
+        assertTrue(response.bodyString().contains("list"))
     }
 
     @Test
     fun `get rentals with date returns rentals`() {
-        val request = Request(Method.GET, "/rental/date?date=2021-06-03")
+        val fixture = createFixture(date = "2026-01-06")
+        val request = Request(Method.GET, "/rental/date?date=${fixture.date}")
         val response = api(request)
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
-        assertTrue(response.bodyString().contains("id"))
+        assertTrue(response.bodyString().contains(fixture.date))
     }
 
     @Test
     fun `get available hours returns list`() {
-        val request = Request(Method.GET, "/rentals/available?cid=2&crid=2&date=2021-06-03")
+        val fixture = createFixture(date = "2026-01-07")
+        val request = Request(
+            Method.GET,
+            "/rentals/available?cid=${fixture.club.id.id}&crid=${fixture.court.id.id}&date=${fixture.date}"
+        )
         val response = api(request)
         assertEquals(OK, response.status)
         assertEquals("application/json", response.header("content-type"))
         assertTrue(response.bodyString().contains("["))
     }
 
-     */
+
 }
