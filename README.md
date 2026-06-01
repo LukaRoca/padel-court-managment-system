@@ -35,31 +35,44 @@ Before running this project, ensure you have the following installed:
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/) (Recommended)
 
 ## How to Run
+### 1. Clone the Repository
 
-### 1. Database Setup (via Docker)
+```bash
+git clone [https://github.com/LukaRoca/padel-court-management.git](https://github.com/LukaRoca/padel-court-management.git)
+cd padel-court-managment-system
+```
+
+### 2. Database Setup (via Docker)
 Start by spinning up the PostgreSQL database in a Docker container. We use port `5433` to avoid conflicts with existing local databases.
 
 ```bash
 docker run --name sports-db -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=sports -p 5433:5432 -d postgres:16
 ```
-
-### 2. Environment Variables
-The backend requires a connection string to communicate with the database. Set the following environment variable in your system or your IDE (Run Configurations):
-
-#### Name: JDBC_DATABASE_URL **
-
-#### Value: jdbc:postgresql://localhost:5433/sports?user=postgres&password=postgres 
-
 ### 3. Database Schema Initialization
 Before launching the server, you need to create the tables and insert mock data.
 Using your preferred database client (e.g., IntelliJ Database tool or pgAdmin), connect to the database using the credentials above and execute the following SQL scripts located in src/main/sql/:
 
-#### Execute createSchema.sql
+### Execute createSchema.sql
 
-#### Execute addData.sql
+### Execute addData.sql
 
-### 4. Running the Server
-You can run the server directly via your IDE by executing the main function in Server.kt, or via the terminal using Gradle:
+### 4. Environment Variables
+The backend requires a connection string to communicate with the database. You can configure this directly in your IDE (Run Configurations -> JDBC_DATABASE_URL), or run it directly in your terminal:
+
+#### Name: JDBC_DATABASE_URL **
+
+#### Value: jdbc:postgresql://localhost:5433/sports?user=postgres&password=postgres
+
+For Windows (PowerShell):
+```bash
+$env:JDBC_DATABASE_URL="jdbc:postgresql://localhost:5433/sports?user=postgres&password=postgres"
+./gradlew run
+```
+For mac/Linux (Bash/Zsh):
+```bash
+export JDBC_DATABASE_URL="jdbc:postgresql://localhost:5433/sports?user=postgres&password=postgres"
+./gradlew run
+```
 
 ### 5. Accessing the Application
    Once the server is running, open your web browser and navigate to:
